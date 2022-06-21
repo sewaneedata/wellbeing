@@ -4,8 +4,8 @@
 ## Final Project
 
 ## Deliverables:
-[Project Pitch](./Project\ Pitch.md)
-[Partner Perspective Report](./Partner\ Perspective\ Report.md)
+[Project Pitch](./Project Pitch.md)
+[Partner Perspective Report](./Partner Perspective Report.md)
 [Goals](./Goals.md)
 
 ## Project Contributors:

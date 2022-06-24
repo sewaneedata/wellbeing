@@ -1,74 +1,13 @@
+# lets make a new df of 18- 20 data that includes depression and anxiety data
+
+
 library(tidyverse)
 library(data.table)
 
 # Reading in CSV files
-hms17 <- read_csv("./HMS17.csv")
-hms18 <- read_csv("./HMS18.csv")
-hms19 <- read_csv("./HMS19.csv")
-hms20 <- read_csv("./HMS20_better.csv")
-
-#################################################
-# ROWS THAT DON'T HAVE A RESPONSE ID 2017/18 ----
-#################################################
-
-# Filter by NA responseid
-# toMelt17 <- as.data.table(hms17 %>% filter(is.na(responseid)))
-# Combine every column into three
-# melted17 <- data.table::melt(toMelt17, id.vars = "responseid", measure.vars = 2:523)
-# Filter by only non-NA values
-# melted17 %>% filter(!is.na(value))
-
-#################################################
-# ROWS THAT DON'T HAVE A RESPONSE ID 2018/19 ----
-#################################################
-
-# Filter by NA responseid
-# toMelt18 <- as.data.table(hms18 %>% filter(is.na(responseid)))
-# Combine every column into three
-# melted18 <- data.table::melt(toMelt18, id.vars = "responseid", measure.vars = 2:659)
-# Filter by only non-NA values
-# melted18 %>% filter(!is.na(value))
-
-#################################################
-# ROWS THAT DON'T HAVE A RESPONSE ID 2019/20 ----
-#################################################
-
-# Filter by NA responseid
-# toMelt19 <- as.data.table(hms19 %>% filter(is.na(responseid)))
-# Combine every column into three
-# melted19 <- data.table::melt(toMelt19, id.vars = "responseid", measure.vars = 2:643)
-# Filter by only non-NA values
-# melted19 %>% filter(!is.na(value))
-
-#################################################
-# ROWS THAT DON'T HAVE A RESPONSE ID 2020/21 ----
-#################################################
-
-# Filter by NA responseid
-# toMelt20 <- as.data.table(hms20 %>% filter(is.na(responseid)))
-# Combine every column into three
-# melted20 <- data.table::melt(toMelt20, id.vars = "responseid", measure.vars = 2:1068)
-# Filter by only non-NA values
-# melted20 %>% filter(!is.na(value))
-
-############################
-# FILTERING HMS 2017/18 ----
-############################
-
-# Getting just the response IDs for future use
-ids17 <- hms17 %>% 
-  select(responseid)
-
-# Merging the field columns (losing data from those with no fields entered)
-major17 <- hms17 %>% 
-  select(responseid, field_hum:field_other) %>%
-  pivot_longer(!responseid) %>%
-  drop_na(value) %>%
-  group_by(responseid) %>%
-  summarise(major = paste0(name, collapse = ', '))
-
-# Adding back the people with no field selected
-major17 <- ids17 %>% left_join(major17, by = "responseid")
+hms18 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS18.csv")
+hms19 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS19.csv")
+hms20 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS20_better.csv")
 
 ############################
 # FILTERING HMS 2018/19 ----
@@ -153,14 +92,6 @@ hms20 <- hms20 %>%
   left_join(gender20, by = "responseid")
 
 
-# rename gender columns to match with hms20
-hms17$gender <- factor(hms17$gender, levels = c(1,2,3,4,5,6),
-                       labels = c("gender_male", 
-                                  "gender_female", 
-                                  "gender_transm",
-                                  "gender_transf",
-                                  "gender_queernc",
-                                  "gender_selfID"))
 
 hms18$gender <- factor(hms18$gender, levels = c(1,2,3,4,5,6),
                        labels = c("gender_male", 
@@ -175,8 +106,6 @@ hms19$gender <- factor(hms19$gender, levels = c(1,2),
                                   "gender_female"))
 
 
-
-
 # work with bipolar and ocd data for hms18
 hms18 <- hms18 %>% 
   mutate(dx_bip = ifelse(!is.na(dx_bip_1) | !is.na(dx_bip_2) | !is.na(dx_bip_3) 
@@ -184,7 +113,6 @@ hms18 <- hms18 %>%
   mutate(dx_ocd = ifelse(!is.na(dx_ocd_1) | !is.na(dx_ocd_2) | !is.na(dx_ocd_3) 
                          | !is.na(dx_ocd_4) | !is.na(dx_ocd_5) | !is.na(dx_ocd_5)
                          , 1,NA)) 
-
 
 ################################################################################
 ################################################################################
@@ -226,36 +154,29 @@ cats <- c("schoolYear",
           "talk1_8",
           "talk1_8_text",
           "talk1_9",
-          "ther_ever"
-          # "gad7_1",
-          # "gad7_2",
-          # "gad7_3",
-          # "gad7_4",
-          # "gad7_5",
-          # "gad7_6",
-          # "gad7_7",
-          # "gad7_impa"
-          # "phq9_1",
-          # "phq9_2",
-          # "phq9_3",
-          # "phq9_4",
-          # "phq9_5",
-          # "phq9_6",
-          # "phq9_7",
-          # "phq9_8",
-          # "phq9_9",
-          # "phq9_impa",
-          # "phq2_1",
-          # "phq2_2"
-          )
+          "ther_ever",
+          "gad7_1",
+          "gad7_2",
+          "gad7_3",
+          "gad7_4",
+          "gad7_5",
+          "gad7_6",
+          "gad7_7",
+          "gad7_impa",
+          "phq9_1",
+          "phq9_2",
+          "phq9_3",
+          "phq9_4",
+          "phq9_5",
+          "phq9_6",
+          "phq9_7",
+          "phq9_8",
+          "phq9_9",
+          "dep_impa",
+          "phq2_1",
+          "phq2_2"
+)
 
-# Selecting only the columns we want
-hms17 <- hms17 %>% 
-  left_join(major17, by = "responseid") %>% 
-  mutate(schoolYear = "17/18") %>% 
-  rename(classYear = yr_sch) %>%
-  select(cats) %>% 
-  mutate(age = as.character(age))
 
 hms18 <- hms18 %>% 
   left_join(major18, by = "responseid") %>% 
@@ -280,4 +201,5 @@ hms20 <- hms20 %>%
   mutate(age = as.character(age))
 
 # Merging the data by the columns
-combined <- bind_rows(hms17, hms18, hms19, hms20)
+combinedNot17 <- bind_rows(hms18, hms19, hms20)
+

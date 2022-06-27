@@ -11,6 +11,7 @@ Healthy Minds Survey:
 Is an online survey study of students, available for implementation at all types of post-secondary institutions. The survey examines the prevalence of mental health outcomes, knowledge and attitudes about mental health and service utilization. HMS emphasizes understanding help-seeking behavior, examining stigma, knowledge, and other potential barriers to mental health service utilization.  
 
 The Healthy Minds Study consists of three *core* modules:   
+
 Demographics  
 Mental Health Status  
 Mental Health Survey Utilization/Help-Seeking  
@@ -59,7 +60,7 @@ I actively contribute to the happiness and well-being of others.
 I am competent and capable in the activities that are important to me.  
 I am a good person and live a good life.  
 I am optimistic about my future.  
-People respect me  
+People respect me.  
 1=Strongly disagree  
 2=Disagree  
 3=Slightly disagree  
@@ -113,7 +114,8 @@ Have you ever received counseling or therapy for mental health concerns?
 4=Yes, both of the above (prior to college and since starting college)  
 
 Anxiety [gad7_…]  
-* Not measured in HMS 2017  
+*Not measured in HMS 2017*  
+
 Over the last 2 weeks, how often have you been bothered by the following problems?  
 Feeling nervous, anxious or on edge  
 Not being able to stop or control worrying  
@@ -127,8 +129,10 @@ How difficult have these problems (noted above) made it for you to do your work,
 2=Several days   
 3=Over half the days   
 4=Nearly every day  
+
 Depression [phq9_…]  
-* Not measured in HMS 2017  
+*Not measured in HMS 2017* 
+
 - Over the last 2 weeks, how often have you been bothered by any of the following problems?:  
 Little interest or pleasure in doing things  
 Feeling down, depressed or hopeless  
@@ -138,7 +142,8 @@ Poor appetite or overeating
 Feeling bad about yourself—or that you are a failure or have let yourself or your family down  
 Trouble concentrating on things, such as reading the newspaper or watching television   
 Moving or speaking so slowly that other people could have noticed; or the opposite—being so fidgety or restless that you have been moving around a lot more than usual  
-Thoughts that you would be better off dead or of hurting yourself in some way  
+Thoughts that you would be better off dead or of hurting yourself in some way 
+
 - During that period, how often were you bothered by these problems?:  
 Little interest or pleasure in doing things  
 Feeling down, depressed or hopeless  
@@ -148,7 +153,8 @@ Feeling down, depressed or hopeless
 4=Nearly every day  
 
 Depression Impact [dep_impa]  
-* Not measured in HMS 2017  
+*Not measured in HMS 2017*  
+
 How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?  
 1=Not difficult at all   
 2=Somewhat difficult   
@@ -157,7 +163,8 @@ How difficult have these problems (noted above) made it for you to do your work,
 
 Loneliness  
 [lone_…]  
-* Only measured in HMS 2020-2021  
+*Only measured in HMS 2020-2021*  
+
 Please answer the following:  
 How often do you feel that you lack companionship?  
 How often do you feel left out?  
@@ -167,7 +174,7 @@ How often do you feel isolated from others?
 3=Often  
 
 Exercise [Q3_27]  
-* Not measured in HMS 2020-2021  
+*Not measured in HMS 2020-2021*  
 In the past 30 days, about how many hours per week on average did you spend exercising? (Include any exercise of moderate or higher intensity, where “moderate intensity” would be roughly equivalent to brisk walking or bicycling)  
 1=Less than 1 hour  
 2=2-3 hours  

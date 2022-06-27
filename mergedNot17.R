@@ -1,24 +1,24 @@
-# lets make a new df of 18- 20 data that includes depression and anxiety data
-
+# Lets make a new data frame for 2018 to 2020 data that includes depression and anxiety data
+# HMS17 doesn't include in depth depression and anxiety questions
 
 library(tidyverse)
 library(data.table)
 
 # Reading in CSV files
-hms18 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS18.csv")
-hms19 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS19.csv")
-hms20 <- read_csv("C:/Users/temi/Desktop/wellness data/HMS20_better.csv")
+hms18_2 <- read_csv("./HMS18.csv")
+hms19_2 <- read_csv("./HMS19.csv")
+hms20_2 <- read_csv("./HMS20_better.csv")
 
 ############################
 # FILTERING HMS 2018/19 ----
 ############################
 
 # Getting just the response IDs for future use
-ids18 <- hms18 %>% 
+ids18_2 <- hms18_2 %>% 
   select(responseid)
 
 # Merging the field columns (losing data from those with no fields entered)
-major18 <- hms18 %>% 
+major18_2 <- hms18_2 %>% 
   select(responseid, field_hum:field_other) %>%
   pivot_longer(!responseid) %>%
   drop_na(value) %>%
@@ -26,18 +26,18 @@ major18 <- hms18 %>%
   summarise(major = paste0(name, collapse = ', '))
 
 # Adding back the people with no field selected
-major18 <- ids18 %>% left_join(major18, by = "responseid")
+major18_2 <- ids18_2 %>% left_join(major18_2, by = "responseid")
 
 ###########################
 # FILTERING HMS 2019/20----
 ###########################
 
 # Getting just the response IDs for future use
-ids19 <- hms19 %>% 
+ids19_2 <- hms19_2 %>% 
   select(responseid)
 
 # Merging the field columns (losing data from those with no fields entered)
-major19 <- hms19 %>% 
+major19_2 <- hms19_2 %>% 
   select(responseid, field_hum:field_other) %>%
   pivot_longer(!responseid) %>%
   drop_na(value) %>%
@@ -45,18 +45,18 @@ major19 <- hms19 %>%
   summarise(major = paste0(name, collapse = ', '))
 
 # Adding back the people with no field selected
-major19 <- ids19 %>% left_join(major19, by = "responseid")
+major19_2 <- ids19_2 %>% left_join(major19_2, by = "responseid")
 
 ############################
 # FILTERING HMS 2020/21 ----
 ############################
 
 # Getting just the response IDs for future use
-ids20 <- hms20 %>% 
+ids20_2 <- hms20_2 %>% 
   select(responseid)
 
 # Merging the field columns (losing data from those with no fields entered)
-major20 <- hms20 %>% 
+major20_2 <- hms20_2 %>% 
   select(responseid, field_hum:field_other) %>%
   pivot_longer(!responseid) %>%
   drop_na(value) %>%
@@ -64,36 +64,31 @@ major20 <- hms20 %>%
   summarise(major = paste0(name, collapse = ', '))
 
 # Adding back the people with no field selected
-major20 <- ids20 %>% left_join(major20, by = "responseid")
+major20_2 <- ids20_2 %>% left_join(major20_2, by = "responseid")
 
+#############
+# Gender ----
+#############
 
-
-##########
-# Gender #
-##########
-
-
-# include gender non binary into gender queer for hms20
-hms20 <- hms20 %>% 
+# Include gender non binary in the gender queer column for hms20
+hms20_2 <- hms20_2 %>% 
   mutate(gender_queernc = ifelse(gender_nonbin == 1 | gender_queernc == 1, 1,NA)) %>% 
   select(-gender_nonbin)
 
-
-# make one gender column for hms20
-gender20 <- hms20 %>% 
+# Make one gender column for hms20 rather than a colum for each gender
+gender20_2 <- hms20_2 %>% 
   select(responseid, gender_male:gender_selfID) %>% 
   pivot_longer(!responseid) %>% 
   drop_na(value) %>% 
   group_by(responseid) %>% 
   summarise(gender = paste0(name, collapse = ", "))
 
+# Adding the gender column to the actual data set
+hms20_2 <- hms20_2 %>% 
+  left_join(gender20_2, by = "responseid")
 
-hms20 <- hms20 %>% 
-  left_join(gender20, by = "responseid")
-
-
-
-hms18$gender <- factor(hms18$gender, levels = c(1,2,3,4,5,6),
+# Renaming the gender column data to match with hms20
+hms18_2$gender <- factor(hms18_2$gender, levels = c(1,2,3,4,5,6),
                        labels = c("gender_male", 
                                   "gender_female", 
                                   "gender_transm",
@@ -101,23 +96,25 @@ hms18$gender <- factor(hms18$gender, levels = c(1,2,3,4,5,6),
                                   "gender_queernc",
                                   "gender_selfID"))
 
-hms19$gender <- factor(hms19$gender, levels = c(1,2),
+hms19_2$gender <- factor(hms19_2$gender, levels = c(1,2),
                        labels = c("gender_male", 
                                   "gender_female"))
 
+##########################
+# Bipolar & OCD HMS18 ----
+##########################
 
-# work with bipolar and ocd data for hms18
-hms18 <- hms18 %>% 
+# Making one bipolar and one ocd column for hms18 rather than having multiple
+hms18_2 <- hms18_2 %>% 
   mutate(dx_bip = ifelse(!is.na(dx_bip_1) | !is.na(dx_bip_2) | !is.na(dx_bip_3) 
                          | !is.na(dx_bip_4) , 1,NA)) %>% 
   mutate(dx_ocd = ifelse(!is.na(dx_ocd_1) | !is.na(dx_ocd_2) | !is.na(dx_ocd_3) 
                          | !is.na(dx_ocd_4) | !is.na(dx_ocd_5) | !is.na(dx_ocd_5)
                          , 1,NA)) 
 
-################################################################################
-################################################################################
-
-
+###########################
+# Filtering Categories ----
+###########################
 
 # Categories to select by:
 cats <- c("schoolYear",
@@ -177,23 +174,23 @@ cats <- c("schoolYear",
           "phq2_2"
 )
 
-
-hms18 <- hms18 %>% 
-  left_join(major18, by = "responseid") %>% 
+# Selecting only the columns we want
+hms18_2 <- hms18_2 %>% 
+  left_join(major18_2, by = "responseid") %>% 
   mutate(schoolYear = "18/19") %>% 
   rename(classYear = yr_sch) %>%
   select(cats) %>% 
   mutate(age = as.character(age))
 
-hms19 <- hms19 %>% 
-  left_join(major19, by = "responseid") %>% 
+hms19_2 <- hms19_2 %>% 
+  left_join(major19_2, by = "responseid") %>% 
   mutate(schoolYear = "19/20") %>% 
   rename(classYear = yr_sch) %>%
   select(cats) %>% 
   mutate(age = as.character(age))
 
-hms20 <- hms20 %>% 
-  left_join(major20, by = "responseid") %>% 
+hms20_2 <- hms20_2 %>% 
+  left_join(major20_2, by = "responseid") %>% 
   distinct(responseid, .keep_all = TRUE) %>% 
   mutate(schoolYear = "20/21") %>% 
   rename(classYear = yr_sch) %>%
@@ -201,5 +198,4 @@ hms20 <- hms20 %>%
   mutate(age = as.character(age))
 
 # Merging the data by the columns
-combinedNot17 <- bind_rows(hms18, hms19, hms20)
-
+combined_2 <- bind_rows(hms18_2, hms19_2, hms20_2)

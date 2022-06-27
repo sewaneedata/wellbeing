@@ -127,20 +127,16 @@ major20 <- hms20 %>%
 # Adding back the people with no field selected
 major20 <- ids20 %>% left_join(major20, by = "responseid")
 
+#############
+# Gender ----
+#############
 
-
-##########
-# Gender #
-##########
-
-
-# include gender non binary into gender queer for hms20
+# Include gender non binary in the gender queer column for hms20
 hms20 <- hms20 %>% 
   mutate(gender_queernc = ifelse(gender_nonbin == 1 | gender_queernc == 1, 1,NA)) %>% 
   select(-gender_nonbin)
 
-
-# make one gender column for hms20
+# Make one gender column for hms20 rather than a colum for each gender
 gender20 <- hms20 %>% 
   select(responseid, gender_male:gender_selfID) %>% 
   pivot_longer(!responseid) %>% 
@@ -148,12 +144,11 @@ gender20 <- hms20 %>%
   group_by(responseid) %>% 
   summarise(gender = paste0(name, collapse = ", "))
 
-
+# Adding the gender column to the actual data set
 hms20 <- hms20 %>% 
   left_join(gender20, by = "responseid")
 
-
-# rename gender columns to match with hms20
+# Renaming the gender column data to match with hms20
 hms17$gender <- factor(hms17$gender, levels = c(1,2,3,4,5,6),
                        labels = c("gender_male", 
                                   "gender_female", 
@@ -174,10 +169,11 @@ hms19$gender <- factor(hms19$gender, levels = c(1,2),
                        labels = c("gender_male", 
                                   "gender_female"))
 
+##########################
+# Bipolar & OCD HMS18 ----
+##########################
 
-
-
-# work with bipolar and ocd data for hms18
+# Making one bipolar and one ocd column for hms18 rather than having multiple
 hms18 <- hms18 %>% 
   mutate(dx_bip = ifelse(!is.na(dx_bip_1) | !is.na(dx_bip_2) | !is.na(dx_bip_3) 
                          | !is.na(dx_bip_4) , 1,NA)) %>% 
@@ -185,11 +181,9 @@ hms18 <- hms18 %>%
                          | !is.na(dx_ocd_4) | !is.na(dx_ocd_5) | !is.na(dx_ocd_5)
                          , 1,NA)) 
 
-
-################################################################################
-################################################################################
-
-
+###########################
+# Filtering Categories ----
+###########################
 
 # Categories to select by:
 cats <- c("schoolYear",
@@ -212,7 +206,6 @@ cats <- c("schoolYear",
           "dx_trauma",
           "dx_neurodev",
           "dx_ea",
-          # "dx_other",
           "dx_none",
           "dx_dk",
           "aca_impa",
@@ -227,26 +220,6 @@ cats <- c("schoolYear",
           "talk1_8_text",
           "talk1_9",
           "ther_ever"
-          # "gad7_1",
-          # "gad7_2",
-          # "gad7_3",
-          # "gad7_4",
-          # "gad7_5",
-          # "gad7_6",
-          # "gad7_7",
-          # "gad7_impa"
-          # "phq9_1",
-          # "phq9_2",
-          # "phq9_3",
-          # "phq9_4",
-          # "phq9_5",
-          # "phq9_6",
-          # "phq9_7",
-          # "phq9_8",
-          # "phq9_9",
-          # "phq9_impa",
-          # "phq2_1",
-          # "phq2_2"
           )
 
 # Selecting only the columns we want

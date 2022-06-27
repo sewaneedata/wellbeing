@@ -7,6 +7,7 @@ College students are experiencing mental health crises at unprecedented rates. W
 - [Partner Perspective Report](./Partner&#32;Perspective&#32;Report.md)
 - [Goals](./Goals.md)
 - [Literature Review](./Literature&#32;Review.md)
+- [Data Dictionary](./Data&#32;Dictionary.md)
 
 ## Project Contributors:
 Temi Adejumobi C'24  

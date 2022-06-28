@@ -2,10 +2,10 @@ library(tidyverse)
 library(data.table)
 
 # Reading in CSV files
-hms17 <- read_csv("./HMS17.csv")
-hms18 <- read_csv("./HMS18.csv")
-hms19 <- read_csv("./HMS19.csv")
-hms20 <- read_csv("./HMS20_better.csv")
+hms17 <- read_csv("../../HMS17.csv")
+hms18 <- read_csv("../../HMS18.csv")
+hms19 <- read_csv("../../HMS19.csv")
+hms20 <- read_csv("../../HMS20_better.csv")
 
 #################################################
 # ROWS THAT DON'T HAVE A RESPONSE ID 2017/18 ----

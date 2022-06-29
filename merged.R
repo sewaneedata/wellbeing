@@ -475,3 +475,5 @@ combined <- combined %>%
          -sexual_other
          ) %>%
   mutate(age = ifelse(parse_number(age) >= 22, "22+", age))
+
+combined %>% write_csv(file = "../../HMSAll.csv", append = FALSE)

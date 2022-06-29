@@ -2,6 +2,8 @@ library(tidyverse)
 library(data.table)
 
 # Reading in CSV files
+# You MUST set your working directory to .../wellbeing/Dashboard
+# And you MUST have your HMS data csv files in the parent directory of wellbeing
 hms17 <- read_csv("../../HMS17.csv")
 hms18 <- read_csv("../../HMS18.csv")
 hms19 <- read_csv("../../HMS19.csv")

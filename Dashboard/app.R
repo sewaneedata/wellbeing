@@ -70,16 +70,60 @@ ui <- dashboardPage(
       
       # Fifth tab content
       tabItem(tabName = 'About',
-              h2('About the Well-being Dream Team'),
-              h3('DataLab 2022 Contributors'),
-              fluidRow(column(3, 'Jarely Soriano'),
-                       column(3, 'Sam Dean'),
-                       column(3, 'Michael Komnick'),
-                       column(3, 'Temi Adejumobi')),
-              fluidRow(column(3, imageOutput("jarely")),
-                       column(3, imageOutput("sam")),
-                       column(3, imageOutput("michael")),
-                       column(3, imageOutput("temi"))))
+              h2('About the Well-being Project'),
+              hr(),
+              h3(strong("What is DataLab?")),
+              br(),
+              h4("DataLab is a summer internship program at Sewanee: the University of the South that partners with DSSG, Data Science for Social Good, to develop data science skills in students by analyzing data sets related to pressing social and environmental problems."),
+              br(),
+              h3(strong('Well-being Dream Team:')),
+              br(),
+              br(),
+              fluidRow(column(4, 
+                              tags$img(src = "jarely.jpg", 
+                                       width = "100%", 
+                                       alt = "Picture of Jarely")),
+                       column(8, 
+                              h3("Jarely Soriano | ",
+                                 a(href = 'mailto:soriaja0@sewanee.edu',
+                                   'Email Me')),
+                              h4(em("C'23 IGS: Latin American and Caribbean Studies and Global Politics")),
+                              tags$blockquote(
+                                em("this is why I joined datalab")))),
+              br(),
+              fluidRow(column(4,
+                              tags$img(src = "sam.jpg",
+                                       width = "100%",
+                                       alt = "Picture of Sam")),
+                       column(8, h3('Sam Dean | ', 
+                                    a(href = 'mailto:deansn0@sewanee.edu',
+                                      'Email Me')),
+                              h4(em("C'23 Psychology")),
+                              tags$blockquote(
+                                em("Being invited to be a part of DataLab 2022 has been one of the most enriching opportunities I have experienced. Not only did my coding skills improve, I was shown how to incorporate two fields I am most passionate about: data science and mental health.")))),
+              br(),
+              fluidRow(column(4,
+                              tags$img(src = "michael.jpg",
+                                       width = "100%",
+                                       alt = "Picture of Michael")),
+                       column(8, h3('Michael Komnick | ', 
+                                    a(href = "mailto:komnimj0@sewanee.edu",
+                                      'Email Me')),
+                              h4(em("C'24 Computer Science")),
+                              tags$blockquote(em(
+                                "I heard that DataLab was a great opportunity to use my computer science skills for social good. I also wanted to increase my network and connections with professionals in the field I am most passionate about.")))),
+              br(),
+              fluidRow(column(4,
+                              tags$img(src = "temi.jpg",
+                                       width = "100%",
+                                       alt = "Picture of Temi")),
+                       column(8, h3('Temi Adejumobi | ', 
+                                    a(href ="mailto:adejuoj0@sewanee.edu", 
+                                      "Email Me")),
+                              h4(em("C'24 Computer Science")),
+                              tags$blockquote(em(
+                                "this is why ..."))))
+      )
     )
   )
 )
@@ -110,25 +154,6 @@ server <- function(input, output){
   output$demplot <- renderPlot({
     
   })
-  
-  
-  
-  # all the outputs for our images on the about page  
-  output$jarely <- renderImage({
-    return(list(src = "./jarely.jpg", width = "100%", contentType = "image/jpg", alt = "Jarely"))
-  }, deleteFile = FALSE)
-  
-  output$sam <- renderImage({
-    return(list(src = "./sam.jpg", width = "100%", contentType = "image/jpg", alt = "Sam"))
-  }, deleteFile = FALSE)
-  
-  output$michael <- renderImage({
-    return(list(src = "./michael.jpg",  width = "100%", contentType = "image/jpg", alt = "Michael"))
-  }, deleteFile = FALSE)
-  
-  output$temi <- renderImage({
-    return(list(src = "./temi.jpg",  width = "100%", contentType = "image/jpg", alt = "Temi"))
-  }, deleteFile = FALSE)
   
 }
 

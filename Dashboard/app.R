@@ -38,56 +38,46 @@ ui <- dashboardPage(
     tabItems(
       # First tab content
       tabItem(tabName = "Home",
-              h1("Cracking the Code to Student Flourishing"),
-              br(),
+              h2("Cracking the Code to Student Flourishing"),
               hr(),
-              h3("Sewanee has fostered some of the greatest academics and
-              so many are flourishing and thrive! But how? What can we learn 
+              h4("Sewanee has fostered some of the greatest academics and
+              so many flourish and thrive! But how? What can we learn 
               from those who are thriving? Over the past decade, the rate of 
               depression, anxiety and serious mental health crises has doubled 
               among college students, according to Daniel Eisenberg, a principal
               investigator of the Healthy Minds Study: an annual survey of 
               thousands of students across the country (Hartocollis, New York 
-              Times 2021).
-                       "),
+              Times 2021)."),
               br(),
-              br(),
-              h3("For the past four years, Sewanee undergrad students have
+              h4("For the past four years, Sewanee undergrad students have
               been filling out the Healthy Minds Survey (HMS), a survey that 
               asks questions about mental health outcomes, knowledge and 
               attitudes about mental health and service utilization. The HMS is 
               used by a network of colleges and emphasizes understanding 
               help-seeking behavior, examining stigma, knowledge, and other 
-              potential barriers to mental health service utilization. 
-                       "),
+              potential barriers to mental health service utilization."),
               br(),
-              br(),
-              h3("Our team of researchers at Sewanee DataLab have analyzed
+              h4("Our team of researchers at Sewanee DataLab have analyzed
                        HMS survey data to answer pressing questions about 
                        flourishing at Sewanee. The four years of HMS data we 
                        have will allow us to find correlations between student 
                        health, habits, and flourishing. This project is in 
                        partnership with the Associate Dean of Student 
                        Flourishing at Sewanee Dr. Nicole Noffsinger-Frazier and 
-                       under mentorship of Dr. Sylvia Gray, Title IX coordinator.
-                       "),
+                       under mentorship of Dr. Sylvia Gray, Title IX coordinator."),
               br(),
-              h3("Click around to learn more about how we Cracked the Code
+              h4("Click around to learn more about how we Cracked the Code
               to Student Flourishing!!! 
                        "),
               br(),
+              h4(strong("WARNING"), ": Some of the graphs may contain potentially triggering information. If you’re unfamiliar with Sewanee’s Counseling and Psychological Services, call 931-598-1325."),
               br(),
-              h3("WARNING : Some of the graphs may contain potentially 
-              triggering information. If you’re unfamiliar with Sewanee’s 
-              Counseling and Psychological Services, call 931-598-1325.
-                       "),
-              br(),
-              br(),
-              h3("University Wellness Center Counseling and Psychological Services: 931-598-1325",
+              h3("Resources:"),
+              h4("University Wellness Center Counseling and Psychological Services: 931-598-1325",
                  br(),
                  "ProtoCall: 931-598-1700 (used after 5pm)",
                  br(),
-                 "Title IX Coordinator at Sewanee, Dr. Sylvia Gray: 931-598-1420, Woods 138, smgray@sewanee.edu",
+                 "Title IX Coordinator at Sewanee, Dr. Sylvia Gray: 931-598-1420, Woods 138,", a(href ="mailto:smgray@sewanee.edu", "Email"),
                  br(),
                  "Chattanooga Rape Crisis Center: 423-755-2700",
                  br(),

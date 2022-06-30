@@ -33,7 +33,7 @@ ui <- dashboardPage(
   
   ## Body content
   dashboardBody(
-    shinyDashboardThemes(theme = "blue_gradient"),
+    shinyDashboardThemes(theme = "grey_dark"),
     
     tabItems(
       # First tab content
@@ -125,7 +125,7 @@ ui <- dashboardPage(
       tabItem(tabName = 'About',
               h2('About the Well-being Project'),
               hr(),
-              h3(strong("What is DataLab?")),
+              h3(strong("What is DataLab </>?")),
               br(),
               h4("DataLab is a summer internship program at Sewanee: the University of the South that partners with DSSG, Data Science for Social Good, to develop data science skills in students by analyzing data sets related to pressing social and environmental problems."),
               br(),
@@ -142,7 +142,7 @@ ui <- dashboardPage(
                                    'Email Me')),
                               h4(em("C'23 IGS: Latin American and Caribbean Studies and Global Politics")),
                               tags$blockquote(
-                                em("this is why I joined datalab")))),
+                                em("I joined DataLab because I wanted to learn something new and do something impactful. If i’ve learned one thing during this experience, it’s that information can be beautiful and powerful.")))),
               br(),
               fluidRow(column(4,
                               tags$img(src = "sam.jpg",
@@ -175,7 +175,7 @@ ui <- dashboardPage(
                                       "Email Me")),
                               h4(em("C'24 Computer Science")),
                               tags$blockquote(em(
-                                "this is why ..."))))
+                                "DataLab 2022 has been a wonderful experience! I am grateful for the opportunity to embrace a purpose beyond oneself while creating sustainable impact in the lives of others. This summer has allowed me to learn and develop important technical and transferable skills; working with and learning from interesting people."))))
       )
     )
   )

@@ -90,25 +90,127 @@ ui <- dashboardPage(
               )
       ),
       
-      # Third tab content
+      # Second tab content
       tabItem(tabName = "Mental_Health",
-              br(),
+              h2('Trends on Mental Health'),
               hr(),
+              fluidRow(column(12,
+                              'Graph on Overall % of mentall illness diagnoses')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              box(width = 3, selectInput(inputId = 'demographics1',
+                                         label = 'Select a demographic:',
+                                         c('Race', 'Gender', 'Class Year')
+              )
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")
+              ),
+              fluidRow(column(12,
+                              'Graph on Overall % dep (phq) by question')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'demographics1',
+                                    label = 'Select a demographic:',
+                                    c('Race', 'Gender', 'Class Year')),
+                     br(),
+                     selectInput(inputId = 'phq?',
+                                 label = 'select a phq question',
+                                 choices = c(1, 2, 3))
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")),
+              fluidRow(column(12,
+                              'Graph on Overall % anx (gad) by question')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'demographics1',
+                                    label = 'Select a demographic:',
+                                    c('Race', 'Gender', 'Class Year')),
+                     br(),
+                     selectInput(inputId = 'gad?',
+                                 label = 'select a gad question',
+                                 choices = c(1, 2, 3))
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")),
+              hr(),
+              h2('Correlations'),
+              fluidRow(column(12,
+                              'Graph on Overall % illness (anx,dep,lone)')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'illness',
+                                    label = 'Select an illness:',
+                                    c('Anx', 'Dep', 'Loneliness')),
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")),
               br(),
-              fluidRow("Trends on Mental Health"),
-              fluidRow("answer prioritized questions")
+              fluidRow(column(12,
+                              'Graph on Overall ever % illness')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'problem',
+                                    label = 'Select a variable:',
+                                    c('sleep', 'Exercise', 'therapy')),
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph"))
       ),
       
       
-      # Second tab content
+      # Third tab content
       tabItem(tabName = 'Well_being',
-              br(),
+              h2('Trends on Well-being'),
               hr(),
+              fluidRow(column(12,
+                              'Graph on Overall % of flourishing')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'demographics1',
+                                    label = 'Select a demographic:',
+                                    c('Race', 'Gender', 'Class Year')
+              ),
               br(),
-              fluidRow("Trends on flourishing over time"),
-              fluidRow("subset by select demographics"),
-              fluidRow("")
-              
+              selectInput(inputId = 'diener?',
+                          label = 'select a diener question',
+                          choices = c(1, 2, 3))
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")
+                       
+              ),
+              fluidRow(column(12,
+                              'Graph on Overall % of those who are flourishing')
+              ),
+              fluidRow(box(plotOutput(width = 9, "MIPlot")
+              ),
+              column(3, selectInput(inputId = 'demographics1',
+                                    label = 'Select a demographic:',
+                                    c('Race', 'Gender', 'Class Year')
+              ),
+              br(),
+              selectInput(inputId = 'variable',
+                          label = 'Select a Variable:',
+                          choices = c('sleep', 'exercise', 'counseling'))
+              )
+              ),
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph")
+              )
       ),
       
       # Fifth tab content

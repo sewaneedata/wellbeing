@@ -578,16 +578,16 @@ server <- function(input, output){
                                             'Depression Question 8', 
                                             'Depression Question 9'), 
                        labels = c(
-                         "Little interest or pleasure in doing things", 
+                         "Little interest or pleasure in doing things (academics, social, etc.)", 
                          "Feeling down, depressed or hopeless",
-                         'Troubles with Sleep',
+                         'Trouble falling or staying asleep,
+                         or sleeping too much',
                          'Feeling tired or having little energy',
                          'Poor appetite or overeating',
-                         'Feeling bad about yourself',
-                         'Trouble concentrating on things',
-                         'Moving or speaking so slowly; or the opposite',
-                         'Thoughts about being dead or 
-                                hurting yourself'))
+                         'Feeling bad about yourself—or that you are a failure or have letyourself or your family down',
+                         'Trouble concentrating on things, such as reading the newspaper or watching television',
+                         'Moving or speaking so slowly that other people could have noticed; or the opposite',
+                         'Thoughts that you would be better off dead or of hurting yourself in some way'))
     
     # Changing the numbers of the values to the actual values
     phq$value <- factor(phq$value, levels = c(1, 2, 3, 4),
@@ -717,7 +717,7 @@ server <- function(input, output){
       geom_col()+
       ylim(c(0,100))+
       labs(title = 
-             paste("Percentage of students who reported having a mental illness by", input$ment1_dem),
+             paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
            subtitle = "2017 - 2021") +
       scale_fill_brewer(palette = 'Paired')
   }, width = 'auto')

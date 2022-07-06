@@ -16,69 +16,107 @@ library(RColorBrewer)
 # source("../merged.R")
 HMS <- read_csv("../../HMSAll.csv")
 
+# Renaming column names so they look more official on the dashboard :)
+HMS <- HMS %>% 
+  rename(Race = race, Gender = gender, International = international,
+         `Class Year` = classYear, `School Year` = schoolYear,
+         `Depression Question 1` = phq9_1, `Depression Question 2` = phq9_2,
+         `Depression Question 3` = phq9_3, `Depression Question 4` = phq9_4,
+         `Depression Question 5` = phq9_5, `Depression Question 6` = phq9_6,
+         `Depression Question 7` = phq9_7, `Depression Question 8` = phq9_8,
+         `Depression Question 9` = phq9_9, `Anxiety Question 1` = gad7_1,
+         `Anxiety Question 2` = gad7_2, `Anxiety Question 3` = gad7_3,
+         `Anxiety Question 4` = gad7_4, `Anxiety Question 5` = gad7_5,
+         `Anxiety Question 6` = gad7_6, `Anxiety Question 7` = gad7_7,
+         `Diagnosed Depression` = dx_dep, `Diagnosed Anxiety` = dx_anx,
+         `Feeling Isolated` = lone_isolated, 
+         `Lacking Companionship` = lone_lackcompanion, 
+         `Feeling Leftout` = lone_leftout)
+
 # changing the international column from 0 and 1 to 'No' and 'Yes" respectively
-HMS$international <- factor(HMS$international, levels = c(0,1),
+HMS$International <- factor(HMS$International, levels = c(0,1),
                             labels = c('No', 'Yes'))
+
+HMS$aca_impa <- factor(HMS$aca_impa, levels = c(1, 2, 3, 4),
+                       labels = c('None', '1 to 2 Days', 
+                                  '3 to 5 Days', '6 or more Days'))
 
 
 # making every race that has less than 6 people grouped into 'race_other'
 HMS <- HMS %>%
-  group_by(race) %>%
-  filter(!is.na(race)) %>%
+  group_by(Race) %>%
+  filter(!is.na(Race)) %>%
   mutate(total = n()) %>%
   ungroup() %>%
-  mutate(race = ifelse(total <= 5, 'race_other', race))
+  mutate(Race = ifelse(total <= 5, 'race_other', Race))
 
 # Created new lgbtq+ column from gender and sexuality, then moved trans into
 # respective gender category
 HMS <- HMS %>%
-  filter(!is.na(gender), !is.na(sexuality)) %>%
-  mutate( LGBTQ = ifelse(!(((gender == 'gender_male' |
-                               gender == 'gender_female')) &
-                             (sexuality == 'sexual_h')), 1, 0)) %>%
-  mutate(gender = ifelse(gender == 'gender_transm', 'gender_male', gender),
-         gender = ifelse(gender == 'gender_transf', 'gender_female', gender),
-         gender = ifelse(grepl(", ", gender), "gender_selfID", gender))
+  filter(!is.na(Gender), !is.na(sexuality)) %>%
+  mutate( `LGBTQ+` = ifelse(!(((Gender == 'gender_male' |
+                                  Gender == 'gender_female')) &
+                                (sexuality == 'sexual_h')), 1, 0)) %>%
+  mutate(Gender = ifelse(Gender == 'gender_transm', 'gender_male', Gender),
+         Gender = ifelse(Gender == 'gender_transf', 'gender_female', Gender),
+         Gender = ifelse(grepl(", ", Gender), "gender_selfID", Gender))
+
+HMS <- HMS %>% 
+  mutate(Gender = ifelse(Gender == 'gender_female', 'Woman Identified',
+                         ifelse(Gender == 'gender_male', 'Man Identified',
+                                ifelse(Gender == 'gender_queernc', 
+                                       'Queer/Nonconforming',
+                                       'Self Identified'))))
 
 # changing the LGBTQ column from 0 and 1 to 'No' and 'Yes" respectively
-HMS$LGBTQ <- factor(HMS$LGBTQ, levels = c(0,1),
-                    labels = c('No', 'Yes'))
+HMS$`LGBTQ+` <- factor(HMS$`LGBTQ+`, levels = c(0,1),
+                       labels = c('No', 'Yes'))
 
 
 # changing class year from a range of numbers, to their respective values
-HMS$classYear <- factor(HMS$classYear, 
-                        levels = c(1, 2, 3, 4, 5),
-                        labels = c('1st Year', "2nd Year",
-                                   '3rd Year', '4th Year',
-                                   '5th Year'))
+HMS$`Class Year` <- factor(HMS$`Class Year`, 
+                           levels = c(1, 2, 3, 4, 5),
+                           labels = c('1st Year', "2nd Year",
+                                      '3rd Year', '4th Year',
+                                      '5th Year'))
 
-phqQuestions <- c('Little interest or pleasure in doing things' = 'phq9_1',
-                  'Feeling down, depressed or hopeless' = "phq9_2",
-                  'Trouble falling or staying asleep, 
-                  or sleeping too much' = 'phq9_3',
-                  'Feeling tired or having little energy' = 'phq9_4',
-                  'Poor appetite or overeating' = 'phq9_5',
+phqQuestions <- c('Little interest or pleasure in doing things' = 
+                    '`Depression Question 1`',
+                  'Feeling down, depressed or hopeless' = 
+                    "`Depression Question 2`",
+                  'Trouble falling or staying asleep, or sleeping too much' =
+                    '`Depression Question 3`',
+                  'Feeling tired or having little energy' = 
+                    '`Depression Question 4`',
+                  'Poor appetite or overeating' = 
+                    '`Depression Question 5`',
                   'Feeling bad about yourself—or that you are a failure 
-                  or have let yourself or your family down' = 'phq9_6',
+                  or have let yourself or your family down' = 
+                    '`Depression Question 6`',
                   'Trouble concentrating on things, such as reading the 
-                  newspaper or watching television' = 'phq9_7',
+                  newspaper or watching television' = 
+                    '`Depression Question 7`',
                   'Moving or speaking so slowly that other people could have 
                   noticed; or the opposite—being so fidgety or restless that 
-                  you have been moving around a lot more than usual' = 'phq9_8',
+                  you have been moving around a lot more than usual' = 
+                    '`Depression Question 8`',
                   'Thoughts that you would be better off dead or of hurting 
-                  yourself in some way' = 'phq9_9')
+                  yourself in some way' = 
+                    '`Depression Question 9`')
 
 phqQues <- HMS %>% 
-  select(phq9_1:phq9_9)
+  select(`Depression Question 1`:`Depression Question 9`)
 
 gadQues <- HMS %>% 
-  select(gad7_1:gad7_7)
+  select(`Anxiety Question 1`:`Anxiety Question 7`)
 
 ment4_variables <- HMS %>% 
-  select(dx_dep, dx_anx,lone_isolated, lone_lackcompanion, lone_leftout)
+  select(`Diagnosed Depression`, `Diagnosed Anxiety`,
+         `Feeling Isolated`, `Lacking Companionship`, `Feeling Leftout`)
 
 demographics <- HMS %>%
-  select('race', 'gender', 'international', 'classYear', 'schoolYear', 'LGBTQ')
+  select('Race', 'Gender', 'International', 
+         `Class Year`, `School Year`, `LGBTQ+`)
 
 ################################################################################
 ####################################### ui #####################################
@@ -211,7 +249,7 @@ ui <- dashboardPage(
               
               # row for title of first graph
               fluidRow(
-                column(12, 'Graph on Overall % of mentall illness diagnoses')
+                column(12, 'Mental Illness Rates by Demographics')
               ),
               
               # row for first graph
@@ -225,8 +263,9 @@ ui <- dashboardPage(
                 box(
                   width = 3,
                   varSelectInput(inputId = 'ment1_dem',
-                                 label = 'Select a demographic:',
-                                 data = demographics
+                                 label = 'Select a Demographic:',
+                                 data = demographics,
+                                 selected = 'School Year'
                   )
                 )
               ),
@@ -234,23 +273,24 @@ ui <- dashboardPage(
                 box(width = 12, "note explaining how to interpret the graph")
               ),
               fluidRow(
-                column(12, 'Graph on Overall % dep (phq) by question')
+                column(12, 'Depression Question Rates by Demographic')
               ),
               fluidRow(
                 box(width = 9,
-                    plotOutput( "phqPlot", width=250 )
+                    plotOutput( "phqPlot")
                 ),
                 box(
                   width = 3,
                   varSelectInput(
                     inputId = "phqdem",
-                    "Variable:",
-                    demographics
+                    "Select a Demographic:",
+                    demographics,
+                    selected = 'School Year'
                   ),
                   br(),
                   varSelectInput(
                     inputId = 'phqQ',
-                    label = 'Select a depression question:',
+                    label = 'Select a Depression Question:',
                     data = phqQues
                   )
                 )
@@ -262,7 +302,7 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                column(12, 'Graph on Overall % anx (gad) by question')
+                column(12, 'Anxiety Question Rates by Demographic')
               ),
               fluidRow(
                 box(width = 9, plotOutput("gadPlot")),
@@ -270,13 +310,14 @@ ui <- dashboardPage(
                   3,
                   varSelectInput(
                     inputId = 'gaddem',
-                    label = 'Select a demographic:',
-                    data = demographics
+                    label = 'Select a Demographic:',
+                    data = demographics,
+                    selected = 'School Year'
                   ),
                   br(),
                   varSelectInput(
                     inputId = 'gadQ',
-                    label = 'Select a anxiety question:',
+                    label = 'Select an Anxiety Question:',
                     data = gadQues
                   )
                 )
@@ -287,7 +328,8 @@ ui <- dashboardPage(
               hr(),
               h2('Correlations'),
               fluidRow(
-                column(12, 'Graph on Overall % illness (anx,dep,lone)')
+                column(12, 'Academic Impairment Rates of Students with 
+                       Anxiety, Depression, and Loneliness')
               ),
               fluidRow(
                 box(width = 9, plotOutput("mentalIllness_4")),
@@ -295,7 +337,7 @@ ui <- dashboardPage(
                   3,
                   varSelectInput(
                     inputId = 'ment4_vars',
-                    label = 'Select an illness:',
+                    label = 'Select a Variable:',
                     data = ment4_variables
                   ),
                 )
@@ -312,13 +354,16 @@ ui <- dashboardPage(
                 column(
                   3, selectInput(
                     inputId = 'problem',
-                    label = 'Select a variable:',
-                    c('sleep', 'Exercise', 'therapy'
+                    label = 'Select a Behavior:',
+                    # these behaviors are just place holders
+                    c('Sleep', 'Exercise', 'Therapy', 'Substance Use',
+                      'Athletics', 'Greek Life'
                     )
                   ),
                 )
               ),
-              fluidRow(box(width = 12, "note explaining how to interpret the graph"))
+              fluidRow(box(width = 12, 
+                           "note explaining how to interpret the graph"))
       ),
       
       # Third tab content
@@ -337,7 +382,7 @@ ui <- dashboardPage(
             3,
             selectInput(
               inputId = 'Fdem1',
-              label = 'Select a demographic:',
+              label = 'Select a Demographic:',
               c('Race', 'Gender', 'Class Year')
             ),
             br(),
@@ -362,15 +407,16 @@ ui <- dashboardPage(
             3,
             selectInput(
               inputId = 'Fplot2',
-              label = 'Select a demographic:',
+              label = 'Select a Demographic:',
               c('Race', 'Gender', 'Class Year')
               
             ),
             br(),
             selectInput(
               inputId = 'variable',
-              label = 'Select a Variable:',
-              choices = c('sleep', 'exercise', 'counseling')
+              label = 'Select a Behavior:',
+              choices = c('Sleep', 'Exercise', 'Therapy', 'Substance Use',
+                          'Athletics', 'Greek Life')
             )
           )
         ),
@@ -522,9 +568,15 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     # Changing the names of the questions to the actual questions
-    phq$name <- factor(phq$name, levels = c('phq9_1', 'phq9_2','phq9_3', 
-                                            'phq9_4', 'phq9_5', 'phq9_6', 
-                                            'phq9_7', 'phq9_8', 'phq9_9'), 
+    phq$name <- factor(phq$name, levels = c('Depression Question 1', 
+                                            'Depression Question 2',
+                                            'Depression Question 3', 
+                                            'Depression Question 4', 
+                                            'Depression Question 5', 
+                                            'Depression Question 6', 
+                                            'Depression Question 7', 
+                                            'Depression Question 8', 
+                                            'Depression Question 9'), 
                        labels = c(
                          "Little interest or pleasure in doing things", 
                          "Feeling down, depressed or hopeless",
@@ -543,7 +595,6 @@ server <- function(input, output){
                                    'Several days',
                                    'More than\n half the days',
                                    'Nearly every day'))
-    
     ggplot(data = phq,
            aes(
              x = value,
@@ -556,8 +607,9 @@ server <- function(input, output){
       theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
       labs(title = phq$name,
            x = 'Response',
-           y = 'Percent of Students')
-  }, width = 670)
+           y = 'Percent of Students') +
+      scale_fill_brewer(palette = 'Paired')
+  }, width = 'auto')
   
   
   ####################
@@ -578,9 +630,13 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     # Changing the names of the questions to the actual questions
-    gad$name <- factor(gad$name, levels = c('gad7_1', 'gad7_2','gad7_3',
-                                            'gad7_4', 'gad7_5', 'gad7_6',
-                                            'gad7_7'), 
+    gad$name <- factor(gad$name, levels = c('Anxiety Question 1', 
+                                            'Anxiety Question 2',
+                                            'Anxiety Question 3',
+                                            'Anxiety Question 4', 
+                                            'Anxiety Question 5', 
+                                            'Anxiety Question 6',
+                                            'Anxiety Question 7'), 
                        labels = c(
                          "Feeling nervous, anxious or on edge", 
                          "Not being able to stop or control worrying",
@@ -611,8 +667,9 @@ server <- function(input, output){
       theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
       labs(title = gad$name,
            x = 'Response',
-           y = 'Percent of Students')
-  }, width = 670)
+           y = 'Percent of Students') +
+      scale_fill_brewer(palette = 'Paired')
+  }, width = 'auto')
   
   
   # output$phqDesc <- renderText({
@@ -631,20 +688,21 @@ server <- function(input, output){
   #########################
   output$mentalIllness_1 <- renderPlot({
     ment <- HMS %>% 
-      group_by(schoolYear) %>% 
+      group_by(`School Year`) %>% 
       tally(name = "totalYear")
     
     
     # filter for those who have at least one mental illness and count them
     ment2 <- HMS %>% 
-      filter(dx_dep ==1 | dx_bip ==1 | dx_anx ==1| dx_ocd ==1| dx_trauma ==1|
+      filter(`Diagnosed Depression` ==1 | dx_bip ==1 | `Diagnosed Anxiety` ==1| dx_ocd ==1| dx_trauma ==1|
                dx_neurodev ==1 | dx_ea==1) %>% 
-      group_by(schoolYear, gender, classYear, race, international, LGBTQ ) %>% 
+      group_by(`School Year`, Gender, `Class Year`, 
+               Race, International, `LGBTQ+`) %>% 
       tally(name = "totalDep")
     
     
     # join both datasets
-    mental_illness <- left_join(ment, ment2, by = 'schoolYear')
+    mental_illness <- left_join(ment, ment2, by = 'School Year')
     
     
     # let's find the percent of people who have a mental illness each year
@@ -653,12 +711,16 @@ server <- function(input, output){
     
     
     # lets plot!
-    ggplot(mental_illness, aes(x = schoolYear, y = percent, fill = !!input$ment1_dem))+
+    ggplot(mental_illness, aes(x = `School Year`, 
+                               y = percent, 
+                               fill = !!input$ment1_dem))+
       geom_col()+
-      scale_y_continuous(n.breaks = 10)+
-      labs(title = "Percentage of students who reported having a mental illness by class year",
-           subtitle = "2017 - 2021")
-  })
+      ylim(c(0,100))+
+      labs(title = 
+             paste("Percentage of students who reported having a mental illness by", input$ment1_dem),
+           subtitle = "2017 - 2021") +
+      scale_fill_brewer(palette = 'Paired')
+  }, width = 'auto')
   
   #########################
   # mental Illness plot 4 #
@@ -678,12 +740,16 @@ server <- function(input, output){
     
     
     # lets plot
-    ggplot(data = impairment, aes(x = aca_impa, y = percent))+
+    ggplot(data = impairment, aes(x = aca_impa, y = percent, 
+                                  fill = as.character(aca_impa)))+
       geom_col()+
       ylim(0,100)+
-      labs(title = "Academic impairment and illness",
-           y = 'percent of students ill')
-  })
+      labs(title = paste("Academic Impairment and", input$ment4_vars),
+           y = 'Percent of Students',
+           x = 'Academic Impairment') +
+      scale_fill_brewer(palette = 'Paired') +
+      theme(legend.position = 'none')
+  }, width = 'auto')
   
 }
 

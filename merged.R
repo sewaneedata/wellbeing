@@ -442,6 +442,8 @@ ids <- combined %>%
 # Merging the field columns (losing data from those with no fields entered)
 race <- combined %>% 
   select(responseid, race_black:race_other) %>%
+  rename(White = race_white, Black = race_black, Asian = race_asian,
+         Hispanic = race_his, Other = race_other) %>% 
   pivot_longer(!responseid) %>%
   drop_na(value) %>%
   group_by(responseid) %>%

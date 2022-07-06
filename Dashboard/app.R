@@ -74,6 +74,9 @@ phqQues <- HMS %>%
 gadQues <- HMS %>% 
   select(gad7_1:gad7_7)
 
+ment4_variables <- HMS %>% 
+  select(dx_dep, dx_anx,lone_isolated, lone_lackcompanion, lone_leftout)
+
 demographics <- HMS %>%
   select('race', 'gender', 'international', 'classYear', 'schoolYear', 'LGBTQ')
 
@@ -215,15 +218,15 @@ ui <- dashboardPage(
               fluidRow(
                 
                 box(
-                  width = 9, plotOutput("plot1")
+                  width = 9, plotOutput("mentalIllness_1")
                 ),
                 
                 # select demographics for first plot
                 box(
                   width = 3,
-                  selectInput(inputId = 'dem1',
-                              label = 'Select a demographic:',
-                              c('Race', 'Gender', 'Class Year')
+                  varSelectInput(inputId = 'ment1_dem',
+                                 label = 'Select a demographic:',
+                                 data = demographics
                   )
                 )
               ),
@@ -287,13 +290,13 @@ ui <- dashboardPage(
                 column(12, 'Graph on Overall % illness (anx,dep,lone)')
               ),
               fluidRow(
-                box(width = 9, plotOutput("plot4")),
+                box(width = 9, plotOutput("mentalIllness_4")),
                 column(
                   3,
-                  selectInput(
-                    inputId = 'illness',
+                  varSelectInput(
+                    inputId = 'ment4_vars',
                     label = 'Select an illness:',
-                    c('Anx', 'Dep', 'Loneliness')
+                    data = ment4_variables
                   ),
                 )
               ),
@@ -502,7 +505,10 @@ server <- function(input, output){
   ################################### plots ##################################### 
   ###############################################################################
   
-  # phq depression plot
+  ######################
+  # phq depression plot#
+  ######################
+  
   output$phqPlot <- renderPlot({
     phq <- HMS %>%
       select(!!input$phqdem, !!input$phqQ) %>%
@@ -554,8 +560,10 @@ server <- function(input, output){
   }, width = 670)
   
   
+  ####################
+  # demographics plot#
+  ####################
   
-  # demographics plot
   output$gadPlot <- renderPlot({
     
     gad <- HMS %>%
@@ -616,6 +624,66 @@ server <- function(input, output){
   #                  classYear = 'interpretation',
   #                  schoolYear = 'interpretation')
   # })
+  
+  
+  #########################
+  # mental Illness plot 1 #
+  #########################
+  output$mentalIllness_1 <- renderPlot({
+    ment <- HMS %>% 
+      group_by(schoolYear) %>% 
+      tally(name = "totalYear")
+    
+    
+    # filter for those who have at least one mental illness and count them
+    ment2 <- HMS %>% 
+      filter(dx_dep ==1 | dx_bip ==1 | dx_anx ==1| dx_ocd ==1| dx_trauma ==1|
+               dx_neurodev ==1 | dx_ea==1) %>% 
+      group_by(schoolYear, gender, classYear, race, international, LGBTQ ) %>% 
+      tally(name = "totalDep")
+    
+    
+    # join both datasets
+    mental_illness <- left_join(ment, ment2, by = 'schoolYear')
+    
+    
+    # let's find the percent of people who have a mental illness each year
+    mental_illness <- mental_illness %>% 
+      mutate(percent = ( (totalDep)/(totalYear) * 100 ))
+    
+    
+    # lets plot!
+    ggplot(mental_illness, aes(x = schoolYear, y = percent, fill = !!input$ment1_dem))+
+      geom_col()+
+      scale_y_continuous(n.breaks = 10)+
+      labs(title = "Percentage of students who reported having a mental illness by class year",
+           subtitle = "2017 - 2021")
+  })
+  
+  #########################
+  # mental Illness plot 4 #
+  #########################
+  output$mentalIllness_4 <- renderPlot({
+    impairment <- HMS %>%
+      filter(!!input$ment4_vars == 1 | is.na(!!input$ment4_vars)) %>%
+      group_by(!!input$ment4_vars, aca_impa) %>%
+      tally(name = 'totalIll') %>% 
+      mutate(total = sum(totalIll),
+             percent = ( (totalIll)/(total) * 100 ) )
+    
+    
+    # clean our new df, remove NA's and 'the whole' of percentage
+    impairment <- impairment %>% 
+      filter(!!input$ment4_vars ==1 & !is.na(aca_impa))
+    
+    
+    # lets plot
+    ggplot(data = impairment, aes(x = aca_impa, y = percent))+
+      geom_col()+
+      ylim(0,100)+
+      labs(title = "Academic impairment and illness",
+           y = 'percent of students ill')
+  })
   
 }
 

@@ -37,6 +37,8 @@ HMS <- HMS %>%
 HMS$International <- factor(HMS$International, levels = c(0,1),
                             labels = c('No', 'Yes'))
 
+
+# changing the academic impairment values from numerical to characters
 HMS$aca_impa <- factor(HMS$aca_impa, levels = c(1, 2, 3, 4),
                        labels = c('None', '1 to 2 Days', 
                                   '3 to 5 Days', '6 or more Days'))
@@ -79,6 +81,25 @@ HMS$`Class Year` <- factor(HMS$`Class Year`,
                            labels = c('1st Year', "2nd Year",
                                       '3rd Year', '4th Year',
                                       '5th Year'))
+
+# create a column of diener scores         
+HMS <- HMS %>% 
+  mutate(diener_status= 
+           case_when(diener_score>30~'Highly Satisfied',
+                     diener_score>25~'Satisfied',
+                     diener_score>20~'Generally Satisfied',
+                     diener_score>15~'Slightly Dissatisfied',
+                     diener_score>10~'Dissatisfied',
+                     diener_score>5~'Extremely Dissatisfied',
+           )) %>%
+  mutate( diener_status = factor( diener_status, levels = 
+                                    c('Extremely Dissatisfied',
+                                      'Dissatisfied',
+                                      'Slightly Dissatisfied',
+                                      'Generally Satisfied',
+                                      'Satisfied',
+                                      'Highly Satisfied'
+  )))
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -380,16 +401,11 @@ ui <- dashboardPage(
           ),
           column(
             3,
-            selectInput(
+            varSelectInput(
               inputId = 'Fdem1',
               label = 'Select a Demographic:',
-              c('Race', 'Gender', 'Class Year')
-            ),
-            br(),
-            selectInput(
-              inputId = 'dienerQ',
-              label = 'select a diener question',
-              choices = c(1, 2, 3)
+              demographics,
+              selected = 'School Year'
             )
           )
         ),
@@ -751,6 +767,32 @@ server <- function(input, output){
       theme(legend.position = 'none')
   }, width = 'auto')
   
+  
+  ###########################################################################
+  ############################Well-being Plot 1##############################
+  ###########################################################################
+  
+  output$Fplot1 <- renderPlot({
+    #Create an object with the percentage of students that were highly satisfied 
+    dienerpercent<- HMS%>% 
+      filter(!is.na(diener_status)) %>% 
+      group_by(!!input$Fdem1, diener_status) %>% 
+      tally() %>% 
+      ungroup() %>% 
+      mutate( total = sum(n)) %>% 
+      mutate(percent = (n/total)*100)
+    
+    ###PLOT 1:the students'flourishing score#####
+    ggplot(data = dienerpercent)+
+      geom_col(aes(x = diener_status, y = percent,
+                   fill = !!input$Fdem1))+
+      ylim(c(0, 100)) +
+      coord_flip()+
+      labs(title = 'Overall Life Satisfaction for Students',
+           y='Percentage of Students',
+           x='Status') +
+      scale_fill_brewer(palette = 'Paired')
+  }, width = 'auto')
 }
 
 shinyApp(ui, server)

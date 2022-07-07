@@ -99,7 +99,7 @@ HMS <- HMS %>%
                                       'Generally Satisfied',
                                       'Satisfied',
                                       'Highly Satisfied'
-  )))
+                                    )))
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -134,6 +134,13 @@ gadQues <- HMS %>%
 ment4_variables <- HMS %>% 
   select(`Diagnosed Depression`, `Diagnosed Anxiety`,
          `Feeling Isolated`, `Lacking Companionship`, `Feeling Leftout`)
+
+flourishing_varibales <- HMS %>% 
+  select(  diener_score, exerc, ther_ever, ther_help, ther_helped_me, smok_freq,
+           smok_vape,binge_fr_f, binge_fr_m,binge_fr_o, activ_fs, activ_athc, 
+           activ_athi,sleep_wk1, sleep_wk2, sleep_wd1, sleep_wd2,activ_cu,
+           activ_art,drug_mar, drug_coc, drug_stim, drug_other,drug_none, 
+           drug_her)
 
 demographics <- HMS %>%
   select('Race', 'Gender', 'International', 
@@ -421,18 +428,16 @@ ui <- dashboardPage(
           ),
           column(
             3,
-            selectInput(
-              inputId = 'Fplot2',
+            varSelectInput(
+              inputId = 'Fplot2_dem',
               label = 'Select a Demographic:',
-              c('Race', 'Gender', 'Class Year')
-              
+              demographics
             ),
             br(),
-            selectInput(
-              inputId = 'variable',
+            varSelectInput(
+              inputId = 'Fplot2_var',
               label = 'Select a Behavior:',
-              choices = c('Sleep', 'Exercise', 'Therapy', 'Substance Use',
-                          'Athletics', 'Greek Life')
+              data = flourishing_varibales
             )
           )
         ),
@@ -710,8 +715,8 @@ server <- function(input, output){
     
     # filter for those who have at least one mental illness and count them
     ment2 <- HMS %>% 
-      filter(`Diagnosed Depression` ==1 | dx_bip ==1 | `Diagnosed Anxiety` ==1| dx_ocd ==1| dx_trauma ==1|
-               dx_neurodev ==1 | dx_ea==1) %>% 
+      filter(`Diagnosed Depression` ==1 | dx_bip ==1 | `Diagnosed Anxiety` ==1|
+               dx_ocd ==1| dx_trauma ==1|dx_neurodev ==1 | dx_ea==1) %>% 
       group_by(`School Year`, Gender, `Class Year`, 
                Race, International, `LGBTQ+`) %>% 
       tally(name = "totalDep")
@@ -769,7 +774,7 @@ server <- function(input, output){
   
   
   ###########################################################################
-  ############################Well-being Plot 1##############################
+  ########################### Well-being Plot 1 #############################
   ###########################################################################
   
   output$Fplot1 <- renderPlot({
@@ -793,6 +798,56 @@ server <- function(input, output){
            x='Status') +
       scale_fill_brewer(palette = 'Paired')
   }, width = 'auto')
+  
+  ###########################################################################
+  ########################### Well-being Plot 2 #############################
+  ###########################################################################
+  
+  output$Fplot2 <- renderPlot({
+    
+    # what can we learn more about people who are considered 'flourishing' vs not
+    
+    # select variables 
+    action_flourish <- HMS %>% 
+      select( `School Year`, Race, Gender,`Class Year`, diener_score,
+              exerc, ther_ever, ther_help, ther_helped_me, smok_freq, smok_vape,
+              binge_fr_f, binge_fr_m,binge_fr_o, activ_fs, activ_athc, activ_athi,
+              sleep_wk1, sleep_wk2, sleep_wd1, sleep_wd2,activ_cu, activ_art,
+              International, `LGBTQ+`, drug_mar, drug_coc, drug_stim, drug_other, 
+              drug_none, drug_her)
+    
+    # create a new 'hours of sleep column'
+    # account for extraneous sleep outliers by making them NA
+    action_flourish <- action_flourish %>%
+      mutate(hrs_sleep_wkday = (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
+      mutate(hrs_sleep_wkend = (as.numeric(sleep_wd2) - as.numeric(sleep_wd1)))%>%
+      mutate(hours_of_sleep = ((hrs_sleep_wkend + hrs_sleep_wkday) / 2),na.rm=T)%>%
+      mutate(hours_of_sleep = 
+               ifelse(hours_of_sleep< 4 | hours_of_sleep > 13,NA,hours_of_sleep)
+      )
+    
+    # define flourishing and mark respondents
+    # 8 questions, scale of 1-7. 90th percentile: >= 50
+    # note: we can subset flourishing by more ranges
+    action_flourish <- action_flourish %>% 
+      mutate(flourish_status = case_when(diener_score >= 50 ~ "Flourishing",
+                                         TRUE ~ "Not flourishing"))
+    
+    # find percent of people who flourish vs not, grouped by selected variables
+    action_flourish <- action_flourish %>% 
+      group_by(flourish_status, !!input$Fplot2_var) %>% 
+      tally() %>% 
+      ungroup() %>% 
+      mutate(total = sum(n),
+             percent = (n)/(total) * 100) %>% 
+      view()
+    
+    
+    ggplot(data = action_flourish)+
+      geom_col(aes(x = !!input$Fplot2_var,
+                   y = percent,
+                   fill = flourish_status))
+    })
+  
 }
-
 shinyApp(ui, server)

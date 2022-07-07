@@ -37,6 +37,30 @@ HMS <- HMS %>%
 HMS$International <- factor(HMS$International, levels = c(0,1),
                             labels = c('No', 'Yes'))
 
+# changing the values of the activ columns from 'NA' and 1 to 0 and 1
+HMS <- HMS %>% 
+  mutate(activ_athv = ifelse(is.na(activ_athv), 0, activ_athv)) %>% 
+  mutate(activ_fs = ifelse(is.na(activ_fs), 0, activ_fs)) 
+
+# changing the following column values from numerical values to their 
+# character respective values
+HMS$activ_athv <- factor(HMS$activ_athv, levels = c(0, 1),
+                         labels = c('No', 'Yes'))
+
+HMS$activ_fs <- factor(HMS$activ_fs, levels = c(0, 1),
+                       labels = c('No', 'Yes'))
+
+HMS$alc_any <- factor(HMS$alc_any, levels = c(0, 1),
+                      labels = c('Yes', 'No'))
+
+HMS$smok_freq <- factor(HMS$smok_freq, levels = c(1, 2, 3, 4, 5),
+                        labels = c('0 cigarettes', 'Less than 1 cigarette',
+                                   '1 to 5 cigarettes', 'About one-half pack',
+                                   '1 or more packs'))
+
+HMS$smok_vape <- factor(HMS$smok_vape, levels = c(1, 2),
+                        labels = c('Yes', 'No'))
+
 
 # changing the academic impairment values from numerical to characters
 HMS$aca_impa <- factor(HMS$aca_impa, levels = c(1, 2, 3, 4),
@@ -100,6 +124,37 @@ HMS <- HMS %>%
                                       'Satisfied',
                                       'Highly Satisfied'
                                     )))
+# creating a new binge column in HMS
+binge <- HMS %>% 
+  select(responseid, binge_fr_f:binge_fr_o) %>% 
+  pivot_longer(!responseid) %>%  
+  filter(!is.na(value)) %>% 
+  group_by(responseid) %>% 
+  mutate(binge = value) %>%  
+  distinct(responseid, binge)
+
+HMS <- HMS %>% 
+  left_join(binge, by = "responseid")
+
+# creating a drug use column in HMS
+drug <- HMS %>% 
+  select(responseid, drug_mar:drug_other) %>% 
+  pivot_longer(!responseid) %>%  
+  filter(!is.na(value)) %>% 
+  group_by(responseid) %>% 
+  mutate(drug = value) %>%  
+  distinct(responseid, drug)
+
+HMS <- HMS %>% 
+  left_join(drug, by = "responseid") %>% 
+  mutate(drug = ifelse(is.na(drug), 0, drug))
+
+HMS$drug <- factor(HMS$drug, levels = c(0, 1),
+                   labels = c('No', 'Yes'))
+
+behaviors <- HMS %>% 
+  select('sleep_wd1', 'exerc', 'alc_any', 'ther_ever', 'activ_athv', 
+         "activ_fs", 'binge', 'smok_freq', 'smok_vape', 'drug')
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -380,14 +435,11 @@ ui <- dashboardPage(
               fluidRow(
                 box(width = 9, plotOutput("plot5")),
                 column(
-                  3, selectInput(
-                    inputId = 'problem',
+                  3, varSelectInput(
+                    inputId = 'behaviors',
                     label = 'Select a Behavior:',
-                    # these behaviors are just place holders
-                    c('Sleep', 'Exercise', 'Therapy', 'Substance Use',
-                      'Athletics', 'Greek Life'
-                    )
-                  ),
+                    data = behaviors
+                  )
                 )
               ),
               fluidRow(box(width = 12, 
@@ -411,7 +463,7 @@ ui <- dashboardPage(
             varSelectInput(
               inputId = 'Fdem1',
               label = 'Select a Demographic:',
-              demographics,
+              data = demographics,
               selected = 'School Year'
             )
           )
@@ -431,13 +483,13 @@ ui <- dashboardPage(
             varSelectInput(
               inputId = 'Fplot2_dem',
               label = 'Select a Demographic:',
-              demographics
+              data = demographics
             ),
             br(),
             varSelectInput(
               inputId = 'Fplot2_var',
               label = 'Select a Behavior:',
-              data = flourishing_varibales
+              data = behaviors
             )
           )
         ),
@@ -773,6 +825,48 @@ server <- function(input, output){
   }, width = 'auto')
   
   
+  ########################################
+  ########Mental Illness Plot 5###########
+  ########################################
+  
+  output$plot5 <- renderPlot({
+    MI <- HMS %>% 
+      select(responseid, `Diagnosed Depression`:dx_ea) %>% 
+      pivot_longer(!responseid) %>% 
+      drop_na(value) %>% 
+      filter(value == 1) %>% 
+      group_by(responseid) %>% 
+      mutate(mentalIllness = 1) %>% 
+      select(responseid, mentalIllness) %>% 
+      distinct(responseid, mentalIllness)
+    
+    HMS <- HMS %>% 
+      left_join(MI, by = "responseid") %>% 
+      mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
+    
+    HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
+                                labels = c('No', 'Yes'))
+    
+    MIPercent <- HMS %>% 
+      select(!!input$behaviors, mentalIllness) %>%
+      filter(!is.na(!!input$behaviors)) %>% 
+      group_by(!!input$behaviors, mentalIllness) %>% 
+      mutate(numerator = n()) %>%
+      ungroup() %>%  
+      mutate(denominator = n()) %>% 
+      mutate(percent = (numerator/denominator)*100)
+    
+    ggplot(data = MIPercent, 
+           aes(x = !!input$behaviors, 
+               y = percent, 
+               fill = mentalIllness)) +
+      geom_col(position = 'dodge')+
+      ylim(c(0,100))+
+      labs(title = 'Percent of Student Behaviors by Mental Illness Status')
+    
+  }, width = 'auto')
+  
+  
   ###########################################################################
   ########################### Well-being Plot 1 #############################
   ###########################################################################
@@ -839,9 +933,8 @@ server <- function(input, output){
       tally() %>% 
       ungroup() %>% 
       mutate(total = sum(n),
-             percent = (n)/(total) * 100) %>% 
-      view()
-    
+             percent = (n)/(total) * 100) 
+
     
     ggplot(data = action_flourish)+
       geom_col(aes(x = !!input$Fplot2_var,

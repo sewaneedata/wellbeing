@@ -134,12 +134,12 @@ HMS$`Therapy Use` <- factor(HMS$`Therapy Use`, levels = c(1, 2, 3, 4),
 # create a column of diener scores         
 HMS <- HMS %>% 
   mutate(diener_status= 
-           case_when(diener_score>30~'Highly Satisfied',
-                     diener_score>25~'Satisfied',
-                     diener_score>20~'Generally Satisfied',
-                     diener_score>15~'Slightly Dissatisfied',
-                     diener_score>10~'Dissatisfied',
-                     diener_score>5~'Extremely Dissatisfied',
+           case_when(diener_score>49~'Highly Satisfied',
+                     diener_score>42~'Satisfied',
+                     diener_score>35~'Generally Satisfied',
+                     diener_score>28~'Slightly Dissatisfied',
+                     diener_score>21~'Dissatisfied',
+                     diener_score>7~'Extremely Dissatisfied',
            )) %>%
   mutate( diener_status = factor( diener_status, levels = 
                                     c('Extremely Dissatisfied',
@@ -1042,10 +1042,10 @@ importantto me',
       ) %>% filter(!is.na(hours_of_sleep))
     
     # define flourishing and mark respondents
-    # 8 questions, scale of 1-7. 90th percentile: >= 50
+    # 8 questions, scale of 1-7. 90th percentile: >= 49
     # note: we can subset flourishing by more ranges
     action_flourish <- action_flourish %>% 
-      mutate(flourish_status = case_when(diener_score >= 50 ~ "Flourishing",
+      mutate(flourish_status = case_when(diener_score >= 49 ~ "Flourishing",
                                          TRUE ~ "Not flourishing"))
     
     # find percent of people who flourish vs not, grouped by selected variables

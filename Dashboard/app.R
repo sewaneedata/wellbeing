@@ -374,7 +374,7 @@ ui <- dashboardPage(
               fluidRow(
                 
                 box(
-                  width = 9, plotOutput("mentalIllness_1")
+                  width = 9, plotlyOutput("mentalIllness_1", width = 'auto')
                 ),
                 
                 # select demographics for first plot
@@ -450,7 +450,8 @@ ui <- dashboardPage(
                        Anxiety, Depression, and Loneliness')
               ),
               fluidRow(
-                box(width = 9, plotOutput("mentalIllness_4")),
+                box(width = 9, plotlyOutput("mentalIllness_4", 
+                                            width = 'auto')),
                 column(
                   3,
                   varSelectInput(
@@ -468,12 +469,17 @@ ui <- dashboardPage(
                 column(12, 'Graph on Overall ever % illness')
               ),
               fluidRow(
-                box(width = 9, plotOutput("plot5")),
+                box(width = 9, plotlyOutput("plot5", width = 'auto')),
                 column(
                   3, varSelectInput(
                     inputId = 'behaviors',
                     label = 'Select a Behavior:',
                     data = behaviors
+                  ),
+                  varSelectInput(
+                    inputId = 'MIdem',
+                    label = 'Select a Demographic:',
+                    data = demographics
                   )
                 )
               ),
@@ -491,7 +497,7 @@ ui <- dashboardPage(
         ),
         fluidRow(
           box(
-            width = 9, plotOutput("Fplot1")
+            width = 9, plotlyOutput("Fplot1", width = 'auto')
           ),
           column(
             3,
@@ -529,7 +535,7 @@ ui <- dashboardPage(
         ),
         fluidRow(
           box(
-            width = 9, plotOutput("Fplot2")
+            width = 9, plotlyOutput("Fplot2", width = 'auto')
           ),
           column(
             3,
@@ -814,7 +820,7 @@ server <- function(input, output){
   #########################
   # mental Illness plot 1 #
   #########################
-  output$mentalIllness_1 <- renderPlot({
+  output$mentalIllness_1 <- renderPlotly({
     ment <- HMS %>% 
       group_by(`School Year`) %>% 
       tally(name = "totalYear")
@@ -839,6 +845,7 @@ server <- function(input, output){
     
     
     # lets plot!
+    ggplotly(
     ggplot(mental_illness, aes(x = `School Year`, 
                                y = percent, 
                                fill = !!input$ment1_dem))+
@@ -847,13 +854,14 @@ server <- function(input, output){
       labs(title = 
              paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
            subtitle = "2017 - 2021") +
-      scale_fill_manual(values = cbPalette)
-  }, width = 'auto')
+      scale_fill_manual(values = cbPalette) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
   
   #########################
   # mental Illness plot 4 #
   #########################
-  output$mentalIllness_4 <- renderPlot({
+  output$mentalIllness_4 <- renderPlotly({
     impairment <- HMS %>%
       filter(!!input$ment4_vars == 1 | is.na(!!input$ment4_vars)) %>%
       group_by(!!input$ment4_vars, aca_impa) %>%
@@ -868,6 +876,7 @@ server <- function(input, output){
     
     
     # lets plot
+    ggplotly(
     ggplot(data = impairment, aes(x = aca_impa, y = percent, 
                                   fill = as.character(aca_impa)))+
       geom_col()+
@@ -876,15 +885,16 @@ server <- function(input, output){
            y = 'Percent of Students',
            x = 'Academic Impairment') +
       scale_fill_manual(values = cbPalette) +
-      theme(legend.position = 'none')
-  }, width = 'auto')
+      theme(legend.position = 'none') +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
   
   
   ########################################
   ########Mental Illness Plot 5###########
   ########################################
   
-  output$plot5 <- renderPlot({
+  output$plot5 <- renderPlotly({
     MI <- HMS %>% 
       select(responseid, `Diagnosed Depression`:dx_ea) %>% 
       pivot_longer(!responseid) %>% 
@@ -903,31 +913,34 @@ server <- function(input, output){
                                 labels = c('No', 'Yes'))
     
     MIPercent <- HMS %>% 
-      select(!!input$behaviors, mentalIllness) %>%
+      select(!!input$behaviors, !!input$MIdem, mentalIllness) %>%
       filter(!is.na(!!input$behaviors)) %>% 
-      group_by(!!input$behaviors, mentalIllness) %>% 
+      group_by(!!input$behaviors, !!input$MIdem, mentalIllness) %>% 
       mutate(numerator = n()) %>%
       ungroup() %>%  
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
+    ggplotly(
     ggplot(data = MIPercent, 
            aes(x = !!input$behaviors, 
                y = percent, 
-               fill = mentalIllness)) +
+               fill = !!input$MIdem)) +
       geom_col(position = 'dodge')+
       ylim(c(0,100))+
       labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
-      scale_fill_manual(values = cbPalette)
+      scale_fill_manual(values = cbPalette)+
+      facet_wrap(~mentalIllness) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
     
-  }, width = 'auto')
+  })
   
   
   ###########################################################################
   ########################### Well-being Plot 1 #############################
   ###########################################################################
   
-  output$Fplot1 <- renderPlot({
+  output$Fplot1 <- renderPlotly({
     #Create an object with the percentage of students that were highly satisfied 
     dienerpercent<- HMS%>% 
       filter(!is.na(diener_status)) %>% 
@@ -938,6 +951,7 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     ###PLOT 1:the students'flourishing score#####
+    ggplotly(
     ggplot(data = dienerpercent)+
       geom_col(aes(x = diener_status, y = percent,
                    fill = !!input$Fdem1))+
@@ -946,8 +960,9 @@ server <- function(input, output){
       labs(title = 'Overall Life Satisfaction for Students',
            y='Percentage of Students',
            x='Status') +
-      scale_fill_manual(values = cbPalette)
-  }, width = 'auto')
+      scale_fill_manual(values = cbPalette) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
   
   ###########################################################################
   ########################### diener plot by ? ##############################
@@ -1009,14 +1024,15 @@ importantto me',
       labs(title = flourishing$name ,
            x = 'Response',
            y = 'Percent of Students') +
-      scale_fill_manual(values = cbPalette)
+      scale_fill_manual(values = cbPalette) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
   }, width = 'auto')
   
   ###########################################################################
   ########################### Well-being Plot 2 #############################
   ###########################################################################
   
-  output$Fplot2 <- renderPlot({
+  output$Fplot2 <- renderPlotly({
     
     # what can we learn more about people who are considered 'flourishing' vs not
     
@@ -1051,23 +1067,26 @@ importantto me',
     # find percent of people who flourish vs not, grouped by selected variables
     action_flourish <- action_flourish %>% 
       filter(!is.na(!!input$Fplot2_var)) %>% 
-      group_by(flourish_status, !!input$Fplot2_var) %>% 
+      group_by(flourish_status, !!input$Fplot2_var, 
+               !!input$Fplot2_dem) %>% 
       tally() %>% 
       ungroup() %>% 
       mutate(total = sum(n),
              percent = (n)/(total) * 100) 
     
-    ggplot(data = action_flourish)+
-      geom_col(aes(x = !!input$Fplot2_var,
-                   y = percent,
-                   fill = flourish_status), 
-               position = 'dodge')+
-      ylim(c(0, 100)) +
-      labs(fill = 'Flourishing Status',
-           y = 'Percent of Students',
-           title = 'Percent of Student Behaviors by Flourishing Status')+
-      scale_fill_manual(values = cbPalette)
-    }, width = 'auto')
+    ggplotly(
+      ggplot(data = action_flourish)+
+        geom_col(aes(x = !!input$Fplot2_var,
+                     y = percent,
+                     fill = !!input$Fplot2_dem), 
+                 position = 'dodge')+
+        facet_wrap(~flourish_status) +
+        ylim(c(0, 100)) +
+        labs(y = 'Percent of Students',
+             title = 'Percent of Student Behaviors by Flourishing Status')+
+        scale_fill_manual(values = cbPalette) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+    })
   
 }
 shinyApp(ui, server)

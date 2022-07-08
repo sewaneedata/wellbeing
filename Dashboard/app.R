@@ -16,6 +16,11 @@ library(RColorBrewer)
 # source("../merged.R")
 HMS <- read_csv("../../HMSAll.csv")
 
+# color-blind palette:
+
+cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#CC79A7",
+               "#F0E442", "#0072B2","#999999", "#D55E00", "#000000")
+
 # Renaming column names so they look more official on the dashboard :)
 HMS <- HMS %>% 
   rename(Race = race, Gender = gender, International = international,
@@ -31,7 +36,15 @@ HMS <- HMS %>%
          `Diagnosed Depression` = dx_dep, `Diagnosed Anxiety` = dx_anx,
          `Feeling Isolated` = lone_isolated, 
          `Lacking Companionship` = lone_lackcompanion, 
-         `Feeling Leftout` = lone_leftout)
+         `Feeling Leftout` = lone_leftout, Exercise = exerc, 
+         `Alcohol Use` = alc_any, `Therapy Use` = ther_ever, 
+         `Varsity Athletics` = activ_athv, `Greek Life` = activ_fs,
+         `Smoking Frequency` = smok_freq, Vaping = smok_vape,
+         `Well-being Question 1` = diener1, `Well-being Question 2` = diener2,
+         `Well-being Question 3` = diener3, `Well-being Question 4` = diener4,
+         `Well-being Question 5` = diener5, `Well-being Question 6` = diener6,
+         `Well-being Question 7` = diener7, `Well-being Question 8` = diener8,
+         Sleep = sleep_wd1)
 
 # changing the international column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$International <- factor(HMS$International, levels = c(0,1),
@@ -39,26 +52,27 @@ HMS$International <- factor(HMS$International, levels = c(0,1),
 
 # changing the values of the activ columns from 'NA' and 1 to 0 and 1
 HMS <- HMS %>% 
-  mutate(activ_athv = ifelse(is.na(activ_athv), 0, activ_athv)) %>% 
-  mutate(activ_fs = ifelse(is.na(activ_fs), 0, activ_fs)) 
+  mutate(`Varsity Athletics` = ifelse(is.na(`Varsity Athletics`), 0, `Varsity Athletics`)) %>% 
+  mutate(`Greek Life` = ifelse(is.na(`Greek Life`), 0, `Greek Life`)) 
 
 # changing the following column values from numerical values to their 
 # character respective values
-HMS$activ_athv <- factor(HMS$activ_athv, levels = c(0, 1),
+HMS$`Varsity Athletics` <- factor(HMS$`Varsity Athletics`, levels = c(0, 1),
                          labels = c('No', 'Yes'))
 
-HMS$activ_fs <- factor(HMS$activ_fs, levels = c(0, 1),
+HMS$`Greek Life` <- factor(HMS$`Greek Life`, levels = c(0, 1),
                        labels = c('No', 'Yes'))
 
-HMS$alc_any <- factor(HMS$alc_any, levels = c(0, 1),
+HMS$`Alcohol Use` <- factor(HMS$`Alcohol Use`, levels = c(0, 1),
                       labels = c('Yes', 'No'))
 
-HMS$smok_freq <- factor(HMS$smok_freq, levels = c(1, 2, 3, 4, 5),
+HMS$`Smoking Frequency` <- factor(HMS$`Smoking Frequency`, 
+                                  levels = c(1, 2, 3, 4, 5),
                         labels = c('0 cigarettes', 'Less than 1 cigarette',
                                    '1 to 5 cigarettes', 'About one-half pack',
                                    '1 or more packs'))
 
-HMS$smok_vape <- factor(HMS$smok_vape, levels = c(1, 2),
+HMS$Vaping <- factor(HMS$Vaping, levels = c(1, 2),
                         labels = c('Yes', 'No'))
 
 
@@ -105,6 +119,17 @@ HMS$`Class Year` <- factor(HMS$`Class Year`,
                            labels = c('1st Year', "2nd Year",
                                       '3rd Year', '4th Year',
                                       '5th Year'))
+HMS$Exercise <- factor(HMS$Exercise, levels = c(1, 2, 3, 4, 5, 6),
+                       labels = c('Strongly Agree', 'Agree', 'Somewhat Agree',
+                                  'Somewhat Disagree', 'Disagree', '
+                                  Strongly Disagree'))
+HMS$`Therapy Use` <- factor(HMS$`Therapy Use`, levels = c(1, 2, 3, 4),
+                            labels = c('No, never',
+                            'Yes,\n prior to starting college',
+                            'Yes,\n since starting college', 
+                            'Yes,\n prior to college\n and since starting college)'))
+
+
 
 # create a column of diener scores         
 HMS <- HMS %>% 
@@ -136,6 +161,11 @@ binge <- HMS %>%
 HMS <- HMS %>% 
   left_join(binge, by = "responseid")
 
+# HMS$binge <- factor(HMS$binge, levels = C(1, 2, 3, 4, 5, 6, 7),
+#                     labels = c('None', 'Once', 'Twice', '3 to 5 times',
+#                                '6 to 9 times', '10 or more times', 
+#                                "Don't know"))
+
 # creating a drug use column in HMS
 drug <- HMS %>% 
   select(responseid, drug_mar:drug_other) %>% 
@@ -153,8 +183,9 @@ HMS$drug <- factor(HMS$drug, levels = c(0, 1),
                    labels = c('No', 'Yes'))
 
 behaviors <- HMS %>% 
-  select('sleep_wd1', 'exerc', 'alc_any', 'ther_ever', 'activ_athv', 
-         "activ_fs", 'binge', 'smok_freq', 'smok_vape', 'drug')
+  select('Sleep', 'Exercise', `Alcohol Use`, `Therapy Use`, 
+         `Varsity Athletics`, `Greek Life`, 'binge', 
+         `Smoking Frequency`, 'Vaping', 'drug')
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -179,6 +210,8 @@ phqQuestions <- c('Little interest or pleasure in doing things' =
                   'Thoughts that you would be better off dead or of hurting 
                   yourself in some way' = 
                     '`Depression Question 9`')
+flourQues <- HMS %>% 
+  select(`Well-being Question 1`: `Well-being Question 8`)
 
 phqQues <- HMS %>% 
   select(`Depression Question 1`:`Depression Question 9`)
@@ -191,9 +224,10 @@ ment4_variables <- HMS %>%
          `Feeling Isolated`, `Lacking Companionship`, `Feeling Leftout`)
 
 flourishing_varibales <- HMS %>% 
-  select(  diener_score, exerc, ther_ever, ther_help, ther_helped_me, smok_freq,
-           smok_vape,binge_fr_f, binge_fr_m,binge_fr_o, activ_fs, activ_athc, 
-           activ_athi,sleep_wk1, sleep_wk2, sleep_wd1, sleep_wd2,activ_cu,
+  select(  diener_score, Exercise, `Therapy Use`, 
+           ther_help, ther_helped_me, `Smoking Frequency`,
+           Vaping,binge_fr_f, binge_fr_m,binge_fr_o, `Greek Life`, activ_athc, 
+           activ_athi,sleep_wk1, sleep_wk2, Sleep, sleep_wd2,activ_cu,
            activ_art,drug_mar, drug_coc, drug_stim, drug_other,drug_none, 
            drug_her)
 
@@ -201,9 +235,9 @@ demographics <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `School Year`, `LGBTQ+`)
 
-################################################################################
-####################################### ui #####################################
-################################################################################
+###############################################################################
+###################################### ui #####################################
+###############################################################################
 ui <- dashboardPage(
   
   # title of dashboard
@@ -256,11 +290,11 @@ ui <- dashboardPage(
           "Sewanee has fostered some of the greatest academics and
                 so many flourish and thrive! But how? What can we learn
                 from those who are thriving? Over the past decade, the rate of
-                depression, anxiety and serious mental health crises has doubled
-                among college students, according to Daniel Eisenberg, a principal
-                investigator of the Healthy Minds Study: an annual survey of
-                thousands of students across the country (Hartocollis, New York
-                Times 2021)."
+                depression, anxiety and serious mental health crises has 
+                doubled among college students, according to Daniel Eisenberg,
+                a principal investigator of the Healthy Minds Study: an annual
+                survey of thousands of students across the country 
+                (Hartocollis, New York Times 2021)."
         ),
         br(),
         
@@ -269,10 +303,11 @@ ui <- dashboardPage(
           "For the past four years, Sewanee undergrad students have
                 been filling out the Healthy Minds Survey (HMS), a survey that
                 asks questions about mental health outcomes, knowledge and
-                attitudes about mental health and service utilization. The HMS is
-                used by a network of colleges and emphasizes understanding
-                help-seeking behavior, examining stigma, knowledge, and other
-                potential barriers to mental health service utilization."
+                attitudes about mental health and service utilization. 
+                The HMS is used by a network of colleges and emphasizes
+                understanding help-seeking behavior, examining stigma, 
+                knowledge, and other potential barriers to mental 
+                health service utilization."
         ),
         br(),
         
@@ -422,7 +457,7 @@ ui <- dashboardPage(
                     inputId = 'ment4_vars',
                     label = 'Select a Variable:',
                     data = ment4_variables
-                  ),
+                  )
                 )
               ),
               fluidRow(
@@ -472,6 +507,24 @@ ui <- dashboardPage(
           box(width = 12, "note explaining how to interpret the graph")
         ),
         fluidRow(
+          box(
+            width = 9, plotOutput('dienerplot')
+          ),
+          column(
+            3,
+            varSelectInput(inputId = "flourdem",
+                           label="Select a Demographic:",
+                           data=demographics,
+                           selected = 'School Year'
+            ),
+            br(),
+            varSelectInput(
+              inputId = 'flourq',
+              label = 'Select a Flourishing Question:',
+              data = flourQues
+            )
+          ),
+        fluidRow(
           column(12, 'Graph on Overall % of those who are flourishing')
         ),
         fluidRow(
@@ -496,6 +549,7 @@ ui <- dashboardPage(
         fluidRow(
           box(width = 12, "note explaining how to interpret the graph")
         )
+      )
       ),
       
       # Fifth tab content
@@ -614,15 +668,16 @@ ui <- dashboardPage(
   )
 )
 
+
 ################################################################################
 # server
 ################################################################################
 
 server <- function(input, output){
   
-  ###############################################################################
-  ################################### plots ##################################### 
-  ###############################################################################
+###############################################################################
+################################### plots ##################################### 
+###############################################################################
   
   ######################
   # phq depression plot#
@@ -681,12 +736,12 @@ server <- function(input, output){
       labs(title = phq$name,
            x = 'Response',
            y = 'Percent of Students') +
-      scale_fill_brewer(palette = 'Paired')
+      scale_fill_manual(values = cbPalette)
   }, width = 'auto')
   
   
   ####################
-  # demographics plot#
+  ### anxiety plot ###
   ####################
   
   output$gadPlot <- renderPlot({
@@ -741,7 +796,7 @@ server <- function(input, output){
       labs(title = gad$name,
            x = 'Response',
            y = 'Percent of Students') +
-      scale_fill_brewer(palette = 'Paired')
+      scale_fill_manual(values = cbPalette)
   }, width = 'auto')
   
   
@@ -792,7 +847,7 @@ server <- function(input, output){
       labs(title = 
              paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
            subtitle = "2017 - 2021") +
-      scale_fill_brewer(palette = 'Paired')
+      scale_fill_manual(values = cbPalette)
   }, width = 'auto')
   
   #########################
@@ -820,7 +875,7 @@ server <- function(input, output){
       labs(title = paste("Academic Impairment and", input$ment4_vars),
            y = 'Percent of Students',
            x = 'Academic Impairment') +
-      scale_fill_brewer(palette = 'Paired') +
+      scale_fill_manual(values = cbPalette) +
       theme(legend.position = 'none')
   }, width = 'auto')
   
@@ -862,7 +917,8 @@ server <- function(input, output){
                fill = mentalIllness)) +
       geom_col(position = 'dodge')+
       ylim(c(0,100))+
-      labs(title = 'Percent of Student Behaviors by Mental Illness Status')
+      labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
+      scale_fill_manual(values = cbPalette)
     
   }, width = 'auto')
   
@@ -890,7 +946,70 @@ server <- function(input, output){
       labs(title = 'Overall Life Satisfaction for Students',
            y='Percentage of Students',
            x='Status') +
-      scale_fill_brewer(palette = 'Paired')
+      scale_fill_manual(values = cbPalette)
+  }, width = 'auto')
+  
+  ###########################################################################
+  ########################### diener plot by ? ##############################
+  ###########################################################################  
+  output$dienerplot <- renderPlot({
+    #data frame
+    flourishing <- HMS %>%
+      select(!!input$flourdem, !!input$flourq) %>%
+      pivot_longer(!(!!input$flourdem)) %>%
+      drop_na(value) %>%
+      group_by(!!input$flourdem, name, value) %>%
+      tally() %>%
+      ungroup() %>%
+      group_by(!!input$flourdem, name) %>%
+      mutate(total = sum(n)) %>%
+      mutate(percent = (n/total)*100)
+    
+    # Changing the names of the questions to the actual questions
+    flourishing$name <- factor(flourishing$name, 
+                               levels = c('Well-being Question 1', 
+                                            'Well-being Question 2',
+                                            'Well-being Question 3', 
+                                            'Well-being Question 4', 
+                                            'Well-being Question 5', 
+                                            'Well-being Question 6', 
+                                            'Well-being Question 7', 
+                                            'Well-being Question 8'), 
+                       labels = c(
+                         "I lead a purposeful and meaningful life", 
+                         "My social relationships are supportive and rewarding",
+                         'I am engaged and interested in my daily activities',
+                         'I actively contribute to the happiness and well-being
+of others',
+                         'I am competent and capable in the activities that are
+importantto me',
+                         'I am a good person and live a good life',
+                         'I am optimistic about my future',
+                         'People respect me'))
+    
+    #plot
+    ggplot(data = flourishing,
+           aes(x = value,
+               y = percent/100,
+               fill = !!input$flourdem
+           )
+    ) +
+      geom_col(position = 'dodge') +
+      ylim(c(0,100)) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+      scale_x_continuous(breaks=seq(1,7,1),
+                         labels = c("Strongly Disagree",
+                                    "Disagree",
+                                    "Slightly Disagree",
+                                    "Mixed",
+                                    "Slightly Agree",
+                                    "Agree",
+                                    "Strongly Agree"))+
+      scale_y_continuous(labels = scales::percent)+
+      labs(title = flourishing$name ,
+           x = 'Response',
+           y = 'Percent of Students') +
+      scale_fill_manual(values = cbPalette)
   }, width = 'auto')
   
   ###########################################################################
@@ -904,21 +1023,23 @@ server <- function(input, output){
     # select variables 
     action_flourish <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
-              exerc, ther_ever, ther_help, ther_helped_me, smok_freq, smok_vape,
-              binge_fr_f, binge_fr_m,binge_fr_o, activ_fs, activ_athc, activ_athi,
-              sleep_wk1, sleep_wk2, sleep_wd1, sleep_wd2,activ_cu, activ_art,
-              International, `LGBTQ+`, drug_mar, drug_coc, drug_stim, drug_other, 
-              drug_none, drug_her)
+              Exercise, `Therapy Use`, ther_help, ther_helped_me, `Smoking Frequency`, 
+              Vaping, binge, `Greek Life`, `Varsity Athletics`, sleep_wk1, 
+              sleep_wk2, Sleep, sleep_wd2,International, `LGBTQ+`, 
+              drug, `Alcohol Use`)
     
     # create a new 'hours of sleep column'
     # account for extraneous sleep outliers by making them NA
     action_flourish <- action_flourish %>%
-      mutate(hrs_sleep_wkday = (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
-      mutate(hrs_sleep_wkend = (as.numeric(sleep_wd2) - as.numeric(sleep_wd1)))%>%
-      mutate(hours_of_sleep = ((hrs_sleep_wkend + hrs_sleep_wkday) / 2),na.rm=T)%>%
+      mutate(hrs_sleep_wkday = 
+               (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
+      mutate(hrs_sleep_wkend = 
+               (as.numeric(sleep_wd2) - as.numeric(Sleep)))%>%
+      mutate(hours_of_sleep = 
+               ((hrs_sleep_wkend + hrs_sleep_wkday) / 2))%>%
       mutate(hours_of_sleep = 
                ifelse(hours_of_sleep< 4 | hours_of_sleep > 13,NA,hours_of_sleep)
-      )
+      ) %>% filter(!is.na(hours_of_sleep))
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 50
@@ -929,18 +1050,24 @@ server <- function(input, output){
     
     # find percent of people who flourish vs not, grouped by selected variables
     action_flourish <- action_flourish %>% 
+      filter(!is.na(!!input$Fplot2_var)) %>% 
       group_by(flourish_status, !!input$Fplot2_var) %>% 
       tally() %>% 
       ungroup() %>% 
       mutate(total = sum(n),
              percent = (n)/(total) * 100) 
-
     
     ggplot(data = action_flourish)+
       geom_col(aes(x = !!input$Fplot2_var,
                    y = percent,
-                   fill = flourish_status))
-    })
+                   fill = flourish_status), 
+               position = 'dodge')+
+      ylim(c(0, 100)) +
+      labs(fill = 'Flourishing Status',
+           y = 'Percent of Students',
+           title = 'Percent of Student Behaviors by Flourishing Status')+
+      scale_fill_manual(values = cbPalette)
+    }, width = 'auto')
   
 }
 shinyApp(ui, server)

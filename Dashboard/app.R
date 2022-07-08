@@ -10,7 +10,7 @@ library(rlang)
 library(readr)
 library(tidyverse)
 library(RColorBrewer)
-
+library(plotly)
 
 # getting combined data
 # source("../merged.R")
@@ -58,22 +58,22 @@ HMS <- HMS %>%
 # changing the following column values from numerical values to their 
 # character respective values
 HMS$`Varsity Athletics` <- factor(HMS$`Varsity Athletics`, levels = c(0, 1),
-                         labels = c('No', 'Yes'))
+                                  labels = c('No', 'Yes'))
 
 HMS$`Greek Life` <- factor(HMS$`Greek Life`, levels = c(0, 1),
-                       labels = c('No', 'Yes'))
+                           labels = c('No', 'Yes'))
 
 HMS$`Alcohol Use` <- factor(HMS$`Alcohol Use`, levels = c(0, 1),
-                      labels = c('Yes', 'No'))
+                            labels = c('Yes', 'No'))
 
 HMS$`Smoking Frequency` <- factor(HMS$`Smoking Frequency`, 
                                   levels = c(1, 2, 3, 4, 5),
-                        labels = c('0 cigarettes', 'Less than 1 cigarette',
-                                   '1 to 5 cigarettes', 'About one-half pack',
-                                   '1 or more packs'))
+                                  labels = c('0 cigarettes', 'Less than 1 cigarette',
+                                             '1 to 5 cigarettes', 'About one-half pack',
+                                             '1 or more packs'))
 
 HMS$Vaping <- factor(HMS$Vaping, levels = c(1, 2),
-                        labels = c('Yes', 'No'))
+                     labels = c('Yes', 'No'))
 
 
 # changing the academic impairment values from numerical to characters
@@ -125,9 +125,9 @@ HMS$Exercise <- factor(HMS$Exercise, levels = c(1, 2, 3, 4, 5, 6),
                                   Strongly Disagree'))
 HMS$`Therapy Use` <- factor(HMS$`Therapy Use`, levels = c(1, 2, 3, 4),
                             labels = c('No, never',
-                            'Yes,\n prior to starting college',
-                            'Yes,\n since starting college', 
-                            'Yes,\n prior to college\n and since starting college)'))
+                                       'Yes,\n prior to starting college',
+                                       'Yes,\n since starting college', 
+                                       'Yes,\n prior to college\n and since starting college)'))
 
 
 
@@ -261,7 +261,7 @@ ui <- dashboardPage(
       ),
       
       menuItem(
-        "Student Well-being", tabName = "Well_being",
+        "Student Flourishing", tabName = "Well_being",
         icon = icon("leaf")
       ),
       
@@ -324,18 +324,21 @@ ui <- dashboardPage(
         ),
         br(),
         h4(
-          "Click around to learn more about how we Cracked the Code
-                 to Student Flourishing!!!"
+          "These graphs show the percentage of students that fit the selected 
+          criteria. This is a dataset of 1,375 survey respondents over 4 school 
+          years. Some demographics are grouped in “other” to protect the 
+          identities of survey respondents."
         ),
         br(),
         
         # trigger warning
         h4(
-          strong("WARNING"), ": Some of the graphs may contain potentially 
-          triggering information. If you’re unfamiliar with Sewanee’s 
-          Counseling and Psychological Services, call 931-598-1325."
+          strong("WARNING"), ": Some content may include references to
+          potentially triggering topics such as mental illness."
         ),
         br(),
+        h4("If you have any issues with accessibility, please contact Dr. 
+        Nicole Noffsinger-Frazier at nanoffsi@sewanee.edu"),
         
         # resources
         h3("Resources:"),
@@ -367,7 +370,8 @@ ui <- dashboardPage(
               
               # row for title of first graph
               fluidRow(
-                column(12, 'Mental Illness Rates by Demographics')
+                column(12, h4('Percentage of Respondents with a Clinically Diagnosed
+                Mental Illness since 2017') )
               ),
               
               # row for first graph
@@ -388,10 +392,14 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12, "note explaining how to interpret the graph")
+                box(width = 12, "Fig 1. Clinically diagnosed mental illness rates among
+                students have relatively remained the same since 2017 - around 
+                35%. We hypothesize that factors such as Covid-19 might account 
+                for the increase from 2019 onwards.")
               ),
               fluidRow(
-                column(12, 'Depression Question Rates by Demographic')
+                column(12, h4('Percentage of respondents’ answers to corresponding 
+                depression survey questions'))
               ),
               fluidRow(
                 box(width = 9,
@@ -420,7 +428,8 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                column(12, 'Anxiety Question Rates by Demographic')
+                column(12, h4("Percentage of respondents’ answers to corresponding
+                anxiety survey questions"))
               ),
               fluidRow(
                 box(width = 9, plotOutput("gadPlot")),
@@ -441,13 +450,14 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12, "note explaining how to interpret the graph")
+                box(width = 12,)
               ),
               hr(),
               h2('Correlations'),
               fluidRow(
-                column(12, 'Academic Impairment Rates of Students with 
-                       Anxiety, Depression, and Loneliness')
+                column(12, h4("Percentage of respondents who reported having 
+                days in which emotional or mental difficulties have affect 
+                academic performance"))
               ),
               fluidRow(
                 box(width = 9, plotlyOutput("mentalIllness_4", 
@@ -462,11 +472,13 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12, "note explaining how to interpret the graph")
+                box(width = 12, )
               ),
               br(),
               fluidRow(
-                column(12, 'Graph on Overall ever % illness')
+                column(12, h4("Percentage of respondents with a clinically
+                              diagnosed mental illness and their behavior 
+                              compared to others."))
               ),
               fluidRow(
                 box(width = 9, plotlyOutput("plot5", width = 'auto')),
@@ -483,8 +495,7 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(box(width = 12, 
-                           "note explaining how to interpret the graph"))
+              fluidRow(box(width = 12,))
       ),
       
       # Third tab content
@@ -493,7 +504,7 @@ ui <- dashboardPage(
         h2('Trends on Well-being'),
         hr(),
         fluidRow(
-          column(12, 'Graph on Overall % of flourishing')
+          column(12,h4("Percentage of students flourishing "))
         ),
         fluidRow(
           box(
@@ -510,7 +521,21 @@ ui <- dashboardPage(
           )
         ),
         fluidRow(
-          box(width = 12, "note explaining how to interpret the graph")
+          box(width = 12, 
+              "Fig 1. 60% of respondents describe themselves as either satisfied or highly 
+          satisfied. Their lives are not perfect, but they love their lives and 
+          feel that things are going very well",
+              br(),
+              br(),
+              em("Categories are derived from The Satisfaction With Life Scale (SWLS). 
+          The scale was developed as a way to assess an individual’s cognitive 
+          judgment of their satisfaction with their life as a whole.")
+          )
+        ),
+        hr(),
+        fluidRow(
+          column(12, h4("Percentage of respondents’ answers to corresponding 
+          positive mental health survey questions"))
         ),
         fluidRow(
           box(
@@ -530,32 +555,34 @@ ui <- dashboardPage(
               data = flourQues
             )
           ),
-        fluidRow(
-          column(12, 'Graph on Overall % of those who are flourishing')
-        ),
-        fluidRow(
-          box(
-            width = 9, plotlyOutput("Fplot2", width = 'auto')
+          fluidRow(
+            column(12, h4("Percentage of respondents considered flourishing and 
+                        their behavior compared to others."))
           ),
-          column(
-            3,
-            varSelectInput(
-              inputId = 'Fplot2_dem',
-              label = 'Select a Demographic:',
-              data = demographics
+          fluidRow(
+            box(
+              width = 9, plotlyOutput("Fplot2", width = 'auto')
             ),
-            br(),
-            varSelectInput(
-              inputId = 'Fplot2_var',
-              label = 'Select a Behavior:',
-              data = behaviors
+            column(
+              3,
+              varSelectInput(
+                inputId = 'Fplot2_dem',
+                label = 'Select a Demographic:',
+                data = demographics
+              ),
+              br(),
+              varSelectInput(
+                inputId = 'Fplot2_var',
+                label = 'Select a Behavior:',
+                data = behaviors
+              )
             )
+          ),
+          fluidRow(
+            box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
           )
-        ),
-        fluidRow(
-          box(width = 12, "note explaining how to interpret the graph")
         )
-      )
       ),
       
       # Fifth tab content
@@ -681,9 +708,9 @@ ui <- dashboardPage(
 
 server <- function(input, output){
   
-###############################################################################
-################################### plots ##################################### 
-###############################################################################
+  ###############################################################################
+  ################################### plots ##################################### 
+  ###############################################################################
   
   ######################
   # phq depression plot#
@@ -846,16 +873,16 @@ server <- function(input, output){
     
     # lets plot!
     ggplotly(
-    ggplot(mental_illness, aes(x = `School Year`, 
-                               y = percent, 
-                               fill = !!input$ment1_dem))+
-      geom_col()+
-      ylim(c(0,100))+
-      labs(title = 
-             paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
-           subtitle = "2017 - 2021") +
-      scale_fill_manual(values = cbPalette) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+      ggplot(mental_illness, aes(x = `School Year`, 
+                                 y = percent, 
+                                 fill = !!input$ment1_dem))+
+        geom_col()+
+        ylim(c(0,100))+
+        labs(title = 
+               paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
+             subtitle = "2017 - 2021") +
+        scale_fill_manual(values = cbPalette) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
   #########################
@@ -877,16 +904,16 @@ server <- function(input, output){
     
     # lets plot
     ggplotly(
-    ggplot(data = impairment, aes(x = aca_impa, y = percent, 
-                                  fill = as.character(aca_impa)))+
-      geom_col()+
-      ylim(0,100)+
-      labs(title = paste("Academic Impairment and", input$ment4_vars),
-           y = 'Percent of Students',
-           x = 'Academic Impairment') +
-      scale_fill_manual(values = cbPalette) +
-      theme(legend.position = 'none') +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+      ggplot(data = impairment, aes(x = aca_impa, y = percent, 
+                                    fill = as.character(aca_impa)))+
+        geom_col()+
+        ylim(0,100)+
+        labs(title = paste("Academic Impairment and", input$ment4_vars),
+             y = 'Percent of Students',
+             x = 'Academic Impairment') +
+        scale_fill_manual(values = cbPalette) +
+        theme(legend.position = 'none') +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
   
@@ -922,16 +949,16 @@ server <- function(input, output){
       mutate(percent = (numerator/denominator)*100)
     
     ggplotly(
-    ggplot(data = MIPercent, 
-           aes(x = !!input$behaviors, 
-               y = percent, 
-               fill = !!input$MIdem)) +
-      geom_col(position = 'dodge')+
-      ylim(c(0,100))+
-      labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
-      scale_fill_manual(values = cbPalette)+
-      facet_wrap(~mentalIllness) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+      ggplot(data = MIPercent, 
+             aes(x = !!input$behaviors, 
+                 y = percent, 
+                 fill = !!input$MIdem)) +
+        geom_col(position = 'dodge')+
+        ylim(c(0,100))+
+        labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
+        scale_fill_manual(values = cbPalette)+
+        facet_wrap(~mentalIllness) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
     
   })
   
@@ -952,16 +979,16 @@ server <- function(input, output){
     
     ###PLOT 1:the students'flourishing score#####
     ggplotly(
-    ggplot(data = dienerpercent)+
-      geom_col(aes(x = diener_status, y = percent,
-                   fill = !!input$Fdem1))+
-      ylim(c(0, 100)) +
-      coord_flip()+
-      labs(title = 'Overall Life Satisfaction for Students',
-           y='Percentage of Students',
-           x='Status') +
-      scale_fill_manual(values = cbPalette) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+      ggplot(data = dienerpercent)+
+        geom_col(aes(x = diener_status, y = percent,
+                     fill = !!input$Fdem1))+
+        ylim(c(0, 100)) +
+        coord_flip()+
+        labs(title = 'Overall Life Satisfaction for Students',
+             y='Percentage of Students',
+             x='Status') +
+        scale_fill_manual(values = cbPalette) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
   ###########################################################################
@@ -983,24 +1010,24 @@ server <- function(input, output){
     # Changing the names of the questions to the actual questions
     flourishing$name <- factor(flourishing$name, 
                                levels = c('Well-being Question 1', 
-                                            'Well-being Question 2',
-                                            'Well-being Question 3', 
-                                            'Well-being Question 4', 
-                                            'Well-being Question 5', 
-                                            'Well-being Question 6', 
-                                            'Well-being Question 7', 
-                                            'Well-being Question 8'), 
-                       labels = c(
-                         "I lead a purposeful and meaningful life", 
-                         "My social relationships are supportive and rewarding",
-                         'I am engaged and interested in my daily activities',
-                         'I actively contribute to the happiness and well-being
+                                          'Well-being Question 2',
+                                          'Well-being Question 3', 
+                                          'Well-being Question 4', 
+                                          'Well-being Question 5', 
+                                          'Well-being Question 6', 
+                                          'Well-being Question 7', 
+                                          'Well-being Question 8'), 
+                               labels = c(
+                                 "I lead a purposeful and meaningful life", 
+                                 "My social relationships are supportive and rewarding",
+                                 'I am engaged and interested in my daily activities',
+                                 'I actively contribute to the happiness and well-being
 of others',
-                         'I am competent and capable in the activities that are
+                                 'I am competent and capable in the activities that are
 importantto me',
-                         'I am a good person and live a good life',
-                         'I am optimistic about my future',
-                         'People respect me'))
+                                 'I am a good person and live a good life',
+                                 'I am optimistic about my future',
+                                 'People respect me'))
     
     #plot
     ggplot(data = flourishing,
@@ -1086,7 +1113,7 @@ importantto me',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
-    })
+  })
   
 }
 shinyApp(ui, server)

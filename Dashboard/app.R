@@ -108,6 +108,25 @@ HMS <- HMS %>%
                                        'Queer/Nonconforming',
                                        'Self Identified'))))
 
+# creating a mental Illness column in HMS using left_join
+
+MI <- HMS %>% 
+  select(responseid, `Diagnosed Depression`:dx_ea) %>% 
+  pivot_longer(!responseid) %>% 
+  drop_na(value) %>% 
+  filter(value == 1) %>% 
+  group_by(responseid) %>% 
+  mutate(mentalIllness = 1) %>% 
+  select(responseid, mentalIllness) %>% 
+  distinct(responseid, mentalIllness)
+
+HMS <- HMS %>% 
+  left_join(MI, by = "responseid") %>% 
+  mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
+
+HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
+                            labels = c('No', 'Yes'))
+
 # changing the LGBTQ column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$`LGBTQ+` <- factor(HMS$`LGBTQ+`, levels = c(0,1),
                        labels = c('No', 'Yes'))
@@ -235,6 +254,10 @@ flourishing_varibales <- HMS %>%
 demographics <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `School Year`, `LGBTQ+`)
+
+demographics1 <- HMS %>%
+  select('Race', 'Gender', 'International', 
+         `Class Year`, `LGBTQ+`)
 
 ###############################################################################
 ###################################### ui #####################################
@@ -387,8 +410,8 @@ ui <- dashboardPage(
                   width = 3,
                   varSelectInput(inputId = 'ment1_dem',
                                  label = 'Select a Demographic:',
-                                 data = demographics,
-                                 selected = 'School Year'
+                                 data = demographics1,
+                                 selected = 'Class Year'
                   )
                 )
               ),
@@ -412,7 +435,7 @@ ui <- dashboardPage(
                     inputId = "phqdem",
                     "Select a Demographic:",
                     demographics,
-                    selected = 'School Year'
+                    selected = 'Class Year'
                   ),
                   br(),
                   varSelectInput(
@@ -440,7 +463,7 @@ ui <- dashboardPage(
                     inputId = 'gaddem',
                     label = 'Select a Demographic:',
                     data = demographics,
-                    selected = 'School Year'
+                    selected = 'Class Year'
                   ),
                   br(),
                   varSelectInput(
@@ -492,7 +515,8 @@ ui <- dashboardPage(
                   varSelectInput(
                     inputId = 'MIdem',
                     label = 'Select a Demographic:',
-                    data = demographics
+                    data = demographics,
+                    selected = 'Class Year'
                   )
                 )
               ),
@@ -512,9 +536,10 @@ ui <- dashboardPage(
                     data = substance_behaviors
                   ),
                   varSelectInput(
-                    inputId = 'MIdem',
+                    inputId = 'MIdem2',
                     label = 'Select a Demographic:',
-                    data = demographics
+                    data = demographics,
+                    selected = 'Class Year'
                   )
                 )
               ),
@@ -539,7 +564,7 @@ ui <- dashboardPage(
               inputId = 'Fdem1',
               label = 'Select a Demographic:',
               data = demographics,
-              selected = 'School Year'
+              selected = 'Class Year'
             )
           )
         ),
@@ -569,7 +594,7 @@ ui <- dashboardPage(
             varSelectInput(inputId = "flourdem",
                            label="Select a Demographic:",
                            data=demographics,
-                           selected = 'School Year'
+                           selected = 'Class Year'
             ),
             br(),
             varSelectInput(
@@ -592,7 +617,8 @@ ui <- dashboardPage(
               varSelectInput(
                 inputId = 'Fplot2_dem',
                 label = 'Select a Demographic:',
-                data = demographics
+                data = demographics,
+                selected = 'Class Year'
               ),
               br(),
               varSelectInput(
@@ -900,27 +926,11 @@ server <- function(input, output){
   # mental Illness plot 1 #
   #########################
   output$mentalIllness_1 <- renderPlotly({
-    ment <- HMS %>% 
-      group_by(`School Year`) %>% 
-      tally(name = "totalYear")
-    
-    
-    # filter for those who have at least one mental illness and count them
-    ment2 <- HMS %>% 
-      filter(`Diagnosed Depression` ==1 | dx_bip ==1 | `Diagnosed Anxiety` ==1|
-               dx_ocd ==1| dx_trauma ==1|dx_neurodev ==1 | dx_ea==1) %>% 
-      group_by(`School Year`, Gender, `Class Year`, 
-               Race, International, `LGBTQ+`) %>% 
-      tally(name = "totalDep")
-    
-    
-    # join both datasets
-    mental_illness <- left_join(ment, ment2, by = 'School Year')
-    
-    
-    # let's find the percent of people who have a mental illness each year
-    mental_illness <- mental_illness %>% 
-      mutate(percent = ( (totalDep)/(totalYear) * 100 ))
+   
+     mental_illness <- HMS %>% 
+      group_by(`School Year`, !!input$ment1_dem) %>%
+      summarize(withMI = sum(ifelse(mentalIllness == "Yes", 1, 0)), 
+                total = n(), percent = (withMI/total)*100)
     
     
     # lets plot!
@@ -928,7 +938,7 @@ server <- function(input, output){
       ggplot(mental_illness, aes(x = `School Year`, 
                                  y = percent, 
                                  fill = !!input$ment1_dem))+
-        geom_col()+
+        geom_col(position = 'dodge')+
         ylim(c(0,100))+
         labs(title = 
                paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
@@ -974,22 +984,6 @@ server <- function(input, output){
   ########################################
   
   output$plot5 <- renderPlotly({
-    MI <- HMS %>% 
-      select(responseid, `Diagnosed Depression`:dx_ea) %>% 
-      pivot_longer(!responseid) %>% 
-      drop_na(value) %>% 
-      filter(value == 1) %>% 
-      group_by(responseid) %>% 
-      mutate(mentalIllness = 1) %>% 
-      select(responseid, mentalIllness) %>% 
-      distinct(responseid, mentalIllness)
-    
-    HMS <- HMS %>% 
-      left_join(MI, by = "responseid") %>% 
-      mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
-    
-    HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
-                                labels = c('No', 'Yes'))
     
     MIPercent <- HMS %>% 
       select(!!input$behaviors, !!input$MIdem, mentalIllness) %>%
@@ -1006,7 +1000,7 @@ server <- function(input, output){
                  y = percent, 
                  fill = !!input$MIdem)) +
         geom_col(position = 'dodge')+
-        ylim(c(0,100))+
+        ylim(c(0,50))+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
@@ -1018,39 +1012,23 @@ server <- function(input, output){
   ########################################
   
   output$plot6 <- renderPlotly({
-    MI <- HMS %>% 
-      select(responseid, `Diagnosed Depression`:dx_ea) %>% 
-      pivot_longer(!responseid) %>% 
-      drop_na(value) %>% 
-      filter(value == 1) %>% 
-      group_by(responseid) %>% 
-      mutate(mentalIllness = 1) %>% 
-      select(responseid, mentalIllness) %>% 
-      distinct(responseid, mentalIllness)
     
-    HMS <- HMS %>% 
-      left_join(MI, by = "responseid") %>% 
-      mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
-    
-    HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
-                                labels = c('No', 'Yes'))
-    
-    MIPercent <- HMS %>% 
-      select(!!input$substance_behaviors, !!input$MIdem, mentalIllness) %>%
+    MIPercent2 <- HMS %>% 
+      select(!!input$substance_behaviors, !!input$MIdem2, mentalIllness) %>%
       filter(!is.na(!!input$substance_behaviors)) %>% 
-      group_by(!!input$substance_behaviors, !!input$MIdem, mentalIllness) %>% 
+      group_by(!!input$substance_behaviors, !!input$MIdem2, mentalIllness) %>% 
       mutate(numerator = n()) %>%
       ungroup() %>%  
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
     ggplotly(
-      ggplot(data = MIPercent, 
+      ggplot(data = MIPercent2, 
              aes(x = !!input$substance_behaviors, 
                  y = percent, 
-                 fill = !!input$MIdem)) +
+                 fill = !!input$MIdem2)) +
         geom_col(position = 'dodge')+
-        ylim(c(0,100))+
+        ylim(c(0,50))+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
@@ -1204,7 +1182,7 @@ importantto me',
                      fill = !!input$Fplot2_dem), 
                  position = 'dodge')+
         facet_wrap(~flourish_status) +
-        ylim(c(0, 100)) +
+        # ylim(c(0, 50)) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
@@ -1221,7 +1199,7 @@ importantto me',
     # what can we learn more about people who are considered 'flourishing' vs not
     
     # select variables 
-    action_flourish <- HMS %>% 
+    action_flourish2 <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
               Exercise, `Therapy Use`, ther_help, ther_helped_me, `Smoking Frequency`, 
               Vaping, binge, `Greek Life`, `Varsity Athletics`, sleep_wk1, 
@@ -1230,7 +1208,7 @@ importantto me',
     
     # create a new 'hours of sleep column'
     # account for extraneous sleep outliers by making them NA
-    action_flourish <- action_flourish %>%
+    action_flourish2 <- action_flourish2 %>%
       mutate(hrs_sleep_wkday = 
                (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
       mutate(hrs_sleep_wkend = 
@@ -1244,12 +1222,12 @@ importantto me',
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
     # note: we can subset flourishing by more ranges
-    action_flourish <- action_flourish %>% 
+    action_flourish2 <- action_flourish2 %>% 
       mutate(flourish_status = case_when(diener_score >= 49 ~ "Flourishing",
                                          TRUE ~ "Not flourishing"))
     
     # find percent of people who flourish vs not, grouped by selected variables
-    action_flourish <- action_flourish %>% 
+    action_flourish2 <- action_flourish2 %>% 
       filter(!is.na(!!input$Fplot3_var)) %>% 
       group_by(flourish_status, !!input$Fplot3_var, 
                !!input$Fplot3_dem) %>% 
@@ -1259,13 +1237,13 @@ importantto me',
              percent = (n)/(total) * 100) 
     
     ggplotly(
-      ggplot(data = action_flourish)+
+      ggplot(data = action_flourish2)+
         geom_col(aes(x = !!input$Fplot3_var,
                      y = percent,
                      fill = !!input$Fplot3_dem), 
                  position = 'dodge')+
         facet_wrap(~flourish_status) +
-        ylim(c(0, 100)) +
+        ylim(c(0, 50)) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +

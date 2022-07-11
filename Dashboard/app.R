@@ -43,8 +43,7 @@ HMS <- HMS %>%
          `Well-being Question 1` = diener1, `Well-being Question 2` = diener2,
          `Well-being Question 3` = diener3, `Well-being Question 4` = diener4,
          `Well-being Question 5` = diener5, `Well-being Question 6` = diener6,
-         `Well-being Question 7` = diener7, `Well-being Question 8` = diener8,
-         Sleep = sleep_wd1)
+         `Well-being Question 7` = diener7, `Well-being Question 8` = diener8)
 
 # changing the international column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$International <- factor(HMS$International, levels = c(0,1),
@@ -68,8 +67,10 @@ HMS$`Alcohol Use` <- factor(HMS$`Alcohol Use`, levels = c(0, 1),
 
 HMS$`Smoking Frequency` <- factor(HMS$`Smoking Frequency`, 
                                   levels = c(1, 2, 3, 4, 5),
-                                  labels = c('0 cigarettes', 'Less than 1 cigarette',
-                                             '1 to 5 cigarettes', 'About one-half pack',
+                                  labels = c('0 cigarettes', 
+                                             'Less than 1 cigarette',
+                                             '1 to 5 cigarettes', 
+                                             'About one-half pack',
                                              '1 or more packs'))
 
 HMS$Vaping <- factor(HMS$Vaping, levels = c(1, 2),
@@ -168,6 +169,25 @@ HMS <- HMS %>%
                                       'Satisfied',
                                       'Highly Satisfied'
                                     )))
+
+# creating a new Sleep column:
+
+Sleep <- HMS %>%
+  select(responseid, sleep_wk1, sleep_wk2, sleep_wd2, sleep_wd1) %>%
+  mutate(hrs_sleep_wkday =
+           abs(as.numeric(sleep_wk1) - as.numeric(sleep_wd1)))%>%
+  mutate(hrs_sleep_wkend =
+           abs(as.numeric(sleep_wk2) - as.numeric(sleep_wd2)))%>%
+  mutate(Sleep =
+           ((hrs_sleep_wkend + hrs_sleep_wkday) / 2))%>%
+  mutate(Sleep = ifelse(Sleep > 10, 'More than 10 hours', 
+                        ifelse(Sleep < 6, 'Less than 6 hours', 
+                               '6 to 10 hours'))) %>% 
+  select(responseid, Sleep)
+
+HMS <- HMS %>%
+  left_join(Sleep, by = 'responseid')
+
 # creating a new binge column in HMS
 binge <- HMS %>% 
   select(responseid, binge_fr_f:binge_fr_o) %>% 
@@ -1140,23 +1160,10 @@ importantto me',
     # select variables 
     action_flourish <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
-              Exercise, `Therapy Use`, ther_help, ther_helped_me, `Smoking Frequency`, 
-              Vaping, binge, `Greek Life`, `Varsity Athletics`, sleep_wk1, 
-              sleep_wk2, Sleep, sleep_wd2,International, `LGBTQ+`, 
+              Exercise, `Therapy Use`, ther_help, ther_helped_me, 
+              `Smoking Frequency`, Vaping, binge, `Greek Life`, 
+              `Varsity Athletics`, Sleep, International, `LGBTQ+`, 
               drug, `Alcohol Use`)
-    
-    # create a new 'hours of sleep column'
-    # account for extraneous sleep outliers by making them NA
-    action_flourish <- action_flourish %>%
-      mutate(hrs_sleep_wkday = 
-               (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
-      mutate(hrs_sleep_wkend = 
-               (as.numeric(sleep_wd2) - as.numeric(Sleep)))%>%
-      mutate(hours_of_sleep = 
-               ((hrs_sleep_wkend + hrs_sleep_wkday) / 2))%>%
-      mutate(hours_of_sleep = 
-               ifelse(hours_of_sleep< 4 | hours_of_sleep > 13,NA,hours_of_sleep)
-      ) %>% filter(!is.na(hours_of_sleep))
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
@@ -1201,23 +1208,10 @@ importantto me',
     # select variables 
     action_flourish2 <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
-              Exercise, `Therapy Use`, ther_help, ther_helped_me, `Smoking Frequency`, 
-              Vaping, binge, `Greek Life`, `Varsity Athletics`, sleep_wk1, 
-              sleep_wk2, Sleep, sleep_wd2,International, `LGBTQ+`, 
+              Exercise, `Therapy Use`, ther_help, ther_helped_me, 
+              `Smoking Frequency`, Vaping, binge, `Greek Life`, 
+              `Varsity Athletics`, Sleep ,International, `LGBTQ+`, 
               drug, `Alcohol Use`)
-    
-    # create a new 'hours of sleep column'
-    # account for extraneous sleep outliers by making them NA
-    action_flourish2 <- action_flourish2 %>%
-      mutate(hrs_sleep_wkday = 
-               (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
-      mutate(hrs_sleep_wkend = 
-               (as.numeric(sleep_wd2) - as.numeric(Sleep)))%>%
-      mutate(hours_of_sleep = 
-               ((hrs_sleep_wkend + hrs_sleep_wkday) / 2))%>%
-      mutate(hours_of_sleep = 
-               ifelse(hours_of_sleep< 4 | hours_of_sleep > 13,NA,hours_of_sleep)
-      ) %>% filter(!is.na(hours_of_sleep))
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49

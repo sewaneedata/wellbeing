@@ -409,6 +409,7 @@ ui <- dashboardPage(
       
       # Second tab content
       tabItem(tabName = "Mental_Health",
+              actionButton('tutorial', 'Click for User Information'),
               h2('Trends on Mental Health'),
               hr(),
               
@@ -447,7 +448,7 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(width = 9,
-                    plotOutput( "phqPlot")
+                    plotlyOutput( "phqPlot", width = 'auto')
                 ),
                 box(
                   width = 3,
@@ -476,7 +477,7 @@ ui <- dashboardPage(
                 anxiety survey questions"))
               ),
               fluidRow(
-                box(width = 9, plotOutput("gadPlot")),
+                box(width = 9, plotlyOutput("gadPlot", width = 'auto')),
                 column(
                   3,
                   varSelectInput(
@@ -516,7 +517,9 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12, )
+                box(width = 12, "Academic Impaiment is 'In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt
+your academic performance?'",
+                    textOutput('description'))
               ),
               br(),
               fluidRow(
@@ -540,7 +543,8 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(box(width = 12,)),
+              fluidRow(box(width = 12,
+                           textOutput('MIdesc'))),
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
@@ -563,7 +567,8 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(box(width = 12,))
+              fluidRow(box(width = 12,
+                           textOutput('MIdesc2')))
       ),
       
       # Third tab content
@@ -600,14 +605,14 @@ ui <- dashboardPage(
           judgment of their satisfaction with their life as a whole.")
           )
         ),
-        br(),
+        hr(),
         fluidRow(
           column(12, h4("Percentage of respondents’ answers to corresponding 
           positive mental health survey questions"))
         ),
         fluidRow(
           box(
-            width = 9, plotOutput('dienerplot')
+            width = 9, plotlyOutput('dienerplot', width = 'auto')
           ),
           column(
             3,
@@ -623,65 +628,66 @@ ui <- dashboardPage(
               data = flourQues
             )
           ),
-        ),
-        br(),
-        hr(),
-        br(),
-        fluidRow(
-          column(12, h4("Percentage of respondents considered flourishing and 
+          hr(),
+          fluidRow(
+            column(12, h4("Percentage of respondents considered flourishing and
                         their behavior compared to others."))
-        ),
-        fluidRow(
-          box(
-            width = 9, plotlyOutput("Fplot2", width = 'auto')
           ),
-          column(
-            3,
-            varSelectInput(
-              inputId = 'Fplot2_dem',
-              label = 'Select a Demographic:',
-              data = demographics,
-              selected = 'Class Year'
+          fluidRow(
+            box(
+              width = 9, plotlyOutput("Fplot2", width = 'auto')
             ),
-            br(),
-            varSelectInput(
-              inputId = 'Fplot2_var',
-              label = 'Select a Behavior:',
-              data = behaviors
+            column(
+              3,
+              varSelectInput(
+                inputId = 'Fplot2_dem',
+                label = 'Select a Demographic:',
+                data = demographics,
+                selected = 'Class Year'
+              ),
+              br(),
+              varSelectInput(
+                inputId = 'Fplot2_var',
+                label = 'Select a Behavior:',
+                data = behaviors
+              )
             )
-          )
-        ),
-        fluidRow(
-          box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
-        ),
-        br(),
-        fluidRow(
-          column(12, h4("Percentage of respondents considered flourishing and 
+          ),
+          fluidRow(
+            box(width = 12, "Flourishing individuals are identified as
+                respondents in the 90th percentile of The Satisfaction 
+                With Life Scale (SWLS).",
+                textOutput('fldesc1'))
+          ),
+          hr(),
+          fluidRow(
+            column(12, h4("Percentage of respondents considered flourishing and 
                         substance use behavior compared to others."))
-        ),
-        fluidRow(
-          box(
-            width = 9, plotlyOutput("Fplot3", width = 'auto')
           ),
-          column(
-            3,
-            varSelectInput(
-              inputId = 'Fplot3_dem',
-              label = 'Select a Demographic:',
-              data = demographics
+          fluidRow(
+            box(
+              width = 9, plotlyOutput("Fplot3", width = 'auto')
             ),
-            br(),
-            varSelectInput(
-              inputId = 'Fplot3_var',
-              label = 'Select a Behavior:',
-              data = substance_behaviors
+            column(
+              3,
+              varSelectInput(
+                inputId = 'Fplot3_dem',
+                label = 'Select a Demographic:',
+                data = demographics
+              ),
+              br(),
+              varSelectInput(
+                inputId = 'Fplot3_var',
+                label = 'Select a Behavior:',
+                data = substance_behaviors
+              )
             )
+          ),
+          fluidRow(
+            box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).",
+                textOutput('fldesc2'))
           )
-        ),
-        fluidRow(
-          box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
         )
       ),
       
@@ -816,7 +822,7 @@ server <- function(input, output){
   # phq depression plot#
   ######################
   
-  output$phqPlot <- renderPlot({
+  output$phqPlot <- renderPlotly({
     phq <- HMS %>%
       select(!!input$phqdem, !!input$phqQ) %>%
       pivot_longer(!(!!input$phqdem)) %>%
@@ -856,28 +862,29 @@ server <- function(input, output){
                                    'Several days',
                                    'More than\n half the days',
                                    'Nearly every day'))
-    ggplot(data = phq,
-           aes(
-             x = value,
-             y = percent,
-             fill = !!input$phqdem
-           )
-    ) +
-      geom_col(position = 'dodge') +
-      ylim(c(0,100)) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-      labs(title = phq$name,
-           x = 'Response',
-           y = 'Percent of Students') +
-      scale_fill_manual(values = cbPalette)
-  }, width = 'auto')
+    ggplotly(
+      ggplot(data = phq,
+             aes(
+               x = value,
+               y = percent,
+               fill = !!input$phqdem
+             )
+      ) +
+        geom_col(position = 'dodge') +
+        ylim(c(0,100)) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+        labs(title = as.character(unique(phq$name)),
+             x = 'Response',
+             y = 'Percent of Students') +
+        scale_fill_manual(values = cbPalette))
+  })
   
   
   ####################
   ### anxiety plot ###
   ####################
   
-  output$gadPlot <- renderPlot({
+  output$gadPlot <- renderPlotly({
     
     gad <- HMS %>%
       select(!!input$gaddem, !!input$gadQ) %>%
@@ -916,21 +923,21 @@ server <- function(input, output){
                                    'Several days',
                                    'Over half\n the days',
                                    'Nearly every day'))
-    
-    ggplot(data = gad,
-           aes(x = value,
-               y = percent,
-               fill = !!input$gaddem
-           )
-    ) +
-      geom_col(position = 'dodge') +
-      ylim(c(0,100)) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-      labs(title = gad$name,
-           x = 'Response',
-           y = 'Percent of Students') +
-      scale_fill_manual(values = cbPalette)
-  }, width = 'auto')
+    ggplotly(
+      ggplot(data = gad,
+             aes(x = value,
+                 y = percent,
+                 fill = !!input$gaddem
+             )
+      ) +
+        geom_col(position = 'dodge') +
+        ylim(c(0,100)) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+        labs(title = as.character(unique(gad$name)),
+             x = 'Response',
+             y = 'Percent of Students') +
+        scale_fill_manual(values = cbPalette))
+  })
   
   
   # output$phqDesc <- renderText({
@@ -1090,7 +1097,7 @@ server <- function(input, output){
   ###########################################################################
   ########################### diener plot by ? ##############################
   ###########################################################################  
-  output$dienerplot <- renderPlot({
+  output$dienerplot <- renderPlotly({
     #data frame
     flourishing <- HMS %>%
       select(!!input$flourdem, !!input$flourq) %>%
@@ -1126,30 +1133,31 @@ importantto me',
                                  'People respect me'))
     
     #plot
-    ggplot(data = flourishing,
-           aes(x = value,
-               y = percent/100,
-               fill = !!input$flourdem
-           )
-    ) +
-      geom_col(position = 'dodge') +
-      ylim(c(0,100)) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
-      scale_x_continuous(breaks=seq(1,7,1),
-                         labels = c("Strongly Disagree",
-                                    "Disagree",
-                                    "Slightly Disagree",
-                                    "Mixed",
-                                    "Slightly Agree",
-                                    "Agree",
-                                    "Strongly Agree"))+
-      scale_y_continuous(labels = scales::percent)+
-      labs(title = flourishing$name ,
-           x = 'Response',
-           y = 'Percent of Students') +
-      scale_fill_manual(values = cbPalette) +
-      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-  }, width = 'auto')
+    ggplotly(
+      ggplot(data = flourishing,
+             aes(x = value,
+                 y = percent/100,
+                 fill = !!input$flourdem
+             )
+      ) +
+        geom_col(position = 'dodge') +
+        # ylim(c(0,100)) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+        scale_x_continuous(breaks=seq(1,7,1),
+                           labels = c("Strongly Disagree",
+                                      "Disagree",
+                                      "Slightly Disagree",
+                                      "Mixed",
+                                      "Slightly Agree",
+                                      "Agree",
+                                      "Strongly Agree"))+
+        scale_y_continuous(labels = scales::percent)+
+        labs(title = as.character(unique(flourishing$name)) ,
+             x = 'Response',
+             y = 'Percent of Students') +
+        scale_fill_manual(values = cbPalette) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
   
   ###########################################################################
   ########################### Well-being Plot 2 #############################
@@ -1245,5 +1253,70 @@ importantto me',
         scale_fill_manual(values = cbPalette) +
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
+  
+  output$description <- renderText({
+    text <- switch(as.character(input$ment4_vars),
+                   'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
+                   'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
+                   "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
+                   'Lacking Companionship' =  "A measurment of loneliness that asks 'How often do you feel that you lack companionship?'",
+                   'Feeling Leftout' = "A measurment of loneliness that asks 'How often do you feel left out?'"
+    )
+  })
+  
+  output$MIdesc <- renderText({
+    text1 <- switch(as.character(input$behaviors),
+                    Sleep= 'Average hours of sleep per day',
+                    Exercise = 'How much do you agree with the following
+statement?:My exercise habits have changed a lot since I began as astudent at my school.',
+                    'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
+                    'Varsity Athletics' ='Are you currently involved in varsity athletics?',
+                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?')
+  })
+  
+  output$MIdesc2 <- renderText({
+    text1 <- switch(as.character(input$substance_behaviors),
+                    'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
+                    'binge' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
+                    'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
+                    'Vaping' = 'Over the past 30 days, have you used an electronic
+cigarette orvape pen?',
+                    'drug' = 'Over the past 30 days have you used any drugs' )
+  })
+  output$description <- renderText({
+    text <- switch(as.character(input$ment4_vars),
+                   'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
+                   'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
+                   "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
+                   'Lacking Companionship' =  "A measurment of loneliness that asks 'How often do you feel that you lack companionship?'",
+                   'Feeling Leftout' = "A measurment of loneliness that asks 'How often do you feel left out?'"
+    )
+  })
+  
+  output$fldesc1 <- renderText({
+    text1 <- switch(as.character(input$Fplot2_var),
+                    Sleep= 'Average hours of sleep per day',
+                    Exercise = 'How much do you agree with the following
+statement?:My exercise habits have changed a lot since I began as astudent at my school.',
+                    'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
+                    'Varsity Athletics' ='Are you currently involved in varsity athletics?',
+                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?')
+  })
+  
+  output$fldesc2 <- renderText({
+    text1 <- switch(as.character(input$Fplot3_var),
+                    'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
+                    'binge' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
+                    'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
+                    'Vaping' = 'Over the past 30 days, have you used an electronic
+cigarette orvape pen?',
+                    'drug' = 'Over the past 30 days have you used any drugs' )
+  })
+  
+  observeEvent(input$tutorial,
+               {shinyalert("How to Use:",
+                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Some graphs are also interactive: hover over to see more information or zoom in on bars!",
+                           html = TRUE)
+               }) 
 }
 shinyApp(ui, server)

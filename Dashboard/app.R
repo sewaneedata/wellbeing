@@ -404,7 +404,25 @@ ui <- dashboardPage(
            br(),
            "Southern Tennessee Regional Hospital - Sewanee: 931-598-5691",
            br()
-        )
+        ),
+        
+        fluidRow(
+          column(12, h4('Who filled out the survey?') )
+        ),
+        
+        fluidRow(
+          box(width = 9, plotlyOutput("homePlot", width = 'auto')),
+          
+          box(
+            width = 3,
+            varSelectInput(inputId = 'homePlot_dem',
+                           label = 'Select a Demographic:',
+                           data = demographics1,
+                           selected = 'Class Year'
+            )
+          )
+        ),
+        
       ),
       
       # Second tab content
@@ -605,7 +623,6 @@ your academic performance?'",
           judgment of their satisfaction with their life as a whole.")
           )
         ),
-        hr(),
         fluidRow(
           column(12, h4("Percentage of respondents’ answers to corresponding 
           positive mental health survey questions"))
@@ -625,10 +642,12 @@ your academic performance?'",
             varSelectInput(
               inputId = 'flourq',
               label = 'Select a Flourishing Question:',
-              data = flourQues
+              data = flourQues)
             )
           ),
-          hr(),
+        br(),
+        hr(),
+        br(),
           fluidRow(
             column(12, h4("Percentage of respondents considered flourishing and
                         their behavior compared to others."))
@@ -659,7 +678,6 @@ your academic performance?'",
                 With Life Scale (SWLS).",
                 textOutput('fldesc1'))
           ),
-          hr(),
           fluidRow(
             column(12, h4("Percentage of respondents considered flourishing and 
                         substance use behavior compared to others."))
@@ -688,7 +706,6 @@ your academic performance?'",
           in the 90th percentile of The Satisfaction With Life Scale (SWLS).",
                 textOutput('fldesc2'))
           )
-        )
       ),
       
       # Fifth tab content
@@ -817,6 +834,28 @@ server <- function(input, output){
   ###############################################################################
   ################################### plots ##################################### 
   ###############################################################################
+
+  output$homePlot <- renderPlotly({
+    
+    n_graph <- HMS %>% 
+      filter(!is.na(!!input$homePlot_dem)) %>% 
+      group_by(`School Year`, !!input$homePlot_dem) %>% 
+      tally() %>% 
+      ungroup() %>% 
+      mutate(total = sum(n),
+             percent = (n)/(total) * 100,
+             percent_text = paste0( round(100*percent,2), "%" )) 
+    
+    ggplotly(
+      ggplot(n_graph)+
+        geom_col(aes(x=`School Year` ,y = percent, fill=!!input$homePlot_dem))+
+        labs(x='School Year', 
+             y='Percentage',
+             title='Number of Survey Respondents')
+    )
+    
+  })  
+  
   
   ######################
   # phq depression plot#

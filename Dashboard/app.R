@@ -183,9 +183,10 @@ HMS$drug <- factor(HMS$drug, levels = c(0, 1),
                    labels = c('No', 'Yes'))
 
 behaviors <- HMS %>% 
-  select('Sleep', 'Exercise', `Alcohol Use`, `Therapy Use`, 
-         `Varsity Athletics`, `Greek Life`, 'binge', 
-         `Smoking Frequency`, 'Vaping', 'drug')
+  select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, `Greek Life`)
+
+substance_behaviors <- HMS %>% 
+  select(`Alcohol Use`, 'binge', `Smoking Frequency`, 'Vaping', 'drug')
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -495,6 +496,28 @@ ui <- dashboardPage(
                   )
                 )
               ),
+              fluidRow(box(width = 12,)),
+              br(),
+              fluidRow(
+                column(12, h4("Percentage of respondents with a clinically
+                              diagnosed mental illness and subtance use behavior 
+                              compared to others."))
+              ),
+              fluidRow(
+                box(width = 9, plotlyOutput("plot6", width = 'auto')),
+                column(
+                  3, varSelectInput(
+                    inputId = 'substance_behaviors',
+                    label = 'Select a Behavior:',
+                    data = substance_behaviors
+                  ),
+                  varSelectInput(
+                    inputId = 'MIdem',
+                    label = 'Select a Demographic:',
+                    data = demographics
+                  )
+                )
+              ),
               fluidRow(box(width = 12,))
       ),
       
@@ -555,6 +578,7 @@ ui <- dashboardPage(
               data = flourQues
             )
           ),
+          hr(),
           fluidRow(
             column(12, h4("Percentage of respondents considered flourishing and 
                         their behavior compared to others."))
@@ -575,6 +599,34 @@ ui <- dashboardPage(
                 inputId = 'Fplot2_var',
                 label = 'Select a Behavior:',
                 data = behaviors
+              )
+            )
+          ),
+          fluidRow(
+            box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
+          ),
+          hr(),
+          fluidRow(
+            column(12, h4("Percentage of respondents considered flourishing and 
+                        substance use behavior compared to others."))
+          ),
+          fluidRow(
+            box(
+              width = 9, plotlyOutput("Fplot3", width = 'auto')
+            ),
+            column(
+              3,
+              varSelectInput(
+                inputId = 'Fplot3_dem',
+                label = 'Select a Demographic:',
+                data = demographics
+              ),
+              br(),
+              varSelectInput(
+                inputId = 'Fplot3_var',
+                label = 'Select a Behavior:',
+                data = substance_behaviors
               )
             )
           ),
@@ -918,7 +970,7 @@ server <- function(input, output){
   
   
   ########################################
-  ########Mental Illness Plot 5###########
+  ####### Mental Illness Plot 5 ##########
   ########################################
   
   output$plot5 <- renderPlotly({
@@ -951,6 +1003,50 @@ server <- function(input, output){
     ggplotly(
       ggplot(data = MIPercent, 
              aes(x = !!input$behaviors, 
+                 y = percent, 
+                 fill = !!input$MIdem)) +
+        geom_col(position = 'dodge')+
+        ylim(c(0,100))+
+        labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
+        scale_fill_manual(values = cbPalette)+
+        facet_wrap(~mentalIllness) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
+  
+  ########################################
+  ####### Mental Illness Plot 6 ##########
+  ########################################
+  
+  output$plot6 <- renderPlotly({
+    MI <- HMS %>% 
+      select(responseid, `Diagnosed Depression`:dx_ea) %>% 
+      pivot_longer(!responseid) %>% 
+      drop_na(value) %>% 
+      filter(value == 1) %>% 
+      group_by(responseid) %>% 
+      mutate(mentalIllness = 1) %>% 
+      select(responseid, mentalIllness) %>% 
+      distinct(responseid, mentalIllness)
+    
+    HMS <- HMS %>% 
+      left_join(MI, by = "responseid") %>% 
+      mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
+    
+    HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
+                                labels = c('No', 'Yes'))
+    
+    MIPercent <- HMS %>% 
+      select(!!input$substance_behaviors, !!input$MIdem, mentalIllness) %>%
+      filter(!is.na(!!input$substance_behaviors)) %>% 
+      group_by(!!input$substance_behaviors, !!input$MIdem, mentalIllness) %>% 
+      mutate(numerator = n()) %>%
+      ungroup() %>%  
+      mutate(denominator = n()) %>% 
+      mutate(percent = (numerator/denominator)*100)
+    
+    ggplotly(
+      ggplot(data = MIPercent, 
+             aes(x = !!input$substance_behaviors, 
                  y = percent, 
                  fill = !!input$MIdem)) +
         geom_col(position = 'dodge')+
@@ -1115,5 +1211,65 @@ importantto me',
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
+  
+  ###########################################################################
+  ########################### Well-being Plot 3 #############################
+  ###########################################################################
+  
+  output$Fplot3 <- renderPlotly({
+    
+    # what can we learn more about people who are considered 'flourishing' vs not
+    
+    # select variables 
+    action_flourish <- HMS %>% 
+      select( `School Year`, Race, Gender,`Class Year`, diener_score,
+              Exercise, `Therapy Use`, ther_help, ther_helped_me, `Smoking Frequency`, 
+              Vaping, binge, `Greek Life`, `Varsity Athletics`, sleep_wk1, 
+              sleep_wk2, Sleep, sleep_wd2,International, `LGBTQ+`, 
+              drug, `Alcohol Use`)
+    
+    # create a new 'hours of sleep column'
+    # account for extraneous sleep outliers by making them NA
+    action_flourish <- action_flourish %>%
+      mutate(hrs_sleep_wkday = 
+               (as.numeric(sleep_wk2) - as.numeric(sleep_wk1)))%>%
+      mutate(hrs_sleep_wkend = 
+               (as.numeric(sleep_wd2) - as.numeric(Sleep)))%>%
+      mutate(hours_of_sleep = 
+               ((hrs_sleep_wkend + hrs_sleep_wkday) / 2))%>%
+      mutate(hours_of_sleep = 
+               ifelse(hours_of_sleep< 4 | hours_of_sleep > 13,NA,hours_of_sleep)
+      ) %>% filter(!is.na(hours_of_sleep))
+    
+    # define flourishing and mark respondents
+    # 8 questions, scale of 1-7. 90th percentile: >= 49
+    # note: we can subset flourishing by more ranges
+    action_flourish <- action_flourish %>% 
+      mutate(flourish_status = case_when(diener_score >= 49 ~ "Flourishing",
+                                         TRUE ~ "Not flourishing"))
+    
+    # find percent of people who flourish vs not, grouped by selected variables
+    action_flourish <- action_flourish %>% 
+      filter(!is.na(!!input$Fplot3_var)) %>% 
+      group_by(flourish_status, !!input$Fplot3_var, 
+               !!input$Fplot3_dem) %>% 
+      tally() %>% 
+      ungroup() %>% 
+      mutate(total = sum(n),
+             percent = (n)/(total) * 100) 
+    
+    ggplotly(
+      ggplot(data = action_flourish)+
+        geom_col(aes(x = !!input$Fplot3_var,
+                     y = percent,
+                     fill = !!input$Fplot3_dem), 
+                 position = 'dodge')+
+        facet_wrap(~flourish_status) +
+        ylim(c(0, 100)) +
+        labs(y = 'Percent of Students',
+             title = 'Percent of Student Behaviors by Flourishing Status')+
+        scale_fill_manual(values = cbPalette) +
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+  })
 }
 shinyApp(ui, server)

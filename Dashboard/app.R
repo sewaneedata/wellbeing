@@ -600,7 +600,7 @@ ui <- dashboardPage(
           judgment of their satisfaction with their life as a whole.")
           )
         ),
-        hr(),
+        br(),
         fluidRow(
           column(12, h4("Percentage of respondents’ answers to corresponding 
           positive mental health survey questions"))
@@ -623,63 +623,65 @@ ui <- dashboardPage(
               data = flourQues
             )
           ),
-          hr(),
-          fluidRow(
-            column(12, h4("Percentage of respondents considered flourishing and 
+        ),
+        br(),
+        hr(),
+        br(),
+        fluidRow(
+          column(12, h4("Percentage of respondents considered flourishing and 
                         their behavior compared to others."))
+        ),
+        fluidRow(
+          box(
+            width = 9, plotlyOutput("Fplot2", width = 'auto')
           ),
-          fluidRow(
-            box(
-              width = 9, plotlyOutput("Fplot2", width = 'auto')
+          column(
+            3,
+            varSelectInput(
+              inputId = 'Fplot2_dem',
+              label = 'Select a Demographic:',
+              data = demographics,
+              selected = 'Class Year'
             ),
-            column(
-              3,
-              varSelectInput(
-                inputId = 'Fplot2_dem',
-                label = 'Select a Demographic:',
-                data = demographics,
-                selected = 'Class Year'
-              ),
-              br(),
-              varSelectInput(
-                inputId = 'Fplot2_var',
-                label = 'Select a Behavior:',
-                data = behaviors
-              )
+            br(),
+            varSelectInput(
+              inputId = 'Fplot2_var',
+              label = 'Select a Behavior:',
+              data = behaviors
             )
-          ),
-          fluidRow(
-            box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
-          ),
-          hr(),
-          fluidRow(
-            column(12, h4("Percentage of respondents considered flourishing and 
-                        substance use behavior compared to others."))
-          ),
-          fluidRow(
-            box(
-              width = 9, plotlyOutput("Fplot3", width = 'auto')
-            ),
-            column(
-              3,
-              varSelectInput(
-                inputId = 'Fplot3_dem',
-                label = 'Select a Demographic:',
-                data = demographics
-              ),
-              br(),
-              varSelectInput(
-                inputId = 'Fplot3_var',
-                label = 'Select a Behavior:',
-                data = substance_behaviors
-              )
-            )
-          ),
-          fluidRow(
-            box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
           )
+        ),
+        fluidRow(
+          box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
+        ),
+        br(),
+        fluidRow(
+          column(12, h4("Percentage of respondents considered flourishing and 
+                        substance use behavior compared to others."))
+        ),
+        fluidRow(
+          box(
+            width = 9, plotlyOutput("Fplot3", width = 'auto')
+          ),
+          column(
+            3,
+            varSelectInput(
+              inputId = 'Fplot3_dem',
+              label = 'Select a Demographic:',
+              data = demographics
+            ),
+            br(),
+            varSelectInput(
+              inputId = 'Fplot3_var',
+              label = 'Select a Behavior:',
+              data = substance_behaviors
+            )
+          )
+        ),
+        fluidRow(
+          box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).")
         )
       ),
       
@@ -946,8 +948,8 @@ server <- function(input, output){
   # mental Illness plot 1 #
   #########################
   output$mentalIllness_1 <- renderPlotly({
-   
-     mental_illness <- HMS %>% 
+    
+    mental_illness <- HMS %>% 
       group_by(`School Year`, !!input$ment1_dem) %>%
       summarize(withMI = sum(ifelse(mentalIllness == "Yes", 1, 0)), 
                 total = n(), percent = (withMI/total)*100)

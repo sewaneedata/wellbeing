@@ -19,8 +19,8 @@ HMS <- read_csv("../../HMSAll.csv")
 
 # color-blind palette:
 
-cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#CC79A7",
-               "#F0E442", "#0072B2","#999999", "#D55E00", "#000000")
+cbPalette <- c("#009E73", "#CC79A7", "#E69F00", "#56B4E9",
+               "#999999","#F0E442", "#0072B2", "#D55E00", "#000000")
 
 # Renaming column names so they look more official on the dashboard :)
 HMS <- HMS %>% 
@@ -301,15 +301,21 @@ ui <- dashboardPage(
         "Home", tabName = "Home", icon = icon("home")
       ),
       
+      
       menuItem(
         "Student Mental Health", tabName = 'Mental_Health',
-        icon = icon('brain')
+        icon = icon('brain'),
+        menuItem('Mental Health Trends', tabName = 'section1'),
+        menuItem('Mental Health Correlations', tabName = 'section2')
       ),
       
       menuItem(
         "Student Flourishing", tabName = "Well_being",
-        icon = icon("leaf")
+        icon = icon("leaf"),
+        menuItem('Flourishing Trends', tabName = 'section3'),
+        menuItem('Floursihing Correlations', tabName = 'section4')
       ),
+      
       
       menuItem(
         "About", tabName = 'About', icon = icon('question')
@@ -335,21 +341,30 @@ ui <- dashboardPage(
         h2("Cracking the Code to Student Flourishing"),
         hr(),
         # the problem
-        h4(
-          "Sewanee has fostered some of the greatest academics and
-                so many flourish and thrive! But how? What can we learn
-                from those who are thriving? Over the past decade, the rate of
-                depression, anxiety and serious mental health crises has 
-                doubled among college students, according to Daniel Eisenberg,
-                a principal investigator of the Healthy Minds Study: an annual
-                survey of thousands of students across the country 
-                (Hartocollis, New York Times 2021)."
+        fluidRow(
+          column(4,
+                 tags$img(
+                   src = "HMN-logo.png",
+                   width = "100%",
+                   alt = "Picture of Healthy Minds Network Logo"
+                 )
+          ),
+          column(8, h3(em(
+            "Over the past decade, the rate of depression, anxiety and serious
+          mental health crises has doubled among college students, according 
+          to Daniel Eisenberg, a principal investigator of the Healthy Minds
+          Study: an annual survey of thousands of students across the country
+          (Hartocollis, New York Times 2021)."
+          )
+          )
+          )
         ),
         br(),
-        
-        # about healthy minds
-        h4(
-          "For the past four years, Sewanee undergrad students have
+        fluidRow(
+          box(width = 12,
+              # about healthy minds
+              h4(
+                "For the past four years, Sewanee undergrad students have
                 been filling out the Healthy Minds Survey (HMS), a survey that
                 asks questions about mental health outcomes, knowledge and
                 attitudes about mental health and service utilization. 
@@ -357,62 +372,62 @@ ui <- dashboardPage(
                 understanding help-seeking behavior, examining stigma, 
                 knowledge, and other potential barriers to mental 
                 health service utilization."
-        ),
-        br(),
-        
-        # project plan
-        h4(
-          "Our team of researchers at Sewanee DataLab have analyzed
+              ))),
+        h3("Our Method"),
+        fluidRow(
+          box(width = 12,
+              # project plan
+              h4(
+                "Our team of researchers at Sewanee DataLab have analyzed
                 HMS survey data to answer pressing questions about
                 flourishing at Sewanee. The four years of HMS data we
                 have will allow us to find correlations between student
                 health, habits, and flourishing. This project is in
                 partnership with the Associate Dean of Student
-                Flourishing at Sewanee Dr. Nicole Noffsinger-Frazier and
+                Flourishing at Sewanee, Dr. Nicole Noffsinger-Frazier, and
                 under mentorship of Dr. Sylvia Gray, Title IX coordinator."
-        ),
-        br(),
-        h4(
-          "These graphs show the percentage of students that fit the selected 
-          criteria. This is a dataset of 1,375 survey respondents over 4 school 
+              ),
+              br(),
+              h4(
+                "These graphs show the percentage of students that fit the selected 
+          criteria. This is a dataset of 1,375 survey respondents over 4 school
           years. Some demographics are grouped in “other” to protect the 
           identities of survey respondents."
-        ),
-        br(),
-        
+              ))),
+        hr(),
         # trigger warning
-        h4(
+        h3(
           strong("WARNING"), ": Some content may include references to
           potentially triggering topics such as mental illness."
         ),
-        br(),
-        h4("If you have any issues with accessibility, please contact Dr. 
-        Nicole Noffsinger-Frazier at nanoffsi@sewanee.edu"),
-        
         # resources
-        h3("Resources:"),
-        h4("University Wellness Center Counseling and Psychological 
+        h3(strong("Resources:")),
+        fluidRow(
+          box(width = 12,
+              h4("University Wellness Center Counseling and Psychological 
            Services: 931-598-1325",
-           br(),
-           "ProtoCall: 931-598-1700 (used after 5pm)",
-           br(),
-           "Title IX Coordinator at Sewanee, Dr. Sylvia Gray: 931-598-1420, 
+                 br(),
+                 "ProtoCall: 931-598-1700 (used after 5pm)",
+                 br(),
+                 "Title IX Coordinator at Sewanee, Dr. Sylvia Gray: 931-598-1420, 
            Woods 138,",
-           a(href ="mailto:smgray@sewanee.edu", "Email"),
-           br(),
-           "Chattanooga Rape Crisis Center: 423-755-2700",
-           br(),
-           "24-Hour Sexual Assault Violence Response Team (Nashville): 
+                 a(href ="mailto:smgray@sewanee.edu", "smgray@sewanee.edu"),
+                 br(),
+                 "Chattanooga Rape Crisis Center: 423-755-2700",
+                 br(),
+                 "24-Hour Sexual Assault Violence Response Team (Nashville): 
            1-800-879-1999",
-           br(),
-           "RAINN (Rape, Abuse & Incest National Network): 1-800-656-4673",
-           br(),
-           "Southern Tennessee Regional Hospital - Sewanee: 931-598-5691",
-           br()
-        ),
+                 br(),
+                 "RAINN (Rape, Abuse & Incest National Network): 1-800-656-4673",
+                 br(),
+                 "Southern Tennessee Regional Hospital - Sewanee: 931-598-5691",
+                 br()
+              ))),
+        h4("*If you have any issues with accessibility, please contact Dr. Nicole Noffsinger-Frazier at", 
+           a(href = "mailto:nanoffsi@sewanee.edu" , "nanoffsi@sewanee.edu")),
         
         fluidRow(
-          column(12, h4('Who filled out the survey?') )
+          column(12, h3('Who filled out the survey?') )
         ),
         
         fluidRow(
@@ -426,12 +441,11 @@ ui <- dashboardPage(
                            selected = 'Class Year'
             )
           )
-        ),
-        
+        )
       ),
       
       # Second tab content
-      tabItem(tabName = "Mental_Health",
+      tabItem(tabName = "section1",
               actionButton('tutorial', 'Click for User Information'),
               h2('Trends on Mental Health'),
               hr(),
@@ -519,8 +533,8 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(width = 12,)
-              ),
-              hr(),
+              )),
+              tabItem(tabName = 'section2',
               h2('Correlations'),
               fluidRow(
                 column(12, h4("Percentage of respondents who reported having 
@@ -596,7 +610,7 @@ your academic performance?'",
       
       # Third tab content
       tabItem(
-        tabName = 'Well_being',
+        tabName = 'section3',
         h2('Trends on Well-being'),
         hr(),
         fluidRow(
@@ -649,10 +663,11 @@ your academic performance?'",
               label = 'Select a Flourishing Question:',
               data = flourQues)
             )
-          ),
-        br(),
+          )),
+      tabItem(
+        tabName = 'section4',
+        h2('Well-being Correlations'), 
         hr(),
-        br(),
           fluidRow(
             column(12, h4("Percentage of respondents considered flourishing and
                         their behavior compared to others."))
@@ -1389,7 +1404,7 @@ cigarette orvape pen?',
   
   observeEvent(input$tutorial,
                {shinyalert("How to Use:",
-                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Some graphs are also interactive: hover over to see more information or zoom in on bars!",
+                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Some graphs are also interactive: hover over to see more information or zoom in on bars! Additionally, underneath each graph there is information about the graphs and the variables within the graph.",
                            html = TRUE)
                }) 
 }

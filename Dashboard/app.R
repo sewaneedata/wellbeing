@@ -313,7 +313,7 @@ ui <- dashboardPage(
         "Student Flourishing", tabName = "Well_being",
         icon = icon("leaf"),
         menuItem('Flourishing Trends', tabName = 'section3'),
-        menuItem('Floursihing Correlations', tabName = 'section4')
+        menuItem('Flourishing Correlations', tabName = 'section4')
       ),
       
       
@@ -505,7 +505,8 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(
-                  width = 12,
+                  width = 12, "Fig 2. This graph shows how many days students 
+                  experienced depressive feelings in the last two weeks.",
                   textOutput('phqDesc')
                 )
               ),
@@ -532,7 +533,8 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12,)
+                box(width = 12, "Fig 3. This graph shows how many days students 
+                experienced anxious feelings in the last two weeks.")
               )),
       tabItem(tabName = 'section2',
               h2('Correlations'),
@@ -554,14 +556,15 @@ ui <- dashboardPage(
                 )
               ),
               fluidRow(
-                box(width = 12, "Academic Impaiment is 'In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt
-your academic performance?'",
+                box(width = 12, "Fig 1. Academic Impairment is measured by
+                how many days per month the respondents felt that emotional or 
+                mental difficulties hurt their academic performance.",
                     textOutput('description'))
               ),
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
-                              diagnosed mental illness and their behavior 
+                              diagnosed mental illness and their activity 
                               compared to others."))
               ),
               fluidRow(
@@ -569,7 +572,7 @@ your academic performance?'",
                 column(
                   3, varSelectInput(
                     inputId = 'behaviors',
-                    label = 'Select a Behavior:',
+                    label = 'Select an Activity:',
                     data = behaviors
                   ),
                   varSelectInput(
@@ -580,7 +583,9 @@ your academic performance?'",
                   )
                 )
               ),
-              fluidRow(box(width = 12,
+              fluidRow(box(width = 12,"Fig 2. Students with one or more 
+              diagnosed mental illnesses and their activities compared to 
+              students without any diagnosed mental illness or illnesses.",
                            textOutput('MIdesc'))),
               br(),
               fluidRow(
@@ -604,14 +609,17 @@ your academic performance?'",
                   )
                 )
               ),
-              fluidRow(box(width = 12,
+              fluidRow(box(width = 12, "Fig 3. Students with one or more 
+                           diagnosed mental illnesses and their behaviors 
+                           compared to students without any diagnosed mental 
+                           illness or illnesses.",
                            textOutput('MIdesc2')))
       ),
       
       # Third tab content
       tabItem(
         tabName = 'section3',
-        h2('Trends on Well-being'),
+        h2('Trends on Flourishing'),
         hr(),
         fluidRow(
           column(12,h4("Percentage of students flourishing "))
@@ -648,7 +656,12 @@ your academic performance?'",
         ),
         fluidRow(
           box(
-            width = 9, plotlyOutput('dienerplot', width = 'auto')
+            width = 9, plotlyOutput('dienerplot', width = 'auto'), 
+            "Fig 2. How much students that are flourishing agree with the selected 
+            wellbeing statement. Flourishing individuals are identified as
+            respondents with a flourishing status of ‘Satisfied’ or 
+            ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
+            Flourishing individuals are in the 90th percentile of the SWLS."
           ),
           column(
             3,
@@ -666,7 +679,7 @@ your academic performance?'",
         )),
       tabItem(
         tabName = 'section4',
-        h2('Well-being Correlations'), 
+        h2('Flourishing Correlations'), 
         hr(),
         fluidRow(
           column(12, h4("Percentage of respondents considered flourishing and
@@ -693,9 +706,10 @@ your academic performance?'",
           )
         ),
         fluidRow(
-          box(width = 12, "Flourishing individuals are identified as
-                respondents in the 90th percentile of The Satisfaction 
-                With Life Scale (SWLS).",
+          box(width = 12, "Fig 1. Flourishing individuals are identified as
+                respondents with a flourishing status of ‘Satisfied’ or 
+                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
+                Flourishing individuals are in the 90th percentile of the SWLS.",
               textOutput('fldesc1'))
         ),
         fluidRow(
@@ -722,8 +736,10 @@ your academic performance?'",
           )
         ),
         fluidRow(
-          box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).",
+          box(width = 12, "Fig 2. Flourishing individuals are identified as
+                respondents with a flourishing status of ‘Satisfied’ or 
+                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
+                Flourishing individuals are in the 90th percentile of the SWLS.",
               textOutput('fldesc2'))
         )
       ),

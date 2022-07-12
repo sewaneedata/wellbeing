@@ -11,6 +11,7 @@ library(readr)
 library(tidyverse)
 library(RColorBrewer)
 library(plotly)
+library(shinyalert)
 
 # getting combined data
 # source("../merged.R")
@@ -288,6 +289,7 @@ ui <- dashboardPage(
   dashboardHeader(
     title = "Cracking the Code to Student Flourishing",
     titleWidth = 400
+
   ),
   
   ## Sidebar content
@@ -320,7 +322,7 @@ ui <- dashboardPage(
   ## Body content
   dashboardBody(
     
-    shinyDashboardThemes(theme = "grey_dark"),
+    shinyDashboardThemes(theme = "poor_mans_flatly"),
     
     tabItems(
       
@@ -851,7 +853,8 @@ server <- function(input, output){
         geom_col(aes(x=`School Year` ,y = percent, fill=!!input$homePlot_dem))+
         labs(x='School Year', 
              y='Percentage',
-             title='Number of Survey Respondents')
+             title='Number of Survey Respondents')+
+        theme_gdocs()
     )
     
   })  
@@ -911,6 +914,7 @@ server <- function(input, output){
       ) +
         geom_col(position = 'dodge') +
         ylim(c(0,100)) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
         labs(title = as.character(unique(phq$name)),
              x = 'Response',
@@ -971,6 +975,7 @@ server <- function(input, output){
       ) +
         geom_col(position = 'dodge') +
         ylim(c(0,100)) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
         labs(title = as.character(unique(gad$name)),
              x = 'Response',
@@ -1012,6 +1017,7 @@ server <- function(input, output){
                paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
              subtitle = "2017 - 2021") +
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
@@ -1042,6 +1048,7 @@ server <- function(input, output){
              y = 'Percent of Students',
              x = 'Academic Impairment') +
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(legend.position = 'none') +
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
@@ -1072,6 +1079,7 @@ server <- function(input, output){
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
@@ -1100,6 +1108,7 @@ server <- function(input, output){
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
     
   })
@@ -1130,6 +1139,7 @@ server <- function(input, output){
              y='Percentage of Students',
              x='Status') +
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
@@ -1195,6 +1205,7 @@ importantto me',
              x = 'Response',
              y = 'Percent of Students') +
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
@@ -1242,6 +1253,7 @@ importantto me',
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   
@@ -1290,6 +1302,7 @@ importantto me',
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
+        theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
   })
   

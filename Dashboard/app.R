@@ -289,7 +289,7 @@ ui <- dashboardPage(
   dashboardHeader(
     title = "Cracking the Code to Student Flourishing",
     titleWidth = 400
-
+    
   ),
   
   ## Sidebar content
@@ -438,7 +438,7 @@ ui <- dashboardPage(
             varSelectInput(inputId = 'homePlot_dem',
                            label = 'Select a Demographic:',
                            data = demographics1,
-                           selected = 'Class Year'
+                           selected = 'Gender'
             )
           )
         )
@@ -534,7 +534,7 @@ ui <- dashboardPage(
               fluidRow(
                 box(width = 12,)
               )),
-              tabItem(tabName = 'section2',
+      tabItem(tabName = 'section2',
               h2('Correlations'),
               fluidRow(
                 column(12, h4("Percentage of respondents who reported having 
@@ -662,70 +662,70 @@ your academic performance?'",
               inputId = 'flourq',
               label = 'Select a Flourishing Question:',
               data = flourQues)
-            )
-          )),
+          )
+        )),
       tabItem(
         tabName = 'section4',
         h2('Well-being Correlations'), 
         hr(),
-          fluidRow(
-            column(12, h4("Percentage of respondents considered flourishing and
+        fluidRow(
+          column(12, h4("Percentage of respondents considered flourishing and
                         their behavior compared to others."))
+        ),
+        fluidRow(
+          box(
+            width = 9, plotlyOutput("Fplot2", width = 'auto')
           ),
-          fluidRow(
-            box(
-              width = 9, plotlyOutput("Fplot2", width = 'auto')
+          column(
+            3,
+            varSelectInput(
+              inputId = 'Fplot2_dem',
+              label = 'Select a Demographic:',
+              data = demographics,
+              selected = 'Class Year'
             ),
-            column(
-              3,
-              varSelectInput(
-                inputId = 'Fplot2_dem',
-                label = 'Select a Demographic:',
-                data = demographics,
-                selected = 'Class Year'
-              ),
-              br(),
-              varSelectInput(
-                inputId = 'Fplot2_var',
-                label = 'Select a Behavior:',
-                data = behaviors
-              )
+            br(),
+            varSelectInput(
+              inputId = 'Fplot2_var',
+              label = 'Select a Behavior:',
+              data = behaviors
             )
-          ),
-          fluidRow(
-            box(width = 12, "Flourishing individuals are identified as
+          )
+        ),
+        fluidRow(
+          box(width = 12, "Flourishing individuals are identified as
                 respondents in the 90th percentile of The Satisfaction 
                 With Life Scale (SWLS).",
-                textOutput('fldesc1'))
-          ),
-          fluidRow(
-            column(12, h4("Percentage of respondents considered flourishing and 
+              textOutput('fldesc1'))
+        ),
+        fluidRow(
+          column(12, h4("Percentage of respondents considered flourishing and 
                         substance use behavior compared to others."))
+        ),
+        fluidRow(
+          box(
+            width = 9, plotlyOutput("Fplot3", width = 'auto')
           ),
-          fluidRow(
-            box(
-              width = 9, plotlyOutput("Fplot3", width = 'auto')
+          column(
+            3,
+            varSelectInput(
+              inputId = 'Fplot3_dem',
+              label = 'Select a Demographic:',
+              data = demographics
             ),
-            column(
-              3,
-              varSelectInput(
-                inputId = 'Fplot3_dem',
-                label = 'Select a Demographic:',
-                data = demographics
-              ),
-              br(),
-              varSelectInput(
-                inputId = 'Fplot3_var',
-                label = 'Select a Behavior:',
-                data = substance_behaviors
-              )
+            br(),
+            varSelectInput(
+              inputId = 'Fplot3_var',
+              label = 'Select a Behavior:',
+              data = substance_behaviors
             )
-          ),
-          fluidRow(
-            box(width = 12, "Flourishing individuals are identified as respondents
-          in the 90th percentile of The Satisfaction With Life Scale (SWLS).",
-                textOutput('fldesc2'))
           )
+        ),
+        fluidRow(
+          box(width = 12, "Flourishing individuals are identified as respondents
+          in the 90th percentile of The Satisfaction With Life Scale (SWLS).",
+              textOutput('fldesc2'))
+        )
       ),
       
       # Fifth tab content
@@ -854,7 +854,7 @@ server <- function(input, output){
   ###############################################################################
   ################################### plots ##################################### 
   ###############################################################################
-
+  
   output$homePlot <- renderPlotly({
     
     n_graph <- HMS %>% 
@@ -948,7 +948,7 @@ server <- function(input, output){
              x = 'Response',
              y = 'Percent of Students') +
         scale_fill_manual(values = cbPalette)
-      ) %>% 
+    ) %>% 
       layout(annotations = list(x=1,
                                 y=1,
                                 xref="paper",
@@ -957,7 +957,7 @@ server <- function(input, output){
                                             as.character(sum( unique(phq$total)))),
                                 showarrow=F)
       )
-      
+    
   })
   
   
@@ -1018,7 +1018,16 @@ server <- function(input, output){
         labs(title = as.character(unique(gad$name)),
              x = 'Response',
              y = 'Percent of Students') +
-        scale_fill_manual(values = cbPalette))
+        scale_fill_manual(values = cbPalette)
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(gad$total)))),
+                                showarrow=F)
+      )
   })
   
   
@@ -1052,11 +1061,22 @@ server <- function(input, output){
         geom_col(position = 'dodge')+
         ylim(c(0,100))+
         labs(title = 
-               paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
+               paste("Percentage of Students Diagnosed with a Mental Illness by",
+                     input$ment1_dem),
              subtitle = "2017 - 2021") +
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              mental_illness$total)))),
+                                showarrow=F)
+      )
   })
   
   #########################
@@ -1088,7 +1108,17 @@ server <- function(input, output){
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(legend.position = 'none') +
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              impairment$total)))),
+                                showarrow=F)
+      )
   })
   
   
@@ -1117,7 +1147,17 @@ server <- function(input, output){
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              MIPercent$denominator)))),
+                                showarrow=F)
+      )
   })
   
   ########################################
@@ -1145,7 +1185,17 @@ server <- function(input, output){
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>%
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum(unique(
+                                              MIPercent2$denominator)))),
+                                showarrow=F)
+      )
     
   })
   
@@ -1176,7 +1226,17 @@ server <- function(input, output){
              x='Status') +
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              dienerpercent$total)))),
+                                showarrow=F)
+      )
   })
   
   ###########################################################################
@@ -1242,7 +1302,17 @@ importantto me',
              y = 'Percent of Students') +
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              flourishing$total)))),
+                                showarrow=F)
+      )
   })
   
   ###########################################################################
@@ -1289,7 +1359,17 @@ importantto me',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              action_flourish$total)))),
+                                showarrow=F)
+      )
   })
   
   
@@ -1337,7 +1417,17 @@ importantto me',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+    ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(
+                                              action_flourish2$total)))),
+                                showarrow=F)
+      )
   })
   
   output$description <- renderText({

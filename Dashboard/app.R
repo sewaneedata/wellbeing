@@ -858,6 +858,14 @@ server <- function(input, output){
              y='Percentage',
              title='Number of Survey Respondents')+
         theme_gdocs()
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", 
+                                                as.character(unique
+                                                             (n_graph$total))),
+                                    showarrow=F)
     )
     
   })  
@@ -907,6 +915,7 @@ server <- function(input, output){
                                    'Several days',
                                    'More than\n half the days',
                                    'Nearly every day'))
+    
     ggplotly(
       ggplot(data = phq,
              aes(
@@ -922,7 +931,17 @@ server <- function(input, output){
         labs(title = as.character(unique(phq$name)),
              x = 'Response',
              y = 'Percent of Students') +
-        scale_fill_manual(values = cbPalette))
+        scale_fill_manual(values = cbPalette)
+      ) %>% 
+      layout(annotations = list(x=1,
+                                y=1,
+                                xref="paper",
+                                yref="paper",
+                                text= paste("responses =", 
+                                            as.character(sum( unique(phq$total)))),
+                                showarrow=F)
+      )
+      
   })
   
   

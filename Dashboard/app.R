@@ -872,7 +872,8 @@ server <- function(input, output){
         labs(x='School Year', 
              y='Percentage',
              title='Number of Survey Respondents')+
-        theme_gdocs()
+        theme_gdocs()+
+        scale_fill_manual(values = cbPalette)
     ) %>% layout(annotations = list(x=1,
                                     y=1,
                                     xref="paper",
@@ -1112,7 +1113,6 @@ server <- function(input, output){
                  y = percent, 
                  fill = !!input$MIdem)) +
         geom_col(position = 'dodge')+
-        ylim(c(0,50))+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
@@ -1141,7 +1141,6 @@ server <- function(input, output){
                  y = percent, 
                  fill = !!input$MIdem2)) +
         geom_col(position = 'dodge')+
-        ylim(c(0,50))+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
@@ -1286,7 +1285,6 @@ importantto me',
                      fill = !!input$Fplot2_dem), 
                  position = 'dodge')+
         facet_wrap(~flourish_status) +
-        # ylim(c(0, 50)) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
@@ -1335,7 +1333,6 @@ importantto me',
                      fill = !!input$Fplot3_dem), 
                  position = 'dodge')+
         facet_wrap(~flourish_status) +
-        ylim(c(0, 50)) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +

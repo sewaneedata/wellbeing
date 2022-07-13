@@ -51,6 +51,7 @@ HMS <- HMS %>%
 HMS$International <- factor(HMS$International, levels = c(0,1),
                             labels = c('No', 'Yes'))
 
+
 # changing the values of the activ columns from 'NA' and 1 to 0 and 1
 HMS <- HMS %>% 
   mutate(`Varsity Athletics` = ifelse(is.na(`Varsity Athletics`), 0, `Varsity Athletics`)) %>% 
@@ -212,9 +213,9 @@ HMS <- HMS %>%
   left_join(binge, by = "responseid")
 
 HMS$`Binge Drinking` <- factor(HMS$`Binge Drinking`, levels = c(1, 2, 3, 4, 5, 6, 7),
-                    labels = c('None', 'Once', 'Twice', '3 to 5 times',
-                               '6 to 9 times', '10 or more times',
-                               "Don't know"))
+                               labels = c('None', 'Once', 'Twice', '3 to 5 times',
+                                          '6 to 9 times', '10 or more times',
+                                          "Don't know"))
 
 # creating a drug use column in HMS
 drug <- HMS %>% 
@@ -230,7 +231,7 @@ HMS <- HMS %>%
   mutate(`Drug Use` = ifelse(is.na(`Drug Use`), 0, `Drug Use`))
 
 HMS$`Drug Use` <- factor(HMS$`Drug Use`, levels = c(0, 1),
-                   labels = c('No', 'Yes'))
+                         labels = c('No', 'Yes'))
 
 behaviors <- HMS %>% 
   select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, 
@@ -328,7 +329,9 @@ ui <- dashboardPage(
         menuItem('Flourishing Correlations', tabName = 'section4')
       ),
       
-      
+      menuItem("Key Findings", tabName = 'key', icon = icon('key', 
+                                                            class = NULL,
+                                                            lib = 'font-awesome')),
       menuItem(
         "About", tabName = 'About', icon = icon('question')
       )
@@ -345,7 +348,7 @@ ui <- dashboardPage(
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     
-    tabItems(
+    tabItems( 
       
       # First tab content
       tabItem(
@@ -445,13 +448,18 @@ ui <- dashboardPage(
         fluidRow(
           box(width = 9, plotlyOutput("homePlot", width = 'auto')),
           
-          box(
-            width = 3,
-            varSelectInput(inputId = 'homePlot_dem',
-                           label = 'Select a Demographic:',
-                           data = demographics1,
-                           selected = 'Gender'
-            )
+          column(3,
+                 varSelectInput(inputId = 'homePlot_dem',
+                                label = 'Select a Demographic:',
+                                data = demographics1,
+                                selected = 'Gender'
+                 ),
+                 h4('Gender: Man Identified includes transgender males. Woman
+            identified includes transgender females.'),
+                 h4('Race: POC includes races other than white (Black, Asian, 
+            Hispanic, Multiracial, etc.)'),
+                 h4('LGBTQ+: includes sexual identities other than heterosexual
+            as well as genders that are not cisgender.')
           )
         )
       ),
@@ -480,13 +488,13 @@ ui <- dashboardPage(
                 
                 # select demographics for first plot
                 column(3,
-                  varSelectInput(inputId = 'ment1_dem',
-                                 label = 'Select a Demographic:',
-                                 data = demographics1,
-                                 selected = 'Class Year'
-                  )
+                       varSelectInput(inputId = 'ment1_dem',
+                                      label = 'Select a Demographic:',
+                                      data = demographics1,
+                                      selected = 'Class Year'
+                       )
                 )),
-
+              
               fluidRow(
                 column(12, h4('Percentage of respondents’ answers to corresponding 
                 depression survey questions'))
@@ -499,21 +507,21 @@ ui <- dashboardPage(
                     textOutput('phqDesc')
                 ),
                 column(3,
-                  varSelectInput(
-                    inputId = "phqdem",
-                    "Select a Demographic:",
-                    demographics,
-                    selected = 'Class Year'
-                  ),
-                  br(),
-                  varSelectInput(
-                    inputId = 'phqQ',
-                    label = 'Select a Depression Question:',
-                    data = phqQues
-                  )
+                       varSelectInput(
+                         inputId = "phqdem",
+                         "Select a Demographic:",
+                         demographics,
+                         selected = 'Class Year'
+                       ),
+                       br(),
+                       varSelectInput(
+                         inputId = 'phqQ',
+                         label = 'Select a Depression Question:',
+                         data = phqQues
+                       )
                 )
               ),
-
+              
               fluidRow(
                 column(12, h4("Percentage of respondents’ answers to corresponding
                 anxiety survey questions"))
@@ -538,7 +546,7 @@ ui <- dashboardPage(
                   )
                 )
               )
-),
+      ),
       tabItem(tabName = 'section2',
               h2('Correlations'),
               hr(),
@@ -554,7 +562,7 @@ ui <- dashboardPage(
                 how many days per month the respondents felt that emotional or 
                 mental difficulties hurt their academic performance.",
                     textOutput('description')
-                    ),
+                ),
                 column(
                   3,
                   varSelectInput(
@@ -564,7 +572,7 @@ ui <- dashboardPage(
                   )
                 )
               ),
-
+              
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
@@ -591,7 +599,7 @@ ui <- dashboardPage(
                   )
                 )
               ),
-
+              
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
@@ -641,7 +649,7 @@ ui <- dashboardPage(
             (SWLS). The scale was developed as a way to assess an individual’s
             cognitive judgment of their satisfaction with their life as a 
                whole."
-          )),
+            )),
           column(
             3,
             varSelectInput(
@@ -652,7 +660,7 @@ ui <- dashboardPage(
             )
           )
         ),
-
+        
         fluidRow(
           column(12, h4("Percentage of respondents’ answers to corresponding 
           positive mental health survey questions"))
@@ -714,7 +722,7 @@ ui <- dashboardPage(
             )
           )
         ),
-
+        
         fluidRow(
           column(12, h4("Percentage of respondents considered flourishing and 
                         substance use behavior compared to others."))
@@ -744,6 +752,158 @@ ui <- dashboardPage(
             )
           )
         )
+      ),
+      tabItem(tabName = 'key',
+              h2("Important Takeaways"),
+              hr(),
+              fluidRow(column(12,
+                              h3('Mental Health',
+                                 style = 'text-align: center;'))),
+              fluidRow(
+                box(width = 4,
+                           h4(strong('Trends')),
+                           'Generally, from 2017 to 2021, mental illness
+                           rates have increased across races.',
+                           br(),
+                    br(),
+                           ' Mental illness is more common among gender queer/
+                           nonconforming (56% in 2021) and self-identified
+                           (100% in 2021) students than in man (21% in 2021)
+                           and woman (45% in 2021) identified students.',
+                           br(),
+                    br(),
+                           'Anxiety and depression are the two most prevalent
+                           mental illnesses on campus. Among students with
+                           mental illnesses, 53% have both
+                           depression and anxiety.',
+                           br(),
+                    br(),
+                           'As class year increases, mental illness
+                           percentages
+                           increase. Seniors (53% in 2019) tend to have more
+                           mental illnesses than freshman (42% in 2019).',
+                           br(),
+                    br(),
+                           'Mental Illnesses are more common among LGBTQ+
+                           students than non-LGBTQ+ students. For example, in
+                           2021, mental illness percent among LGBTQ+ students
+                           was 56% whereas for non-LGBTQ+ students was 35%.'),
+                box(width = 4,
+                           h4(strong('Student Activities')),
+                           'Diagnosed depression and anxiety have a large
+                    impact on academic impairment. 46% and 40% of students with
+                    depression and anxiety, respectively,
+                    report experiencing academic impairment 
+                    for 6 or more days',
+                    br(),
+                    br(),
+                    'Feelings of loneliness do not have as large of an impact
+                    on academic impairment. Around 30-35%, depedning on the
+                    loneliness variable, experience academic impairment only
+                    one or two days.',
+                    br(),
+                    br(),
+                    'Generally, students sleep less than an average of 6 hours,
+                    regardless of mental illness status and demographic.',
+                    br(),
+                    br(),
+                    'Students with mental illnesses use therapy more. In 2021,
+                    around 42% of students with a mental illness reported using
+                    therapy, whereas 35% of students without a mental illness
+                    report not using therapy.',
+                    br(),
+                    br(),
+                    'Knowledge of mental health services on campus is similar
+                    (about 32% agree or strongly agree in 2021)
+                    amongst students with and without mental illnesses' 
+                    ),
+                box(width = 4,
+                    h4(strong('Substance Use')),
+                           'Most students have not had any alcohol in the past
+                    2 weeks regardless of mental illness status 
+                    (around 36% in 2021).',
+                    br(),
+                    br(),
+                    'Binge drinking three to five times or less is more common
+                    (47% in 2021) amongst students without mental illness than
+                    those with(43% in 2021).',
+                    br(),
+                    br(),
+                    'Smoking frequency is mainly zero days for students with 
+                    (33% in 2021) or without (45% in 2021) mental illness.',
+                    br(),
+                    br(),
+                    'Not vaping (68% in 2021) in the past 30 days is more
+                    common than vaping (34% in 2021) across both mental
+                    statuses.',
+                    br(),
+                    br(),
+                    'Drug use is more common in those with mental illnesses
+                    (16% in 2021) compared to those without (13% in 2021).')
+              ),
+              fluidRow(column(12,
+                              h3('Flourishing',
+                                 style = 'text-align: center;'))),
+              fluidRow(
+                    box(width = 4,
+                           h4(strong('Trends')),
+                           'Overall, most students are satisfied (around 40%)
+                           or highly
+                           satisfied (around 27%) with their lives',
+                           br(),
+                           br(),
+                           'Zero percent of gender queer/nonconforming students
+                        report being highly satisfied with their lives.',
+                           br(),
+                           br(),
+                           'Non LGBTQ+ report being more satisfied (41%) and
+                        highly satisfied (31%) than LGBTQ+ students (35% and
+                        11% respectively).',
+                        br(),
+                        br(),
+                        'Life satisfaction generally increases with class year.
+                        36% of first year students report being satisfied
+                        compared to 41% of fourth year students.'),
+                    box(width = 4,
+                        h4(strong('Student Activities')),
+                           'Generally, students sleep less than an average of 6
+                           hours,
+                    regardless of flourishing status and demographic.',
+                        br(),
+                        br(),
+                        'Students who are not flourishing use therapy (46% in
+                        2021) more than not (23% in 2021).' ,
+                        br(),
+                        br(),
+                        'Regardless of flourishing status, most students agree
+                        they have knowledge of mental health services on
+                        campus.'),
+                    box(width = 4,
+                        h4(strong('Substance Use')),
+                           'Most students have not had any alcohol in the past
+                        two weeks whether they are flourishing or not.',
+                        br(),
+                        br(),
+                        'Students who are not flourishing seem to binge drink 3
+                        to 5 times more often than students who are 
+                        flourishing.',
+                        br(),
+                        br(),
+                        'Smoking frequency is mainly zero days for flourishing 
+                        students (25% in 2021) and non-flourishing students
+                        (53% in 2021).',
+                        br(),
+                        br(),
+                        'Not vaping (67% in 2021) in the past 30 days is more
+                        common than vaping (47% in 2021) across both 
+                        flourishing statuses.',
+                        br(),
+                        br(),
+                        'Drug use is generally not common amongst both
+                        flourishing statuses; 51% in 2021 for non-flourishing
+                        students and 20% in 2021 for flourishing students.')
+              )
+              
       ),
       
       # Fifth tab content
@@ -1146,7 +1306,7 @@ server <- function(input, output){
   ########################################
   
   output$plot5 <- renderPlotly({
-
+    
     MIPercent <- HMS %>% 
       select(!!input$behaviors, !!input$MIdem, mentalIllness) %>%
       filter(!is.na(!!input$behaviors)) %>% 
@@ -1227,11 +1387,14 @@ server <- function(input, output){
   
   output$Fplot1 <- renderPlotly({
     #Create an object with the percentage of students that were highly satisfied 
+    # browser()
     dienerpercent<- HMS%>% 
       filter(!is.na(diener_status)) %>% 
+      filter(!is.na(!!input$Fdem1)) %>% 
       group_by(!!input$Fdem1, diener_status) %>% 
-      tally() %>% 
+      summarise(n = n()) %>% 
       ungroup() %>% 
+      group_by(!!input$Fdem1) %>% 
       mutate( total = sum(n)) %>% 
       mutate(percent = (n/total)*100)
     
@@ -1239,8 +1402,9 @@ server <- function(input, output){
     ggplotly(
       ggplot(data = dienerpercent)+
         geom_col(aes(x = diener_status, y = percent,
-                     fill = !!input$Fdem1))+
-        ylim(c(0, 100)) +
+                     fill = !!input$Fdem1),
+                 position = 'dodge')+
+        # ylim(c(0, 100)) +
         coord_flip()+
         labs(title = 'Overall Life Satisfaction for Students',
              y='Percentage of Students',
@@ -1460,8 +1624,8 @@ importantto me',
                    'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
                    'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
                    "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
-                   'Lacking Companionship' =  "A measurment of loneliness that asks 'How often do you feel that you lack companionship?'",
-                   'Feeling Leftout' = "A measurment of loneliness that asks 'How often do you feel left out?'"
+                   'Lacking Companionship' =  "A measurment of loneliness that asks: How often do you feel that you lack companionship?",
+                   'Feeling Leftout' = "A measurment of loneliness that asks: How often do you feel left out?"
     )
   })
   
@@ -1469,10 +1633,11 @@ importantto me',
     text1 <- switch(as.character(input$behaviors),
                     Sleep= 'Average hours of sleep per day',
                     Exercise = 'How much do you agree with the following
-statement?:My exercise habits have changed a lot since I began as astudent at my school.',
+statement? : My exercise habits have changed a lot since I began as a student at my school.',
                     'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
                     'Varsity Athletics' ='Are you currently involved in varsity athletics?',
-                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?')
+                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+                    'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.')
   })
   
   output$MIdesc2 <- renderText({
@@ -1480,8 +1645,7 @@ statement?:My exercise habits have changed a lot since I began as astudent at my
                     'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
                     'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
                     'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
-                    'Vaping' = 'Over the past 30 days, have you used an electronic
-cigarette orvape pen?',
+                    'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
                     'Drug Use' = 'Over the past 30 days have you used any drugs' )
   })
   output$description <- renderText({
@@ -1498,10 +1662,13 @@ cigarette orvape pen?',
     text1 <- switch(as.character(input$Fplot2_var),
                     Sleep= 'Average hours of sleep per day',
                     Exercise = 'How much do you agree with the following
-statement?:My exercise habits have changed a lot since I began as astudent at my school.',
+statement? : My exercise habits have changed a lot since I began as a student at my school.',
                     'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
                     'Varsity Athletics' ='Are you currently involved in varsity athletics?',
-                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?')
+                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+                    
+                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+                    'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.')
   })
   
   output$fldesc2 <- renderText({
@@ -1509,8 +1676,7 @@ statement?:My exercise habits have changed a lot since I began as astudent at my
                     'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
                     'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
                     'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
-                    'Vaping' = 'Over the past 30 days, have you used an electronic
-cigarette orvape pen?',
+                    'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
                     'Drug Use' = 'Over the past 30 days have you used any drugs' )
   })
   

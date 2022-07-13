@@ -44,7 +44,8 @@ HMS <- HMS %>%
          `Well-being Question 1` = diener1, `Well-being Question 2` = diener2,
          `Well-being Question 3` = diener3, `Well-being Question 4` = diener4,
          `Well-being Question 5` = diener5, `Well-being Question 6` = diener6,
-         `Well-being Question 7` = diener7, `Well-being Question 8` = diener8)
+         `Well-being Question 7` = diener7, `Well-being Question 8` = diener8,
+         `Knowledge of Services` = knowwher)
 
 # changing the international column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$International <- factor(HMS$International, levels = c(0,1),
@@ -150,6 +151,14 @@ HMS$`Therapy Use` <- factor(HMS$`Therapy Use`, levels = c(1, 2, 3, 4),
                                        'Yes,\n since starting college', 
                                        'Yes,\n prior to college\n and since starting college)'))
 
+HMS$`Knowledge of Services` <- factor(HMS$`Knowledge of Services`,
+                                      levels = c(1, 2, 3, 4, 5, 6),
+                                      labels = c('Strongly agree',
+                                                 'Agree',
+                                                 'Somewhat agree',
+                                                 'Somewhat disagree',
+                                                 'Disagree',
+                                                 'Strongly disagree'))
 
 
 # create a column of diener scores         
@@ -223,7 +232,8 @@ HMS$drug <- factor(HMS$drug, levels = c(0, 1),
                    labels = c('No', 'Yes'))
 
 behaviors <- HMS %>% 
-  select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, `Greek Life`)
+  select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, 
+         `Greek Life`, `Knowledge of Services`)
 
 substance_behaviors <- HMS %>% 
   select(`Alcohol Use`, 'binge', `Smoking Frequency`, 'Vaping', 'drug')
@@ -538,6 +548,7 @@ ui <- dashboardPage(
               )),
       tabItem(tabName = 'section2',
               h2('Correlations'),
+              hr(),
               fluidRow(
                 column(12, h4("Percentage of respondents who reported having 
                 days in which emotional or mental difficulties have affect 
@@ -1143,13 +1154,14 @@ server <- function(input, output){
   ########################################
   
   output$plot5 <- renderPlotly({
-    
+
     MIPercent <- HMS %>% 
       select(!!input$behaviors, !!input$MIdem, mentalIllness) %>%
       filter(!is.na(!!input$behaviors)) %>% 
       group_by(!!input$behaviors, !!input$MIdem, mentalIllness) %>% 
       mutate(numerator = n()) %>%
       ungroup() %>%  
+      group_by(!!input$MIdem) %>% 
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
@@ -1187,7 +1199,8 @@ server <- function(input, output){
       filter(!is.na(!!input$substance_behaviors)) %>% 
       group_by(!!input$substance_behaviors, !!input$MIdem2, mentalIllness) %>% 
       mutate(numerator = n()) %>%
-      ungroup() %>%  
+      ungroup() %>% 
+      group_by(!!input$MIdem2) %>% 
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
@@ -1345,7 +1358,7 @@ importantto me',
               Exercise, `Therapy Use`, ther_help, ther_helped_me, 
               `Smoking Frequency`, Vaping, binge, `Greek Life`, 
               `Varsity Athletics`, Sleep, International, `LGBTQ+`, 
-              drug, `Alcohol Use`)
+              drug, `Alcohol Use`, `Knowledge of Services`)
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
@@ -1356,13 +1369,15 @@ importantto me',
     
     # find percent of people who flourish vs not, grouped by selected variables
     action_flourish <- action_flourish %>% 
+      select(!!input$Fplot2_var, !!input$Fplot2_dem, flourish_status) %>% 
       filter(!is.na(!!input$Fplot2_var)) %>% 
       group_by(flourish_status, !!input$Fplot2_var, 
                !!input$Fplot2_dem) %>% 
-      tally() %>% 
+      summarise(numerator = n()) %>% 
       ungroup() %>% 
-      mutate(total = sum(n),
-             percent = (n)/(total) * 100) 
+      group_by(!!input$Fplot2_dem) %>% 
+      mutate(total = sum(numerator),
+             percent = ((numerator)/(total)) * 100) 
     
     ggplotly(
       ggplot(data = action_flourish)+
@@ -1413,12 +1428,14 @@ importantto me',
                                          TRUE ~ "Not flourishing"))
     
     # find percent of people who flourish vs not, grouped by selected variables
+    
     action_flourish2 <- action_flourish2 %>% 
       filter(!is.na(!!input$Fplot3_var)) %>% 
       group_by(flourish_status, !!input$Fplot3_var, 
                !!input$Fplot3_dem) %>% 
-      tally() %>% 
+      summarise(n = n()) %>% 
       ungroup() %>% 
+      group_by(!!input$Fplot3_dem) %>% 
       mutate(total = sum(n),
              percent = (n)/(total) * 100) 
     

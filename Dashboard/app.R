@@ -128,7 +128,8 @@ HMS <- HMS %>%
   mutate(mentalIllness = ifelse(is.na(mentalIllness), 0, mentalIllness))
 
 HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
-                            labels = c('No', 'Yes'))
+                            labels = c('No Mental Illness', 
+                                       'Has Mental Illness'))
 
 # changing the LGBTQ column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$`LGBTQ+` <- factor(HMS$`LGBTQ+`, levels = c(0,1),
@@ -204,16 +205,16 @@ binge <- HMS %>%
   pivot_longer(!responseid) %>%  
   filter(!is.na(value)) %>% 
   group_by(responseid) %>% 
-  mutate(binge = value) %>%  
-  distinct(responseid, binge)
+  mutate(`Binge Drinking` = value) %>%  
+  distinct(responseid, `Binge Drinking`)
 
 HMS <- HMS %>% 
   left_join(binge, by = "responseid")
 
-# HMS$binge <- factor(HMS$binge, levels = C(1, 2, 3, 4, 5, 6, 7),
-#                     labels = c('None', 'Once', 'Twice', '3 to 5 times',
-#                                '6 to 9 times', '10 or more times', 
-#                                "Don't know"))
+HMS$`Binge Drinking` <- factor(HMS$`Binge Drinking`, levels = c(1, 2, 3, 4, 5, 6, 7),
+                    labels = c('None', 'Once', 'Twice', '3 to 5 times',
+                               '6 to 9 times', '10 or more times',
+                               "Don't know"))
 
 # creating a drug use column in HMS
 drug <- HMS %>% 
@@ -221,14 +222,14 @@ drug <- HMS %>%
   pivot_longer(!responseid) %>%  
   filter(!is.na(value)) %>% 
   group_by(responseid) %>% 
-  mutate(drug = value) %>%  
-  distinct(responseid, drug)
+  mutate(`Drug Use` = value) %>%  
+  distinct(responseid, `Drug Use`)
 
 HMS <- HMS %>% 
   left_join(drug, by = "responseid") %>% 
-  mutate(drug = ifelse(is.na(drug), 0, drug))
+  mutate(`Drug Use` = ifelse(is.na(`Drug Use`), 0, `Drug Use`))
 
-HMS$drug <- factor(HMS$drug, levels = c(0, 1),
+HMS$`Drug Use` <- factor(HMS$`Drug Use`, levels = c(0, 1),
                    labels = c('No', 'Yes'))
 
 behaviors <- HMS %>% 
@@ -236,7 +237,8 @@ behaviors <- HMS %>%
          `Greek Life`, `Knowledge of Services`)
 
 substance_behaviors <- HMS %>% 
-  select(`Alcohol Use`, 'binge', `Smoking Frequency`, 'Vaping', 'drug')
+  select(`Alcohol Use`, `Binge Drinking`, `Smoking Frequency`, 
+         'Vaping', `Drug Use`)
 
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
@@ -1076,7 +1078,8 @@ server <- function(input, output){
     
     mental_illness <- HMS %>% 
       group_by(`School Year`, !!input$ment1_dem) %>%
-      summarize(withMI = sum(ifelse(mentalIllness == "Yes", 1, 0)), 
+      summarize(withMI = sum(ifelse(mentalIllness == "Has Mental Illness", 
+                                    1, 0)), 
                 total = n(), percent = (withMI/total)*100)
     
     
@@ -1356,9 +1359,9 @@ importantto me',
     action_flourish <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
               Exercise, `Therapy Use`, ther_help, ther_helped_me, 
-              `Smoking Frequency`, Vaping, binge, `Greek Life`, 
+              `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
               `Varsity Athletics`, Sleep, International, `LGBTQ+`, 
-              drug, `Alcohol Use`, `Knowledge of Services`)
+              `Drug Use`, `Alcohol Use`, `Knowledge of Services`)
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
@@ -1416,9 +1419,9 @@ importantto me',
     action_flourish2 <- HMS %>% 
       select( `School Year`, Race, Gender,`Class Year`, diener_score,
               Exercise, `Therapy Use`, ther_help, ther_helped_me, 
-              `Smoking Frequency`, Vaping, binge, `Greek Life`, 
+              `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
               `Varsity Athletics`, Sleep ,International, `LGBTQ+`, 
-              drug, `Alcohol Use`)
+              `Drug Use`, `Alcohol Use`)
     
     # define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
@@ -1486,11 +1489,11 @@ statement?:My exercise habits have changed a lot since I began as astudent at my
   output$MIdesc2 <- renderText({
     text1 <- switch(as.character(input$substance_behaviors),
                     'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
-                    'binge' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
+                    'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
                     'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
                     'Vaping' = 'Over the past 30 days, have you used an electronic
 cigarette orvape pen?',
-                    'drug' = 'Over the past 30 days have you used any drugs' )
+                    'Drug Use' = 'Over the past 30 days have you used any drugs' )
   })
   output$description <- renderText({
     text <- switch(as.character(input$ment4_vars),
@@ -1515,11 +1518,11 @@ statement?:My exercise habits have changed a lot since I began as astudent at my
   output$fldesc2 <- renderText({
     text1 <- switch(as.character(input$Fplot3_var),
                     'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
-                    'binge' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
+                    'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
                     'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
                     'Vaping' = 'Over the past 30 days, have you used an electronic
 cigarette orvape pen?',
-                    'drug' = 'Over the past 30 days have you used any drugs' )
+                    'Drug Use' = 'Over the past 30 days have you used any drugs' )
   })
   
   observeEvent(input$tutorial,

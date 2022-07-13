@@ -472,35 +472,33 @@ ui <- dashboardPage(
               fluidRow(
                 
                 box(
-                  width = 9, plotlyOutput("mentalIllness_1", width = 'auto')
-                ),
+                  width = 9, plotlyOutput("mentalIllness_1", width = 'auto'),
+                  "Fig 1. Clinically diagnosed mental illness rates among
+                students have relatively remained the same since 2017 - around 
+                35%. We hypothesize that factors such as Covid-19 might account
+                for the increase from 2019 onwards."),
                 
                 # select demographics for first plot
-                box(
-                  width = 3,
+                column(3,
                   varSelectInput(inputId = 'ment1_dem',
                                  label = 'Select a Demographic:',
                                  data = demographics1,
                                  selected = 'Class Year'
                   )
-                )
-              ),
-              fluidRow(
-                box(width = 12, "Fig 1. Clinically diagnosed mental illness rates among
-                students have relatively remained the same since 2017 - around 
-                35%. We hypothesize that factors such as Covid-19 might account 
-                for the increase from 2019 onwards.")
-              ),
+                )),
+
               fluidRow(
                 column(12, h4('Percentage of respondents’ answers to corresponding 
                 depression survey questions'))
               ),
               fluidRow(
                 box(width = 9,
-                    plotlyOutput( "phqPlot", width = 'auto')
+                    plotlyOutput( "phqPlot", width = 'auto'),
+                    "Fig 2. This graph shows how many days students 
+                  experienced depressive feelings in the last two weeks.",
+                    textOutput('phqDesc')
                 ),
-                box(
-                  width = 3,
+                column(3,
                   varSelectInput(
                     inputId = "phqdem",
                     "Select a Demographic:",
@@ -515,19 +513,15 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(
-                box(
-                  width = 12, "Fig 2. This graph shows how many days students 
-                  experienced depressive feelings in the last two weeks.",
-                  textOutput('phqDesc')
-                )
-              ),
+
               fluidRow(
                 column(12, h4("Percentage of respondents’ answers to corresponding
                 anxiety survey questions"))
               ),
               fluidRow(
-                box(width = 9, plotlyOutput("gadPlot", width = 'auto')),
+                box(width = 9, plotlyOutput("gadPlot", width = 'auto'),
+                    "Fig 3. This graph shows how many days students 
+                experienced anxious feelings in the last two weeks."),
                 column(
                   3,
                   varSelectInput(
@@ -543,11 +537,8 @@ ui <- dashboardPage(
                     data = gadQues
                   )
                 )
-              ),
-              fluidRow(
-                box(width = 12, "Fig 3. This graph shows how many days students 
-                experienced anxious feelings in the last two weeks.")
-              )),
+              )
+),
       tabItem(tabName = 'section2',
               h2('Correlations'),
               hr(),
@@ -558,7 +549,12 @@ ui <- dashboardPage(
               ),
               fluidRow(
                 box(width = 9, plotlyOutput("mentalIllness_4", 
-                                            width = 'auto')),
+                                            width = 'auto'),
+                    "Fig 1. Academic Impairment is measured by
+                how many days per month the respondents felt that emotional or 
+                mental difficulties hurt their academic performance.",
+                    textOutput('description')
+                    ),
                 column(
                   3,
                   varSelectInput(
@@ -568,12 +564,7 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(
-                box(width = 12, "Fig 1. Academic Impairment is measured by
-                how many days per month the respondents felt that emotional or 
-                mental difficulties hurt their academic performance.",
-                    textOutput('description'))
-              ),
+
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
@@ -581,7 +572,11 @@ ui <- dashboardPage(
                               compared to others."))
               ),
               fluidRow(
-                box(width = 9, plotlyOutput("plot5", width = 'auto')),
+                box(width = 9, plotlyOutput("plot5", width = 'auto'),
+                    "Fig 2. Students with one or more 
+              diagnosed mental illnesses and their activities compared to 
+              students without any diagnosed mental illness or illnesses.",
+                    textOutput('MIdesc')),
                 column(
                   3, varSelectInput(
                     inputId = 'behaviors',
@@ -596,18 +591,20 @@ ui <- dashboardPage(
                   )
                 )
               ),
-              fluidRow(box(width = 12,"Fig 2. Students with one or more 
-              diagnosed mental illnesses and their activities compared to 
-              students without any diagnosed mental illness or illnesses.",
-                           textOutput('MIdesc'))),
+
               br(),
               fluidRow(
                 column(12, h4("Percentage of respondents with a clinically
-                              diagnosed mental illness and subtance use behavior 
-                              compared to others."))
+                              diagnosed mental illness and subtance use
+                              behavior compared to others."))
               ),
               fluidRow(
-                box(width = 9, plotlyOutput("plot6", width = 'auto')),
+                box(width = 9, plotlyOutput("plot6", width = 'auto'),
+                    "Fig 3. Students with one or more 
+                           diagnosed mental illnesses and their behaviors 
+                           compared to students without any diagnosed mental 
+                           illness or illnesses.",
+                    textOutput('MIdesc2')),
                 column(
                   3, varSelectInput(
                     inputId = 'substance_behaviors',
@@ -621,12 +618,7 @@ ui <- dashboardPage(
                     selected = 'Class Year'
                   )
                 )
-              ),
-              fluidRow(box(width = 12, "Fig 3. Students with one or more 
-                           diagnosed mental illnesses and their behaviors 
-                           compared to students without any diagnosed mental 
-                           illness or illnesses.",
-                           textOutput('MIdesc2')))
+              )
       ),
       
       # Third tab content
@@ -639,8 +631,17 @@ ui <- dashboardPage(
         ),
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot1", width = 'auto')
-          ),
+            width = 9, plotlyOutput("Fplot1", width = 'auto'),
+            "Fig 1. 60% of respondents describe themselves as either satisfied
+            or highly satisfied. Their lives are not perfect, but they love
+            their lives and feel that things are going very well",
+            br(),
+            br(),
+            em("Categories are derived from The Satisfaction With Life Scale
+            (SWLS). The scale was developed as a way to assess an individual’s
+            cognitive judgment of their satisfaction with their life as a 
+               whole."
+          )),
           column(
             3,
             varSelectInput(
@@ -651,18 +652,7 @@ ui <- dashboardPage(
             )
           )
         ),
-        fluidRow(
-          box(width = 12, 
-              "Fig 1. 60% of respondents describe themselves as either satisfied or highly 
-          satisfied. Their lives are not perfect, but they love their lives and 
-          feel that things are going very well",
-              br(),
-              br(),
-              em("Categories are derived from The Satisfaction With Life Scale (SWLS). 
-          The scale was developed as a way to assess an individual’s cognitive 
-          judgment of their satisfaction with their life as a whole.")
-          )
-        ),
+
         fluidRow(
           column(12, h4("Percentage of respondents’ answers to corresponding 
           positive mental health survey questions"))
@@ -670,7 +660,8 @@ ui <- dashboardPage(
         fluidRow(
           box(
             width = 9, plotlyOutput('dienerplot', width = 'auto'), 
-            "Fig 2. How much students that are flourishing agree with the selected 
+            "Fig 2. How much students that are flourishing agree with the
+            selected 
             wellbeing statement. Flourishing individuals are identified as
             respondents with a flourishing status of ‘Satisfied’ or 
             ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
@@ -700,7 +691,12 @@ ui <- dashboardPage(
         ),
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot2", width = 'auto')
+            width = 9, plotlyOutput("Fplot2", width = 'auto'),
+            "Fig 1. Flourishing individuals are identified as
+                respondents with a flourishing status of ‘Satisfied’ or 
+                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
+                Flourishing individuals are in the 90th percentile of the SWLS.",
+            textOutput('fldesc1')
           ),
           column(
             3,
@@ -718,20 +714,20 @@ ui <- dashboardPage(
             )
           )
         ),
-        fluidRow(
-          box(width = 12, "Fig 1. Flourishing individuals are identified as
-                respondents with a flourishing status of ‘Satisfied’ or 
-                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
-                Flourishing individuals are in the 90th percentile of the SWLS.",
-              textOutput('fldesc1'))
-        ),
+
         fluidRow(
           column(12, h4("Percentage of respondents considered flourishing and 
                         substance use behavior compared to others."))
         ),
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot3", width = 'auto')
+            width = 9, plotlyOutput("Fplot3", width = 'auto'),
+            "Fig 2. Flourishing individuals are identified as
+                respondents with a flourishing status of ‘Satisfied’ or 
+                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
+                Flourishing individuals are in the 90th percentile of the 
+            SWLS.",
+            textOutput('fldesc2')
           ),
           column(
             3,
@@ -747,13 +743,6 @@ ui <- dashboardPage(
               data = substance_behaviors
             )
           )
-        ),
-        fluidRow(
-          box(width = 12, "Fig 2. Flourishing individuals are identified as
-                respondents with a flourishing status of ‘Satisfied’ or 
-                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
-                Flourishing individuals are in the 90th percentile of the SWLS.",
-              textOutput('fldesc2'))
         )
       ),
       

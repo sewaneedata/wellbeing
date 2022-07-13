@@ -422,11 +422,15 @@ ui <- dashboardPage(
               h4("University Wellness Center Counseling and Psychological 
            Services: 931-598-1325",
                  br(),
-                 "ProtoCall: 931-598-1700 (used after 5pm)",
+                 "24/7 Wellness Crisis Line: 931-598-1700",
                  br(),
-                 "Title IX Coordinator at Sewanee, Dr. Sylvia Gray: 931-598-1420, 
+                 "Nationwide Mental Health Emergency and Suicide Prevention Hotline: 988",
+                 br(),
+                 "Director of Equity, Equal Opportunity, and Title IX, Dr. Sylvia Gray: 931-598-1420, 
            Woods 138,",
                  a(href ="mailto:smgray@sewanee.edu", "smgray@sewanee.edu"),
+                 br(),
+                 "CARE Team: https://new.sewanee.edu/care-team/",
                  br(),
                  "Chattanooga Rape Crisis Center: 423-755-2700",
                  br(),
@@ -439,7 +443,9 @@ ui <- dashboardPage(
                  br()
               ))),
         h4("*If you have any issues with accessibility, please contact Dr. Nicole Noffsinger-Frazier at", 
-           a(href = "mailto:nanoffsi@sewanee.edu" , "nanoffsi@sewanee.edu")),
+           a(href = "mailto:nanoffsi@sewanee.edu" , "nanoffsi@sewanee.edu"), 
+           "or Matthew Brown from Student Accessibility Services", 
+           a(href = "mailto:mabrown@sewanee.edu" , "mabrown@sewanee.edu")),
         
         fluidRow(
           column(12, h3('Who filled out the survey?') )

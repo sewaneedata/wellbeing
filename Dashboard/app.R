@@ -86,13 +86,10 @@ HMS$aca_impa <- factor(HMS$aca_impa, levels = c(1, 2, 3, 4),
                                   '3 to 5 Days', '6 or more Days'))
 
 
-# making every race that has less than 6 people grouped into 'race_other'
+# making people who selected multiple races into 'Multiracial' 
 HMS <- HMS %>%
-  group_by(Race) %>%
   filter(!is.na(Race)) %>%
-  mutate(total = n()) %>%
-  ungroup() %>%
-  mutate(Race = ifelse(total <= 5, 'race_other', Race))
+  mutate(Race= ifelse(grepl(", ", Race), "Multiracial", Race))
 
 # Created new lgbtq+ column from gender and sexuality, then moved trans into
 # respective gender category

@@ -290,6 +290,9 @@ demographics1 <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `LGBTQ+`)
 
+box_height = '41em'
+box_height2 = '33em'
+
 ###############################################################################
 ###################################### ui #####################################
 ###############################################################################
@@ -427,7 +430,7 @@ ui <- dashboardPage(
            Woods 138,",
                  a(href ="mailto:smgray@sewanee.edu", "smgray@sewanee.edu"),
                  br(),
-                 "CARE Team: https://new.sewanee.edu/care-team/",
+                 a(href = "https://new.sewanee.edu/care-team/", "CARE Team"),
                  br(),
                  "Chattanooga Rape Crisis Center: 423-755-2700",
                  br(),
@@ -457,12 +460,13 @@ ui <- dashboardPage(
                                 data = demographics1,
                                 selected = 'Gender'
                  ),
-                 h4('Gender: Man Identified includes transgender males. Woman
-            identified includes transgender females.'),
-                 h4('Race: POC includes races other than white (Black, Asian, 
-            Hispanic, Multiracial, etc.)'),
-                 h4('LGBTQ+: includes sexual identities other than heterosexual
-            as well as genders that are not cisgender.')
+                 h4(strong('Gender:'), 'Man Identified includes transgender
+                 males. Woman identified includes transgender females.'),
+                 h4(strong("Race:"), "Multiracial includes students of multiple
+                 races.Other encompasses races of too small population size to
+                    preserve anonymity."),
+                 h4(strong('LGBTQ+:'), 'includes sexual identities other than
+                 heterosexual as well as genders that are not cisgender.')
           )
         )
       ),
@@ -763,7 +767,7 @@ ui <- dashboardPage(
                               h3('Mental Health',
                                  style = 'text-align: center;'))),
               fluidRow(
-                box(width = 4,
+                box(width = 4, height = box_height,
                            h4(strong('Trends')),
                            'Generally, from 2017 to 2021, mental illness
                            rates have increased across races.',
@@ -791,7 +795,7 @@ ui <- dashboardPage(
                            students than non-LGBTQ+ students. For example, in
                            2021, mental illness percent among LGBTQ+ students
                            was 56% whereas for non-LGBTQ+ students was 35%.'),
-                box(width = 4,
+                box(width = 4, height = box_height,
                            h4(strong('Student Activities')),
                            'Diagnosed depression and anxiety have a large
                     impact on academic impairment. 46% and 40% of students with
@@ -820,7 +824,7 @@ ui <- dashboardPage(
                     (about 32% agree or strongly agree in 2021)
                     amongst students with and without mental illnesses' 
                     ),
-                box(width = 4,
+                box(width = 4, height = box_height,
                     h4(strong('Substance Use')),
                            'Most students have not had any alcohol in the past
                     2 weeks regardless of mental illness status 
@@ -848,7 +852,7 @@ ui <- dashboardPage(
                               h3('Flourishing',
                                  style = 'text-align: center;'))),
               fluidRow(
-                    box(width = 4,
+                    box(width = 4, height = box_height2,
                            h4(strong('Trends')),
                            'Overall, most students are satisfied (around 40%)
                            or highly
@@ -867,7 +871,7 @@ ui <- dashboardPage(
                         'Life satisfaction generally increases with class year.
                         36% of first year students report being satisfied
                         compared to 41% of fourth year students.'),
-                    box(width = 4,
+                    box(width = 4, height = box_height2,
                         h4(strong('Student Activities')),
                            'Generally, students sleep less than an average of 6
                            hours,
@@ -881,7 +885,7 @@ ui <- dashboardPage(
                         'Regardless of flourishing status, most students agree
                         they have knowledge of mental health services on
                         campus.'),
-                    box(width = 4,
+                    box(width = 4, height = box_height2,
                         h4(strong('Substance Use')),
                            'Most students have not had any alcohol in the past
                         two weeks whether they are flourishing or not.',

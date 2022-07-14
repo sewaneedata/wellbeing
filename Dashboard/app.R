@@ -1749,7 +1749,7 @@ statement? : My exercise habits have changed a lot since I began as a student at
   
   observeEvent(input$tutorial,
                {shinyalert("How to Use:",
-                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Some graphs are also interactive: hover over to see more information or zoom in on bars! Additionally, underneath each graph there is information about the graphs and the variables within the graph.",
+                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Graphs are also interactive: hover over to see more information or zoom in on bars! Additionally, underneath each graph there is information about the graphs and the variables within the graph.",
                            html = TRUE)
                }) 
 }

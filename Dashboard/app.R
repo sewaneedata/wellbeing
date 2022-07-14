@@ -290,8 +290,8 @@ demographics1 <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `LGBTQ+`)
 
-box_height = '41em'
-box_height2 = '33em'
+box_height = '60em'
+box_height2 = '65em'
 
 ###############################################################################
 ###################################### ui #####################################
@@ -768,147 +768,207 @@ ui <- dashboardPage(
                                  style = 'text-align: center;'))),
               fluidRow(
                 box(width = 4, height = box_height,
-                           h4(strong('Trends')),
-                           'Generally, from 2017 to 2021, mental illness
-                           rates have increased across races.',
-                           br(),
+                    h4(strong('Student Mental Illness Prevalence'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigBlue', '56%'),
+                    p(class = 'nextTo', 'of gender queer/nonconforming students
+                    have diagnosed mental illnesses in 2021'),
                     br(),
-                           ' Mental illness is more common among gender queer/
-                           nonconforming (56% in 2021) and self-identified
-                           (100% in 2021) students than in man (21% in 2021)
-                           and woman (45% in 2021) identified students.',
-                           br(),
                     br(),
-                           'Anxiety and depression are the two most prevalent
-                           mental illnesses on campus. Among students with
-                           mental illnesses, 53% have both
-                           depression and anxiety.',
-                           br(),
+                    p(class = 'bigLav', '100%'),
+                    p(class = 'nextTo', 'of gender self identifying students
+                    have diagnosed
+                    mental illnesses in 2021'),
                     br(),
-                           'As class year increases, mental illness
-                           percentages
-                           increase. Seniors (53% in 2019) tend to have more
-                           mental illnesses than freshman (42% in 2019).',
-                           br(),
                     br(),
-                           'Mental Illnesses are more common among LGBTQ+
-                           students than non-LGBTQ+ students. For example, in
-                           2021, mental illness percent among LGBTQ+ students
-                           was 56% whereas for non-LGBTQ+ students was 35%.'),
+                    p(class = 'bigSam', '45%'),
+                    p(class = 'nextTo', 'of woman identifying students have
+                      diagnosed mental illnesses in 2021'),
+                    br(),
+                    br(),
+                    p(class = 'bigNavy', '21%'),
+                    p(class = 'nextTo', 'of man identifying students have
+                      diagnosed mental illnesses in 2021'),
+                    hr(),
+                    p(class = 'bigBlue', '53%'),
+                    p(class = 'nextTo', 'of students with mental illnesses have
+                      both depression and anxiety'),
+                    hr(),
+                    p(class = 'bigLav', '53%'),
+                    p(class = 'nextTo', 'of seniors in 2019 have mental
+                      illnesses'),
+                    h4(em('vs'), style = 'text-align:center;'),
+                    p(class = 'bigSam', '42%'),
+                    p(class = 'nextTo', 'of freshman in 2019 with mental
+                      illness'),
+                    hr(),
+                    p(class = 'bigNavy', '56%'),
+                    p(class = 'nextTo', 'of LGBTQ+ students in 2021 experience
+                      mental illness'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigBlue', '35%'),
+                    p(class = 'nextTo', 'of non-LGBTQ+ students in 2021')),
                 box(width = 4, height = box_height,
-                           h4(strong('Student Activities')),
-                           'Diagnosed depression and anxiety have a large
-                    impact on academic impairment. 46% and 40% of students with
-                    depression and anxiety, respectively,
-                    report experiencing academic impairment 
-                    for 6 or more days',
-                    br(),
-                    br(),
-                    'Feelings of loneliness do not have as large of an impact
-                    on academic impairment. Around 30-35%, depedning on the
-                    loneliness variable, experience academic impairment only
-                    one or two days.',
-                    br(),
-                    br(),
-                    'Generally, students sleep less than an average of 6 hours,
-                    regardless of mental illness status and demographic.',
-                    br(),
-                    br(),
-                    'Students with mental illnesses use therapy more. In 2021,
-                    around 42% of students with a mental illness reported using
-                    therapy, whereas 35% of students without a mental illness
-                    report not using therapy.',
-                    br(),
-                    br(),
-                    'Knowledge of mental health services on campus is similar
-                    (about 32% agree or strongly agree in 2021)
-                    amongst students with and without mental illnesses' 
-                    ),
+                    h4(strong('Student Activities'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigLav', '46% and 40%'),
+                    p(class = 'nextTo', 'of students with depression and
+                    anxiety, respectively, report experiencing academic
+                    impairment for 6 or more days'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigSam', '30-35%'),
+                    p(class = 'nextTo', 'of students experience academic
+                      impairment only one or two days, depending on the
+                      loneliness variable'),
+                    hr(),
+                    p(class = 'bigNavy', '6 hours'),
+                    p(class = 'nextTo', 'or less is on average how much
+                      students sleep regardless of mental illness status and
+                      demographic'),
+                    hr(),
+                    p(class = 'bigBlue', '42%'),
+                    p(class = 'nextTo', 'of students with mental illness in
+                      2021 reported using therapy'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigLav', '35%'),
+                    p(class = 'nextTo', 'students without mental illness in
+                      2021'),
+                    hr(),
+                    p(class = 'bigSam', '~32%'),
+                    p(class = 'nextTo', 'of students, with and without mental
+                      illness, in 2021 agree or strongly agree with having
+                      knowledge of mental health services on campus')
+                ),
                 box(width = 4, height = box_height,
-                    h4(strong('Substance Use')),
-                           'Most students have not had any alcohol in the past
-                    2 weeks regardless of mental illness status 
-                    (around 36% in 2021).',
-                    br(),
-                    br(),
-                    'Binge drinking three to five times or less is more common
-                    (47% in 2021) amongst students without mental illness than
-                    those with(43% in 2021).',
-                    br(),
-                    br(),
-                    'Smoking frequency is mainly zero days for students with 
-                    (33% in 2021) or without (45% in 2021) mental illness.',
-                    br(),
-                    br(),
-                    'Not vaping (68% in 2021) in the past 30 days is more
-                    common than vaping (34% in 2021) across both mental
-                    statuses.',
-                    br(),
-                    br(),
-                    'Drug use is more common in those with mental illnesses
-                    (16% in 2021) compared to those without (13% in 2021).')
-              ),
+                    h4(strong('Substance Use'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigNavy', '~36%'),
+                    p(class = 'nextTo', 'of students in 2021 have not had any
+                    alcohol in the past 2 weeks regardless of mental illness
+                      status '),
+                    hr(),
+                    p(class = 'bigBlue', '47%'),
+                    p(class = 'nextTo', 'of students with mental illness in
+                      2021, binge drink three to five times or less'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigLav', '43%'),
+                    p(class = 'nextTo', 'of students in 2021 without mental
+                      illness'),
+                    hr(),
+                    p(class = 'bigSam', '78%'),
+                    p(class = 'nextTo', 'of students of both mental illness
+                    statuses in 2021 smoked 0 days'),
+                    hr(),
+                    p(class = 'bigNavy', '68%'),
+                    p(class = 'nextTo', 'of students in 2021 have not vaped in the past 30 days across both mental illnes statuses'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigBlue', '34%'),
+                    p(class = 'nexTo', 'of students in 2021 have vaped'),
+                    hr(),
+                    p(class = 'bigLav', '16%'),
+                    p(class = 'nextTo', 'of students with mental illness in
+                      2021 have used drugs'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigSam', '13%'),
+                    p(class = 'nextTo', 'those without mental illness in 2021')
+                )),
               fluidRow(column(12,
                               h3('Flourishing',
                                  style = 'text-align: center;'))),
+              fluidRow(h4("If you want to learn more on how to improve your
+              flourishing, visit Sewanee's flourishing website:", 
+                          a(href = "https://verge.sewanee.edu", "Verge")),
+                       style = 'text-align: center;'),
               fluidRow(
-                    box(width = 4, height = box_height2,
-                           h4(strong('Trends')),
-                           'Overall, most students are satisfied (around 40%)
-                           or highly
-                           satisfied (around 27%) with their lives',
-                           br(),
-                           br(),
-                           'Zero percent of gender queer/nonconforming students
-                        report being highly satisfied with their lives.',
-                           br(),
-                           br(),
-                           'Non LGBTQ+ report being more satisfied (41%) and
-                        highly satisfied (31%) than LGBTQ+ students (35% and
-                        11% respectively).',
-                        br(),
-                        br(),
-                        'Life satisfaction generally increases with class year.
-                        36% of first year students report being satisfied
-                        compared to 41% of fourth year students.'),
-                    box(width = 4, height = box_height2,
-                        h4(strong('Student Activities')),
-                           'Generally, students sleep less than an average of 6
-                           hours,
-                    regardless of flourishing status and demographic.',
-                        br(),
-                        br(),
-                        'Students who are not flourishing use therapy (46% in
-                        2021) more than not (23% in 2021).' ,
-                        br(),
-                        br(),
-                        'Regardless of flourishing status, most students agree
-                        they have knowledge of mental health services on
-                        campus.'),
-                    box(width = 4, height = box_height2,
-                        h4(strong('Substance Use')),
-                           'Most students have not had any alcohol in the past
-                        two weeks whether they are flourishing or not.',
-                        br(),
-                        br(),
-                        'Students who are not flourishing seem to binge drink 3
-                        to 5 times more often than students who are 
-                        flourishing.',
-                        br(),
-                        br(),
-                        'Smoking frequency is mainly zero days for flourishing 
-                        students (25% in 2021) and non-flourishing students
-                        (53% in 2021).',
-                        br(),
-                        br(),
-                        'Not vaping (67% in 2021) in the past 30 days is more
-                        common than vaping (47% in 2021) across both 
-                        flourishing statuses.',
-                        br(),
-                        br(),
-                        'Drug use is generally not common amongst both
-                        flourishing statuses; 51% in 2021 for non-flourishing
-                        students and 20% in 2021 for flourishing students.')
+                box(width = 4, height = box_height2,
+                    h4(strong('Student Flourishing'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigBlue', '~40%'),
+                    p(class = 'nextTo', 'of students report being statisfied
+                      with their lives'),
+                    h4(em('and'), style = 'text-align: center;'),
+                    p(class = 'bigLav', '~27%'),
+                    p(class = 'nextTo', 'of students report being highly
+                      satisfied'),
+                    hr(),
+                    p(class = 'bigSam', '0%'),
+                    p(class = 'nextTo', 'of gender queer/nonconforming students
+                        report being highly satisfied with their lives'),
+                    hr(),
+                    p(class = 'bigNavy', '41% and 31%'),
+                    p(class = 'nextTo', 'of non-LGBTQ+ students report being
+                      statisfied and highly satisfied respectively'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigBlue', '35% and 11%'),
+                    p(class = 'nextTo', 'of LGBTQ+ students'),
+                    hr(),
+                    p(class = 'bigLav', '36%'),
+                    p(class = 'nextTo', 'of first year students report being
+                      satisfied'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigSam', '41%'),
+                    p(class = 'nextTo', 'of fourth year students')),
+                box(width = 4, height = box_height2,
+                    h4(strong('Student Activities'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigNavy', '6 hours'),
+                    p(class = 'nextTo', 'or less is on average how much
+                      students sleep regardless of flourishing status and
+                      demographic'),
+                    hr(),
+                    p(class = 'bigBlue', '46%'),
+                    p(class = 'nextTo', 'of students who are not flourishing
+                      use therapy'),
+                    h4(em('vs'), style = 'text-align = center;'),
+                    p(class = 'bigLav', '23%'),
+                    p(class = 'nextTo', 'of students who are not flourishing
+                      do not use therapy'),
+                    hr(),
+                    p(class = 'bigSam', '23%'),
+                    p(class = 'nextTo', 'of students not flourishing in 2021
+                      agree they have knowledge of mental health services'),
+                    h4(em('and'), style = 'text-align: center;'),
+                    p(class = 'bigNavy', '13%'),
+                    p(class = 'nextTo', 'of students flourishing in 2021 agree
+                      they have knowledge of mental health services')),
+                box(width = 4, height = box_height2,
+                    h4(strong('Substance Use'),
+                       style = 'text-align: center;'),
+                    p(class = 'bigBlue', '73%'),
+                    p(class = 'nextTo', 'of students in 2021 have not had
+                      alcohol in the past two weeks regardless of flourishing
+                      status'),
+                    hr(),
+                    p(class = 'bigLav', '64%'),
+                    p(class = 'nextTo', 'of students who are not flourishing in
+                      2021 binge drink 3 to 5 times or less'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigSam', '26%'),
+                    p(class = 'nextTo', 'of students who are flourishing in
+                      2021 binge drink 3 to 5 times or less'),
+                    hr(),
+                    p(class = 'bigNavy', '25%'),
+                    p(class = 'nextTo', 'of flourishing students in 2021 smoke
+                      zero days'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigBlue', '53%'),
+                    p(class = 'nextTo', 'of non-flourishing students in 2021
+                      smoke zero days'),
+                    hr(),
+                    p(class = 'bigLav', '67%'),
+                    p(class = 'nextTo', 'of students in 2021 have not vaped in
+                    the past 30 days regardless of flourishing status'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigSam', '33%'),
+                    p(class = 'nextTo', 'of students in 2021 who have vaped'),
+                    hr(),
+                    p(class = 'bigNavy', '71%'),
+                    p(class = 'nextTo', 'of both non-flourishing and
+                      flourishing students have not used drugs in 2021'),
+                    h4(em('vs'), style = 'text-align: center;'),
+                    p(class = 'bigBlue', '29%'),
+                    p(class = 'nextTo', 'of students who have used drugs in
+                      2021'))
               )
               
       ),

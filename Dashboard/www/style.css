@@ -5,3 +5,28 @@
 .main-header .logo {
   font-family: "Crimson Text";
 }
+
+.bigBlue {
+  font-size: 2em;
+  color: rgb(24, 188, 156);
+}
+
+.nextTo, .bigBlue, .bigNavy, .bigLav, .bigSam {
+  display: inline;
+}
+
+.bigNavy {
+  font-size: 2em;
+  color: rgb(87,116,152);
+}
+
+.bigLav {
+  font-size: 2em;
+  color: DarkOrchid;
+}
+
+.bigSam {
+  font-size: 2em;
+  color: LightSalmon;
+}
+

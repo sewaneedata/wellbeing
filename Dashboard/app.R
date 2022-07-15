@@ -977,7 +977,7 @@ ui <- dashboardPage(
             hr(),
             
             p(class = 'bigLav', '53%'),
-            p(class = 'nextTo', 'of seniors in 2019 have mental illnesses'),
+            p(class = 'nextTo', 'of seniors in 2019 have a mental illness'),
             h4(em('vs'), style = 'text-align:center;'),
             p(class = 'bigSam', '42%'),
             p(class = 'nextTo', 'of freshman in 2019 with mental illness'),
@@ -1002,19 +1002,19 @@ ui <- dashboardPage(
               report experiencing academic impairment for 6 or more days in the past four weeks'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigSam', '30-35%'),
-            p(class = 'nextTo', 'of students experience academic impairment only one or two days in the past four weeks,
+            p(class = 'nextTo', 'of students experience academic impairment only one or two days,
               depending on the loneliness variable'),
             
             hr(),
             
             p(class = 'bigNavy', '6 hours'),
-            p(class = 'nextTo', 'or less is on average how much students sleep regardless of
+            p(class = 'nextTo', 'or less is on average how much students sleep per night regardless of
               mental illness status and demographic'),
             
             hr(),
             
             p(class = 'bigBlue', '42%'),
-            p(class = 'nextTo', 'of students with mental illness in 2021 reported using therapy'),
+            p(class = 'nextTo', 'of students with mental illness in 2021 reported that they have used therapy before'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigLav', '35%'),
             p(class = 'nextTo', 'students without mental illness in 2021'),

@@ -999,10 +999,10 @@ ui <- dashboardPage(
             
             p(class = 'bigLav', '46% and 40%'),
             p(class = 'nextTo', 'of students with depression and anxiety, respectively,
-              report experiencing academic impairment for 6 or more days'),
+              report experiencing academic impairment for 6 or more days in the past four weeks'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigSam', '30-35%'),
-            p(class = 'nextTo', 'of students experience academic impairment only one or two days,
+            p(class = 'nextTo', 'of students experience academic impairment only one or two days in the past four weeks,
               depending on the loneliness variable'),
             
             hr(),
@@ -1040,7 +1040,7 @@ ui <- dashboardPage(
             hr(),
             
             p(class = 'bigBlue', '47%'),
-            p(class = 'nextTo', 'of students with mental illness in 2021, binge drink three to five times or less'),
+            p(class = 'nextTo', 'of students with mental illness in 2021, binge drink three to five times or less in the past 2 weeks'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigLav', '43%'),
             p(class = 'nextTo', 'of students in 2021 without mental illness'),
@@ -1048,7 +1048,7 @@ ui <- dashboardPage(
             hr(),
             
             p(class = 'bigSam', '78%'),
-            p(class = 'nextTo', 'of students of both mental illness statuses in 2021 smoked 0 days'),
+            p(class = 'nextTo', 'of students of both mental illness statuses in 2021 smoked 0 days in the past 30 days'),
             
             hr(),
             
@@ -1062,7 +1062,7 @@ ui <- dashboardPage(
             hr(),
             
             p(class = 'bigLav', '16%'),
-            p(class = 'nextTo', 'of students with mental illness in 2021 have used drugs'),
+            p(class = 'nextTo', 'of students with mental illness in 2021 have used drugs in the past 30 days'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigSam', '13%'),
             p(class = 'nextTo', 'those without mental illness in 2021')
@@ -1163,7 +1163,7 @@ ui <- dashboardPage(
             p(class = 'nextTo', 'of students who are not flourishing in 2021 binge drink 3 to 5 times or less'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigSam', '26%'),
-            p(class = 'nextTo', 'of students who are flourishing in 2021 binge drink 3 to 5 times or less'),
+            p(class = 'nextTo', 'of students who are flourishing in 2021 binge drink 3 to 5 times or less in the past two weeks'),
             
             hr(),
             
@@ -1171,7 +1171,7 @@ ui <- dashboardPage(
             p(class = 'nextTo', 'of flourishing students in 2021 smoke zero days'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigBlue', '53%'),
-            p(class = 'nextTo', 'of non-flourishing students in 2021 smoke zero days'),
+            p(class = 'nextTo', 'of non-flourishing students in 2021 smoked zero days in the past 30 days'),
             
             hr(),
             
@@ -1185,10 +1185,10 @@ ui <- dashboardPage(
             hr(),
             
             p(class = 'bigNavy', '71%'),
-            p(class = 'nextTo', 'of both non-flourishing and flourishing students have not used drugs in 2021'),
+            p(class = 'nextTo', 'of both non-flourishing and flourishing students, in 2021, have not used drugs in the past 30 days'),
             h4(em('vs'), style = 'text-align: center;'),
             p(class = 'bigBlue', '29%'),
-            p(class = 'nextTo', 'of students who have used drugs in 2021')
+            p(class = 'nextTo', 'of students in 2021 who have used drugs in the past 30 days')
           ) # END OF BOX
         ) # END OF ROW
       ), # END OF KEY TAKEAWAYS TABITEM
@@ -1567,6 +1567,7 @@ server <- function(input, output){
       mutate(total = sum(totalIll), percent = ( (totalIll)/(total) * 100 ) )
     
     # Clean our new dataframe, remove NA's (keep those only with the diagnosis) and 'the whole' of percentage
+
     impairment <- impairment %>% 
       filter(!!input$ment4_vars ==1 & !is.na(aca_impa))
     

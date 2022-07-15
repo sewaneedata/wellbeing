@@ -753,13 +753,6 @@ ui <- dashboardPage(
               inputId = 'substance_behaviors',
               label = 'Select a Behavior:',
               data = substance_behaviors
-            ),
-            # Demographic input
-            varSelectInput(
-              inputId = 'MIdem2',
-              label = 'Select a Demographic:',
-              data = demographics,
-              selected = 'Class Year'
             )
           ) # END OF COLUMN
         ) # END OF ROW
@@ -918,14 +911,6 @@ ui <- dashboardPage(
           
           column(
             3,
-            # Demographic input
-            varSelectInput(
-              inputId = 'Fplot3_dem',
-              label = 'Select a Demographic:',
-              data = demographics
-            ),
-            
-            br(),
             
             # Behavior input
             varSelectInput(
@@ -1645,26 +1630,26 @@ server <- function(input, output){
   output$plot6 <- renderPlotly({
     
     MIPercent2 <- HMS %>% 
-      select(!!input$substance_behaviors, !!input$MIdem2, mentalIllness) %>%
+      select(!!input$substance_behaviors, mentalIllness) %>%
       filter(!is.na(!!input$substance_behaviors)) %>% 
-      group_by(!!input$substance_behaviors, !!input$MIdem2, mentalIllness) %>% 
+      group_by(!!input$substance_behaviors, mentalIllness) %>% 
       mutate(numerator = n()) %>%
       ungroup() %>% 
-      group_by(!!input$MIdem2) %>% 
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
     ggplotly(
       ggplot(data = MIPercent2, 
              aes(x = !!input$substance_behaviors, 
-                 y = percent, 
-                 fill = !!input$MIdem2)) +
+                 y = percent,
+                 fill = !!input$substance_behaviors)) +
         geom_col(position = 'dodge')+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
+        theme(legend.position = 'none')
     ) %>%
       layout(annotations = list(x=1,
                                 y=1,
@@ -1885,11 +1870,9 @@ importantto me',
     
     action_flourish2 <- action_flourish2 %>% 
       filter(!is.na(!!input$Fplot3_var)) %>% 
-      group_by(flourish_status, !!input$Fplot3_var, 
-               !!input$Fplot3_dem) %>% 
+      group_by(flourish_status, !!input$Fplot3_var) %>% 
       summarise(n = n()) %>% 
       ungroup() %>% 
-      group_by(!!input$Fplot3_dem) %>% 
       mutate(total = sum(n),
              percent = (n)/(total) * 100) 
     
@@ -1897,14 +1880,15 @@ importantto me',
       ggplot(data = action_flourish2)+
         geom_col(aes(x = !!input$Fplot3_var,
                      y = percent,
-                     fill = !!input$Fplot3_dem), 
+                     fill = !!input$Fplot3_var), 
                  position = 'dodge')+
         facet_wrap(~flourish_status) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
-        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+        theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
+        theme(legend.position = 'none')
     ) %>% 
       layout(annotations = list(x=1,
                                 y=1,

@@ -1344,7 +1344,7 @@ server <- function(input, output){
         geom_col(aes(x=`School Year` ,y = percent, fill=!!input$homePlot_dem))+
         labs(x='School Year', 
              y='Percentage',
-             title='Number of Survey Respondents')+
+             title='Percentage of Survey Respondents')+
         theme_gdocs()+
         scale_fill_manual(values = cbPalette)
     ) %>% layout(annotations = list(x=1,
@@ -1537,8 +1537,9 @@ server <- function(input, output){
       ggplot(mental_illness, aes(x = `School Year`, y = percent, fill = !!input$ment1_dem))+
         geom_col(position = 'dodge')+
         ylim(c(0,100))+
-        labs(title = paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
-             subtitle = "2017 - 2021") +
+        labs(title = paste("Percent of Students Diagnosed with a Mental Illness by", input$ment1_dem),
+             subtitle = "2017 - 2021",
+             y = "Percent of Students") +
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
@@ -1611,7 +1612,8 @@ server <- function(input, output){
     ggplotly(
       ggplot(data = MIPercent, aes(x = !!input$behaviors, y = percent, fill = !!input$MIdem)) +
         geom_col(position = 'dodge')+
-        labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
+        labs(title = 'Percent of Student Behaviors by Mental Illness Status',
+             y = "Percent of Students") +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+
@@ -1645,7 +1647,8 @@ server <- function(input, output){
       ggplot(data = MIPercent2,
              aes(x = !!input$substance_behaviors, y = percent, fill = !!input$substance_behaviors)) +
         geom_col(position = 'dodge')+
-        labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
+        labs(title = 'Percent of Student Behaviors by Mental Illness Status',
+             y = "Percent of Students") +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+

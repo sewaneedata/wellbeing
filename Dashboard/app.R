@@ -301,7 +301,7 @@ demographics1 <- HMS %>%
 
 # Defining heights for the boxes in the key takeaways tab so that we can change the heights with one variable
 box_height = '60em'
-box_height2 = '65em'
+box_height2 = '70em'
 
 
 
@@ -971,8 +971,8 @@ ui <- dashboardPage(
             
             hr(),
             
-            p(class = 'bigBlue', '53%'),
-            p(class = 'nextTo', 'of students with mental illnesses have both depression and anxiety'),
+            p(class = 'bigBlue', '~75% and 67%'),
+            p(class = 'nextTo', 'of students with mental illnesses have either anxiety or depression, respectively'),
             
             hr(),
             

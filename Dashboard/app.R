@@ -2,7 +2,7 @@
 # SETUP ----
 ############
 
-# loading libraries
+# Loading libraries
 library(shiny)
 library(shinydashboard)
 library(dashboardthemes)
@@ -15,11 +15,11 @@ library(RColorBrewer)
 library(plotly)
 library(shinyalert)
 
-# getting combined data
-# source("../merged.R")
+# Getting combined data
+# Running merged.R will generate the HMSALL.csv file
 HMS <- read_csv("../../HMSAll.csv")
 
-# color-blind palette vector:
+# Color-blind palette vector:
 cbPalette <- c("#009E73", "#CC79A7", "#E69F00", "#56B4E9",
                "#999999","#F0E442", "#0072B2", "#D55E00", "#000000")
 
@@ -48,17 +48,17 @@ HMS <- HMS %>%
          `Well-being Question 7` = diener7, `Well-being Question 8` = diener8,
          `Knowledge of Services` = knowwher)
 
-# changing the international column from 0 and 1 to 'No' and 'Yes" respectively
+# Changing the international column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$International <- factor(HMS$International, levels = c(0,1),
                             labels = c('No', 'Yes'))
 
 
-# changing the values of the activ columns from 'NA' and 1 to 0 and 1
+# Changing the values of the activ columns from 'NA' and 1 to 0 and 1
 HMS <- HMS %>% 
   mutate(`Varsity Athletics` = ifelse(is.na(`Varsity Athletics`), 0, `Varsity Athletics`)) %>% 
   mutate(`Greek Life` = ifelse(is.na(`Greek Life`), 0, `Greek Life`)) 
 
-# changing the following column values from numerical values to their 
+# Changing the following column values from numerical values to their 
 # character respective values
 HMS$`Varsity Athletics` <- factor(HMS$`Varsity Athletics`, levels = c(0, 1),
                                   labels = c('No', 'Yes'))
@@ -81,13 +81,13 @@ HMS$Vaping <- factor(HMS$Vaping, levels = c(1, 2),
                      labels = c('Yes', 'No'))
 
 
-# changing the academic impairment values from numerical to characters
+# Changing the academic impairment values from numerical to characters
 HMS$aca_impa <- factor(HMS$aca_impa, levels = c(1, 2, 3, 4),
                        labels = c('None', '1 to 2 Days', 
                                   '3 to 5 Days', '6 or more Days'))
 
 
-# making people who selected multiple races into 'Multiracial' 
+# Making people who selected multiple races into 'Multiracial' 
 HMS <- HMS %>%
   filter(!is.na(Race)) %>%
   mutate(Race= ifelse(grepl(", ", Race), "Multiracial", Race))
@@ -110,7 +110,7 @@ HMS <- HMS %>%
                                        'Queer/Nonconforming',
                                        'Self Identified'))))
 
-# creating a mentalIllness column in HMS using left_join
+# Creating a mentalIllness column in HMS using left_join
 MI <- HMS %>% 
   select(responseid, `Diagnosed Depression`:dx_ea) %>% 
   pivot_longer(!responseid) %>% 
@@ -129,12 +129,12 @@ HMS$mentalIllness <- factor(HMS$mentalIllness, levels = c(0, 1),
                             labels = c('No Mental Illness', 
                                        'Has Mental Illness'))
 
-# changing the LGBTQ column from 0 and 1 to 'No' and 'Yes" respectively
+# Changing the LGBTQ column from 0 and 1 to 'No' and 'Yes" respectively
 HMS$`LGBTQ+` <- factor(HMS$`LGBTQ+`, levels = c(0,1),
                        labels = c('No', 'Yes'))
 
 
-# changing class year from a range of numbers, to their respective values
+# Changing class year from a range of numbers, to their respective values
 HMS$`Class Year` <- factor(HMS$`Class Year`, 
                            levels = c(1, 2, 3, 4, 5),
                            labels = c('1st Year', "2nd Year",
@@ -159,7 +159,7 @@ HMS$`Knowledge of Services` <- factor(HMS$`Knowledge of Services`,
                                                  'Disagree',
                                                  'Strongly disagree'))
 
-# create a column of diener scores         
+# Create a column of diener scores         
 HMS <- HMS %>% 
   mutate(diener_status= 
            case_when(diener_score>49~'Highly Satisfied',
@@ -178,7 +178,7 @@ HMS <- HMS %>%
                                       'Highly Satisfied'
                                     )))
 
-# creating a new Sleep column to show about how many hours of sleep a student gets on average:
+# Creating a new Sleep column to show about how many hours of sleep a student gets on average:
 Sleep <- HMS %>%
   select(responseid, sleep_wk1, sleep_wk2, sleep_wd2, sleep_wd1) %>%
   mutate(hrs_sleep_wkday =
@@ -195,7 +195,7 @@ Sleep <- HMS %>%
 HMS <- HMS %>%
   left_join(Sleep, by = 'responseid')
 
-# creating a new binge column in HMS
+# Creating a new binge column in HMS
 binge <- HMS %>% 
   select(responseid, binge_fr_f:binge_fr_o) %>% 
   pivot_longer(!responseid) %>%  
@@ -212,7 +212,7 @@ HMS$`Binge Drinking` <- factor(HMS$`Binge Drinking`, levels = c(1, 2, 3, 4, 5, 6
                                           '6 to 9 times', '10 or more times',
                                           "Don't know"))
 
-# creating a drug use column in HMS
+# Creating a drug use column in HMS
 drug <- HMS %>% 
   select(responseid, drug_mar:drug_other) %>% 
   pivot_longer(!responseid) %>%  
@@ -228,17 +228,17 @@ HMS <- HMS %>%
 HMS$`Drug Use` <- factor(HMS$`Drug Use`, levels = c(0, 1),
                          labels = c('No', 'Yes'))
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 behaviors <- HMS %>% 
   select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, 
          `Greek Life`, `Knowledge of Services`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 substance_behaviors <- HMS %>% 
   select(`Alcohol Use`, `Binge Drinking`, `Smoking Frequency`, 
          'Vaping', `Drug Use`)
 
-# depression question vector to display the whole question rather than the drop down label
+# Depression question vector to display the whole question rather than the drop down label
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
                   'Feeling down, depressed or hopeless' = 
@@ -263,24 +263,24 @@ phqQuestions <- c('Little interest or pleasure in doing things' =
                   yourself in some way' = 
                     '`Depression Question 9`')
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 flourQues <- HMS %>% 
   select(`Well-being Question 1`: `Well-being Question 8`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 phqQues <- HMS %>% 
   select(`Depression Question 1`:`Depression Question 9`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 gadQues <- HMS %>% 
   select(`Anxiety Question 1`:`Anxiety Question 7`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 ment4_variables <- HMS %>% 
   select(`Diagnosed Depression`, `Diagnosed Anxiety`,
          `Feeling Isolated`, `Lacking Companionship`, `Feeling Leftout`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 flourishing_varibales <- HMS %>% 
   select(  diener_score, Exercise, `Therapy Use`, 
            ther_help, ther_helped_me, `Smoking Frequency`,
@@ -289,27 +289,33 @@ flourishing_varibales <- HMS %>%
            activ_art,drug_mar, drug_coc, drug_stim, drug_other,drug_none, 
            drug_her)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 demographics <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `School Year`, `LGBTQ+`)
 
-# creating an empty dataframe for varSelectInputs in the future
+# Creating an empty dataframe for varSelectInputs in the future
 demographics1 <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `LGBTQ+`)
 
-# defining heights for the boxes in the key takeaways tab so that we can change the heights with one variable
+# Defining heights for the boxes in the key takeaways tab so that we can change the heights with one variable
 box_height = '60em'
 box_height2 = '65em'
 
+
+
+##########################
 ##########################
 # UI - USER INTERFACE ----
 ##########################
+##########################
+
+
 
 ui <- dashboardPage(
   
-  # title of dashboard
+  # Title of dashboard
   dashboardHeader(
     title = "Cracking the Code to Student Flourishing",
     titleWidth = 400
@@ -1306,18 +1312,23 @@ ui <- dashboardPage(
 ) # END OF UI
 
 
-################################################################################
-# server
-################################################################################
+
+#############
+#############
+# SERVER ----
+#############
+#############
+
+
 
 server <- function(input, output){
   
-  ###############################################################################
-  ################################### plots ##################################### 
-  ###############################################################################
-  
+  # Home Plot of Demographics ----
   output$homePlot <- renderPlotly({
     
+    # Filtering out NA
+    # Finding the number of students of the selected demographic
+    # And finding the percent of how many students there are of said demographic out of the total
     n_graph <- HMS %>% 
       filter(!is.na(!!input$homePlot_dem)) %>% 
       group_by(`School Year`, !!input$homePlot_dem) %>% 
@@ -1327,6 +1338,7 @@ server <- function(input, output){
              percent = (n)/(total) * 100,
              percent_text = paste0( round(100*percent,2), "%" )) 
     
+    # The plot!
     ggplotly(
       ggplot(n_graph)+
         geom_col(aes(x=`School Year` ,y = percent, fill=!!input$homePlot_dem))+
@@ -1339,20 +1351,19 @@ server <- function(input, output){
                                     y=1,
                                     xref="paper",
                                     yref="paper",
-                                    text= paste("responses =", 
-                                                as.character(unique
-                                                             (n_graph$total))),
+                                    text= paste("responses =", as.character(unique(n_graph$total))),
                                     showarrow=F)
-    )
-    
-  })  
+    ) # END OF LAYOUT
+  }) # END OF HOME PLOT OUTPUT
   
-  
-  ######################
-  # phq depression plot#
-  ######################
-  
+  # Depression Plot (PHQ) ----
   output$phqPlot <- renderPlotly({
+    
+    # Only need the column for selected demographic and question
+    # Dropping NA
+    # Counting up the number of people who answered the question by their response
+    # Counting up the number of people who answered the question in total
+    # Calculating percent of people who answered with each response out of total answers
     phq <- HMS %>%
       select(!!input$phqdem, !!input$phqQ) %>%
       pivot_longer(!(!!input$phqdem)) %>%
@@ -1365,42 +1376,47 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     # Changing the names of the questions to the actual questions
-    phq$name <- factor(phq$name, levels = c('Depression Question 1', 
-                                            'Depression Question 2',
-                                            'Depression Question 3', 
-                                            'Depression Question 4', 
-                                            'Depression Question 5', 
-                                            'Depression Question 6', 
-                                            'Depression Question 7', 
-                                            'Depression Question 8', 
-                                            'Depression Question 9'), 
-                       labels = c(
-                         "Little interest or pleasure in doing things (academics, social, etc.)", 
-                         "Feeling down, depressed or hopeless",
-                         'Trouble falling or staying asleep,
-                         or sleeping too much',
-                         'Feeling tired or having little energy',
-                         'Poor appetite or overeating',
-                         'Feeling bad about yourself—or that you are a failure or have letyourself or your family down',
-                         'Trouble concentrating on things, such as reading the newspaper or watching television',
-                         'Moving or speaking so slowly that other people could have noticed; or the opposite',
-                         'Thoughts that you would be better off dead or of hurting yourself in some way'))
+    phq$name <- factor(
+      phq$name,
+      levels = c(
+        'Depression Question 1',
+        'Depression Question 2',
+        'Depression Question 3',
+        'Depression Question 4',
+        'Depression Question 5',
+        'Depression Question 6',
+        'Depression Question 7',
+        'Depression Question 8',
+        'Depression Question 9'
+      ),
+      labels = c(
+        "Little interest or pleasure in doing things (academics, social, etc.)",
+        "Feeling down, depressed or hopeless",
+        'Trouble falling or staying asleep, or sleeping too much',
+        'Feeling tired or having little energy',
+        'Poor appetite or overeating',
+        'Feeling bad about yourself—or that you are a failure or have letyourself or your family down',
+        'Trouble concentrating on things, such as reading the newspaper or watching television',
+        'Moving or speaking so slowly that other people could have noticed; or the opposite',
+        'Thoughts that you would be better off dead or of hurting yourself in some way'
+      )
+    ) # END OF FACTOR
     
     # Changing the numbers of the values to the actual values
-    phq$value <- factor(phq$value, levels = c(1, 2, 3, 4),
-                        labels = c('Not at all',
-                                   'Several days',
-                                   'More than\n half the days',
-                                   'Nearly every day'))
+    phq$value <- factor(
+      phq$value,
+      levels = c(1, 2, 3, 4),
+      labels = c(
+        'Not at all',
+        'Several days',
+        'More than\n half the days',
+        'Nearly every day'
+      )
+    ) # END OF FACTOR
     
+    # The plot!
     ggplotly(
-      ggplot(data = phq,
-             aes(
-               x = value,
-               y = percent,
-               fill = !!input$phqdem
-             )
-      ) +
+      ggplot(data = phq, aes(x = value, y = percent, fill = !!input$phqdem)) +
         geom_col(position = 'dodge') +
         ylim(c(0,100)) +
         theme_gdocs()+
@@ -1409,25 +1425,23 @@ server <- function(input, output){
              x = 'Response',
              y = 'Percent of Students') +
         scale_fill_manual(values = cbPalette)
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(phq$total)))),
-                                showarrow=F)
-      )
-    
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(phq$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF DEPRESSION PLOT OUTPUT
   
-  
-  ####################
-  ### anxiety plot ###
-  ####################
-  
+  # Anxiety Plot (GAD)
   output$gadPlot <- renderPlotly({
     
+    # Only need the column for selected demographic and question
+    # Dropping NA
+    # Counting up the number of people who answered the question by their response
+    # Counting up the number of people who answered the question in total
+    # Calculating percent of people who answered with each response out of total answers
     gad <- HMS %>%
       select(!!input$gaddem, !!input$gadQ) %>%
       pivot_longer(!(!!input$gaddem)) %>%
@@ -1440,31 +1454,40 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     # Changing the names of the questions to the actual questions
-    gad$name <- factor(gad$name, levels = c('Anxiety Question 1', 
-                                            'Anxiety Question 2',
-                                            'Anxiety Question 3',
-                                            'Anxiety Question 4', 
-                                            'Anxiety Question 5', 
-                                            'Anxiety Question 6',
-                                            'Anxiety Question 7'), 
-                       labels = c(
-                         "Feeling nervous, anxious or on edge", 
-                         "Not being able to stop or control worrying",
-                         'Worrying too much about different things',
-                         'Trouble relaxing',
-                         'Being so restless that it’s hard to sit still',
-                         'Becoming easily annoyed or irritable',
-                         'Feeling afraid as if something awful 
-                               might happen'
-                       )
-    )
+    gad$name <- factor(
+      gad$name,
+      levels = c(
+        'Anxiety Question 1', 
+        'Anxiety Question 2',
+        'Anxiety Question 3',
+        'Anxiety Question 4', 
+        'Anxiety Question 5', 
+        'Anxiety Question 6',
+        'Anxiety Question 7'
+      ),
+      labels = c(
+        "Feeling nervous, anxious or on edge", 
+        "Not being able to stop or control worrying",
+        'Worrying too much about different things',
+        'Trouble relaxing',
+        'Being so restless that it’s hard to sit still',
+        'Becoming easily annoyed or irritable',
+        'Feeling afraid as if something awful might happen'
+      )
+    ) # END OF FACTOR
     
     # Changing the numbers of the values to the actual values
-    gad$value <- factor(gad$value, levels = c(1, 2, 3, 4),
-                        labels = c('Not at all',
-                                   'Several days',
-                                   'Over half\n the days',
-                                   'Nearly every day'))
+    gad$value <- factor(
+      gad$value, levels = c(1, 2, 3, 4),
+      labels = c(
+        'Not at all',
+        'Several days',
+        'Over half\n the days',
+        'Nearly every day'
+      )
+    ) # END OF FACTOR
+    
+    # The plot!
     ggplotly(
       ggplot(data = gad,
              aes(x = value,
@@ -1480,16 +1503,14 @@ server <- function(input, output){
              x = 'Response',
              y = 'Percent of Students') +
         scale_fill_manual(values = cbPalette)
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(gad$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(gad$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF ANXIETY PLOT OUTPUT
   
   
   # output$phqDesc <- renderText({
@@ -1502,66 +1523,55 @@ server <- function(input, output){
   #                  schoolYear = 'interpretation')
   # })
   
-  
-  #########################
-  # mental Illness plot 1 #
-  #########################
+  # Mental Illness Plot 1 ----
   output$mentalIllness_1 <- renderPlotly({
     
+    # Calculating the number of people with mental illness and making it a percent
     mental_illness <- HMS %>% 
       group_by(`School Year`, !!input$ment1_dem) %>%
-      summarize(withMI = sum(ifelse(mentalIllness == "Has Mental Illness", 
-                                    1, 0)), 
+      summarize(withMI = sum(ifelse(mentalIllness == "Has Mental Illness", 1, 0)), 
                 total = n(), percent = (withMI/total)*100)
     
-    
-    # lets plot!
+    # The plot!
     ggplotly(
-      ggplot(mental_illness, aes(x = `School Year`, 
-                                 y = percent, 
-                                 fill = !!input$ment1_dem))+
+      ggplot(mental_illness, aes(x = `School Year`, y = percent, fill = !!input$ment1_dem))+
         geom_col(position = 'dodge')+
         ylim(c(0,100))+
-        labs(title = 
-               paste("Percentage of Students Diagnosed with a Mental Illness by",
-                     input$ment1_dem),
+        labs(title = paste("Percentage of Students Diagnosed with a Mental Illness by", input$ment1_dem),
              subtitle = "2017 - 2021") +
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              mental_illness$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(mental_illness$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF FIRST MENTAL ILLNESS PLOT OUTPUT
   
-  #########################
-  # mental Illness plot 4 #
-  #########################
+  # Mental Illness Plot 4 ----
   output$mentalIllness_4 <- renderPlotly({
+    
+    # Filter anything that isn't 1 (meaning diagnosed with the selected option)
+    # Or NA (meaning not diagnosed with the selected option)
+    # - For some reason there was one value that wasn't 1 or NA (it was an issue before we got the data)
+    # Count the number of people with matching responses (have same diagnosis status and same response to question)
+    # And then count the total responses and make a percent for each group
     impairment <- HMS %>%
       filter(!!input$ment4_vars == 1 | is.na(!!input$ment4_vars)) %>%
       group_by(!!input$ment4_vars, aca_impa) %>%
       tally(name = 'totalIll') %>% 
-      mutate(total = sum(totalIll),
-             percent = ( (totalIll)/(total) * 100 ) )
+      mutate(total = sum(totalIll), percent = ( (totalIll)/(total) * 100 ) )
     
-    
-    # clean our new df, remove NA's and 'the whole' of percentage
+    # Clean our new dataframe, remove NA's (keep those only with the diagnosis) and 'the whole' of percentage
     impairment <- impairment %>% 
       filter(!!input$ment4_vars ==1 & !is.na(aca_impa))
     
-    
-    # lets plot
+    # The plot!
     ggplotly(
-      ggplot(data = impairment, aes(x = aca_impa, y = percent, 
-                                    fill = as.character(aca_impa)))+
+      ggplot(data = impairment, aes(x = aca_impa, y = percent, fill = as.character(aca_impa)))+
         geom_col()+
         ylim(0,100)+
         labs(title = paste("Academic Impairment and", input$ment4_vars),
@@ -1571,25 +1581,22 @@ server <- function(input, output){
         theme_gdocs()+
         theme(legend.position = 'none') +
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              impairment$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(impairment$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF FOURTH MENTAL ILLNESS PLOT OUTPUT
   
-  
-  ########################################
-  ####### Mental Illness Plot 5 ##########
-  ########################################
-  
+  # Mental Illness Plot 5 ----
   output$plot5 <- renderPlotly({
     
+    # Filter out NA values
+    # Finding the number of people with the same answer to the behavior question,
+    # the same demographic, and the same mentalIllness status (having or not having a mental illness)
+    # Then finding the percent of students in those groups out of the total responses from each demographic
     MIPercent <- HMS %>% 
       select(!!input$behaviors, !!input$MIdem, mentalIllness) %>%
       filter(!is.na(!!input$behaviors)) %>% 
@@ -1600,35 +1607,30 @@ server <- function(input, output){
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
+    # The plot!
     ggplotly(
-      ggplot(data = MIPercent, 
-             aes(x = !!input$behaviors, 
-                 y = percent, 
-                 fill = !!input$MIdem)) +
+      ggplot(data = MIPercent, aes(x = !!input$behaviors, y = percent, fill = !!input$MIdem)) +
         geom_col(position = 'dodge')+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
         facet_wrap(~mentalIllness) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              MIPercent$denominator)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(MIPercent$denominator)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF FIFTH MENTAL ILLNESS PLOT OUTPUT
   
-  ########################################
-  ####### Mental Illness Plot 6 ##########
-  ########################################
-  
+  # Mental Illness Plot 6 ----
   output$plot6 <- renderPlotly({
     
+    # Filtering out NA responses for the question selected
+    # Counting the number of people that had the same response and mental illness status
+    # Counting the total number of responses and finding the percent of students in each group
     MIPercent2 <- HMS %>% 
       select(!!input$substance_behaviors, mentalIllness) %>%
       filter(!is.na(!!input$substance_behaviors)) %>% 
@@ -1638,11 +1640,10 @@ server <- function(input, output){
       mutate(denominator = n()) %>% 
       mutate(percent = (numerator/denominator)*100)
     
+    # The plot!
     ggplotly(
-      ggplot(data = MIPercent2, 
-             aes(x = !!input$substance_behaviors, 
-                 y = percent,
-                 fill = !!input$substance_behaviors)) +
+      ggplot(data = MIPercent2,
+             aes(x = !!input$substance_behaviors, y = percent, fill = !!input$substance_behaviors)) +
         geom_col(position = 'dodge')+
         labs(title = 'Percent of Student Behaviors by Mental Illness Status') +
         scale_fill_manual(values = cbPalette)+
@@ -1650,27 +1651,19 @@ server <- function(input, output){
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
         theme(legend.position = 'none')
-    ) %>%
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum(unique(
-                                              MIPercent2$denominator)))),
-                                showarrow=F)
-      )
-    
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum(unique(MIPercent2$denominator)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF SIXTH MENTAL ILLNESS PLOT OUTPUT
   
-  
-  ###########################################################################
-  ########################### Well-being Plot 1 #############################
-  ###########################################################################
-  
+  # Well-being Plot 1 ----
   output$Fplot1 <- renderPlotly({
-    #Create an object with the percentage of students that were highly satisfied 
-    # browser()
+    
+    # Create an dataframe with the percentage of students that were highly satisfied grouped by demographic
     dienerpercent<- HMS%>% 
       filter(!is.na(diener_status)) %>% 
       filter(!is.na(!!input$Fdem1)) %>% 
@@ -1681,13 +1674,10 @@ server <- function(input, output){
       mutate( total = sum(n)) %>% 
       mutate(percent = (n/total)*100)
     
-    ###PLOT 1:the students'flourishing score#####
+    # The plot!
     ggplotly(
       ggplot(data = dienerpercent)+
-        geom_col(aes(x = diener_status, y = percent,
-                     fill = !!input$Fdem1),
-                 position = 'dodge')+
-        # ylim(c(0, 100)) +
+        geom_col(aes(x = diener_status, y = percent, fill = !!input$Fdem1), position = 'dodge')+
         coord_flip()+
         labs(title = 'Overall Life Satisfaction for Students',
              y='Percentage of Students',
@@ -1695,23 +1685,21 @@ server <- function(input, output){
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              dienerpercent$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(dienerpercent$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF FIRST WELL-BEING PLOT OUTPUT
   
-  ###########################################################################
-  ########################### diener plot by ? ##############################
-  ###########################################################################  
+  # Diener Plot by Question ----
   output$dienerplot <- renderPlotly({
-    #data frame
+    # Selecting the question and demographic columns
+    # Counting the number of poeple with the same demographic and response to the question
+    # Finding the total number of responses
+    # And finding the percent of students in that demographic with the same response
     flourishing <- HMS %>%
       select(!!input$flourdem, !!input$flourq) %>%
       pivot_longer(!(!!input$flourdem)) %>%
@@ -1724,37 +1712,35 @@ server <- function(input, output){
       mutate(percent = (n/total)*100)
     
     # Changing the names of the questions to the actual questions
-    flourishing$name <- factor(flourishing$name, 
-                               levels = c('Well-being Question 1', 
-                                          'Well-being Question 2',
-                                          'Well-being Question 3', 
-                                          'Well-being Question 4', 
-                                          'Well-being Question 5', 
-                                          'Well-being Question 6', 
-                                          'Well-being Question 7', 
-                                          'Well-being Question 8'), 
-                               labels = c(
-                                 "I lead a purposeful and meaningful life", 
-                                 "My social relationships are supportive and rewarding",
-                                 'I am engaged and interested in my daily activities',
-                                 'I actively contribute to the happiness and well-being
-of others',
-                                 'I am competent and capable in the activities that are
-importantto me',
-                                 'I am a good person and live a good life',
-                                 'I am optimistic about my future',
-                                 'People respect me'))
+    flourishing$name <- factor(
+      flourishing$name, 
+      levels = c(
+        'Well-being Question 1', 
+        'Well-being Question 2',
+        'Well-being Question 3', 
+        'Well-being Question 4', 
+        'Well-being Question 5', 
+        'Well-being Question 6', 
+        'Well-being Question 7', 
+        'Well-being Question 8'
+      ), 
+      labels = c(
+        
+        "I lead a purposeful and meaningful life", 
+        "My social relationships are supportive and rewarding",
+        'I am engaged and interested in my daily activities',
+        'I actively contribute to the happiness and well-being of others',
+        'I am competent and capable in the activities that are importantto me',
+        'I am a good person and live a good life',
+        'I am optimistic about my future',
+        'People respect me'
+      )
+    ) # END OF FACTOR
     
-    #plot
+    # The plot!
     ggplotly(
-      ggplot(data = flourishing,
-             aes(x = value,
-                 y = percent/100,
-                 fill = !!input$flourdem
-             )
-      ) +
+      ggplot(data = flourishing, aes(x = value, y = percent/100, fill = !!input$flourdem)) +
         geom_col(position = 'dodge') +
-        # ylim(c(0,100)) +
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1)) +
         scale_x_continuous(breaks=seq(1,7,1),
                            labels = c("Strongly Disagree",
@@ -1771,117 +1757,93 @@ importantto me',
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              flourishing$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(flourishing$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF FIRST WELL-BEING PLOT OUTPUT
   
-  ###########################################################################
-  ########################### Well-being Plot 2 #############################
-  ###########################################################################
-  
+  # Well-being Plot 2 ----
   output$Fplot2 <- renderPlotly({
     
-    # what can we learn more about people who are considered 'flourishing' vs not
-    
-    # select variables 
+    # What can we learn more about people who are considered 'flourishing' vs not
+    # Selecting variables 
     action_flourish <- HMS %>% 
-      select( `School Year`, Race, Gender,`Class Year`, diener_score,
-              Exercise, `Therapy Use`, ther_help, ther_helped_me, 
-              `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
-              `Varsity Athletics`, Sleep, International, `LGBTQ+`, 
-              `Drug Use`, `Alcohol Use`, `Knowledge of Services`)
+      select(`School Year`, Race, Gender,`Class Year`, diener_score,
+             Exercise, `Therapy Use`, ther_help, ther_helped_me, 
+             `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
+             `Varsity Athletics`, Sleep, International, `LGBTQ+`, 
+             `Drug Use`, `Alcohol Use`, `Knowledge of Services`)
     
-    # define flourishing and mark respondents
+    # Define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
-    # note: we can subset flourishing by more ranges
+    # Note: we can subset flourishing by more ranges
     action_flourish <- action_flourish %>% 
       mutate(flourish_status = case_when(diener_score >= 49 ~ "Flourishing",
                                          TRUE ~ "Not flourishing"))
     
-    # find percent of people who flourish vs not, grouped by selected variables
+    # Find percent of people who flourish vs not, grouped by selected variables
     action_flourish <- action_flourish %>% 
       select(!!input$Fplot2_var, !!input$Fplot2_dem, flourish_status) %>% 
       filter(!is.na(!!input$Fplot2_var)) %>% 
-      group_by(flourish_status, !!input$Fplot2_var, 
-               !!input$Fplot2_dem) %>% 
+      group_by(flourish_status, !!input$Fplot2_var, !!input$Fplot2_dem) %>% 
       summarise(numerator = n()) %>% 
       ungroup() %>% 
       group_by(!!input$Fplot2_dem) %>% 
-      mutate(total = sum(numerator),
-             percent = ((numerator)/(total)) * 100) 
+      mutate(total = sum(numerator), percent = ((numerator)/(total)) * 100) 
     
+    # The plot!
     ggplotly(
       ggplot(data = action_flourish)+
-        geom_col(aes(x = !!input$Fplot2_var,
-                     y = percent,
-                     fill = !!input$Fplot2_dem), 
-                 position = 'dodge')+
+        geom_col(aes(x = !!input$Fplot2_var, y = percent, fill = !!input$Fplot2_dem), position = 'dodge')+
         facet_wrap(~flourish_status) +
-        labs(y = 'Percent of Students',
-             title = 'Percent of Student Behaviors by Flourishing Status')+
+        labs(y = 'Percent of Students', title = 'Percent of Student Behaviors by Flourishing Status')+
         scale_fill_manual(values = cbPalette) +
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              action_flourish$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum(unique(action_flourish$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF SECOND WELL-BEING PLOT OUTPUT
   
-  
-  ###########################################################################
-  ########################### Well-being Plot 3 #############################
-  ###########################################################################
-  
+  # Well-being Plot 3 ----
   output$Fplot3 <- renderPlotly({
     
-    # what can we learn more about people who are considered 'flourishing' vs not
-    
-    # select variables 
+    # What can we learn more about people who are considered 'flourishing' vs not
+    # Selecting variables 
     action_flourish2 <- HMS %>% 
-      select( `School Year`, Race, Gender,`Class Year`, diener_score,
-              Exercise, `Therapy Use`, ther_help, ther_helped_me, 
-              `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
-              `Varsity Athletics`, Sleep ,International, `LGBTQ+`, 
-              `Drug Use`, `Alcohol Use`)
+      select(`School Year`, Race, Gender,`Class Year`, diener_score,
+             Exercise, `Therapy Use`, ther_help, ther_helped_me, 
+             `Smoking Frequency`, Vaping, `Binge Drinking`, `Greek Life`, 
+             `Varsity Athletics`, Sleep ,International, `LGBTQ+`, 
+             `Drug Use`, `Alcohol Use`)
     
-    # define flourishing and mark respondents
+    # Define flourishing and mark respondents
     # 8 questions, scale of 1-7. 90th percentile: >= 49
-    # note: we can subset flourishing by more ranges
+    # Note: we can subset flourishing by more ranges
     action_flourish2 <- action_flourish2 %>% 
       mutate(flourish_status = case_when(diener_score >= 49 ~ "Flourishing",
                                          TRUE ~ "Not flourishing"))
     
-    # find percent of people who flourish vs not, grouped by selected variables
-    
+    # Find percent of people who flourish vs not, grouped by selected variable
     action_flourish2 <- action_flourish2 %>% 
       filter(!is.na(!!input$Fplot3_var)) %>% 
       group_by(flourish_status, !!input$Fplot3_var) %>% 
       summarise(n = n()) %>% 
       ungroup() %>% 
-      mutate(total = sum(n),
-             percent = (n)/(total) * 100) 
+      mutate(total = sum(n), percent = (n)/(total) * 100) 
     
+    # The plot!
     ggplotly(
       ggplot(data = action_flourish2)+
-        geom_col(aes(x = !!input$Fplot3_var,
-                     y = percent,
-                     fill = !!input$Fplot3_var), 
-                 position = 'dodge')+
+        geom_col(aes(x = !!input$Fplot3_var, y = percent, fill = !!input$Fplot3_var), position = 'dodge')+
         facet_wrap(~flourish_status) +
         labs(y = 'Percent of Students',
              title = 'Percent of Student Behaviors by Flourishing Status')+
@@ -1889,83 +1851,106 @@ importantto me',
         theme_gdocs()+
         theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))+
         theme(legend.position = 'none')
-    ) %>% 
-      layout(annotations = list(x=1,
-                                y=1,
-                                xref="paper",
-                                yref="paper",
-                                text= paste("responses =", 
-                                            as.character(sum( unique(
-                                              action_flourish2$total)))),
-                                showarrow=F)
-      )
-  })
+    ) %>% layout(annotations = list(x=1,
+                                    y=1,
+                                    xref="paper",
+                                    yref="paper",
+                                    text= paste("responses =", as.character(sum( unique(action_flourish2$total)))),
+                                    showarrow=F)
+    ) # END OF LAYOUT
+  }) # END OF THIRD WELL-BEING PLOT OUTPUT
   
+  # Description 1 ----
   output$description <- renderText({
-    text <- switch(as.character(input$ment4_vars),
-                   'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
-                   'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
-                   "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
-                   'Lacking Companionship' =  "A measurment of loneliness that asks: How often do you feel that you lack companionship?",
-                   'Feeling Leftout' = "A measurment of loneliness that asks: How often do you feel left out?"
-    )
-  })
+    
+    # Change the text based on input
+    text <- switch(
+      as.character(input$ment4_vars),
+      'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
+      'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
+      "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
+      'Lacking Companionship' =  "A measurment of loneliness that asks: How often do you feel that you lack
+      companionship?",
+      'Feeling Leftout' = "A measurment of loneliness that asks: How often do you feel left out?"
+    ) # END OF SWITCH
+  }) # END OF FIRST DESCRIPTION
   
+  # Description 2 ----
   output$MIdesc <- renderText({
-    text1 <- switch(as.character(input$behaviors),
-                    Sleep= 'Average hours of sleep per day',
-                    Exercise = 'How much do you agree with the following
-statement? : My exercise habits have changed a lot since I began as a student at my school.',
-                    'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
-                    'Varsity Athletics' ='Are you currently involved in varsity athletics?',
-                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
-                    'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.')
-  })
+    
+    # Change the text based on input
+    text1 <- switch(
+      as.character(input$behaviors),
+      Sleep= 'Average hours of sleep per day',
+      Exercise = 'How much do you agree with the following statement? : My exercise habits have changed a
+      lot since I began as a student at my school.',
+      'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
+      'Varsity Athletics' ='Are you currently involved in varsity athletics?',
+      'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+      'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed to
+      seek professional help for my mental or emotional health, I would know where to go on my campus.'
+    ) # END OF SWITCH
+  }) # END OF SECOND DESCRIPTION
   
+  # Description 3 ----
   output$MIdesc2 <- renderText({
-    text1 <- switch(as.character(input$substance_behaviors),
-                    'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
-                    'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
-                    'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
-                    'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
-                    'Drug Use' = 'Over the past 30 days have you used any drugs' )
-  })
-  output$description <- renderText({
-    text <- switch(as.character(input$ment4_vars),
-                   'Diagnosed Depression' = "Self-reported clinically diagnosed depression.",
-                   'Diagnosed Anxiety' = "Self-reported clinically diagnosed anxiety.",
-                   "Feeling Isolated" = "A measurment of loneliness that asks: How often do you feel isolated from others?",
-                   'Lacking Companionship' =  "A measurment of loneliness that asks 'How often do you feel that you lack companionship?'",
-                   'Feeling Leftout' = "A measurment of loneliness that asks 'How often do you feel left out?'"
-    )
-  })
+    
+    # Change text based on input
+    text1 <- switch(
+      as.character(input$substance_behaviors),
+      'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
+      'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4
+      or 5 [not female or male] or more alcoholic drinks in a row?',
+      'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
+      'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
+      'Drug Use' = 'Over the past 30 days have you used any drugs'
+    )# END OF SWITCH
+  }) # END OF THRID DESCRIPTION
   
+  # Description 4 ----
   output$fldesc1 <- renderText({
-    text1 <- switch(as.character(input$Fplot2_var),
-                    Sleep= 'Average hours of sleep per day',
-                    Exercise = 'How much do you agree with the following
-statement? : My exercise habits have changed a lot since I began as a student at my school.',
-                    'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
-                    'Varsity Athletics' ='Are you currently involved in varsity athletics?',
-                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
-                    
-                    'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
-                    'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.')
-  })
+    
+    # Change text based on input
+    text1 <- switch(
+      as.character(input$Fplot2_var),
+      Sleep= 'Average hours of sleep per day',
+      Exercise = 'How much do you agree with the following statement? : My exercise habits have
+      changed a lot since I began as a student at my school.',
+      'Therapy Use' = 'Have you ever received counseling or therapy for mental health concerns?',
+      'Varsity Athletics' ='Are you currently involved in varsity athletics?',
+      'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+      'Greek Life' = 'Are you currently involved in a fraternity or sorority?',
+      'Knowledge of Services' = 'How much do you agree with the following statement? : If I needed
+      to seek professional help for my mental or emotional health, I would know where to go on my campus.'
+    ) # END OF SWITCH
+  }) # END OF FOURTH DESCRIPTION
   
+  # Description 5 ----
   output$fldesc2 <- renderText({
-    text1 <- switch(as.character(input$Fplot3_var),
-                    'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
-                    'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row?',
-                    'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
-                    'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
-                    'Drug Use' = 'Over the past 30 days have you used any drugs' )
-  })
+    
+    # Change text based on input
+    text1 <- switch(
+      as.character(input$Fplot3_var),
+      'Alcohol Use' = 'Over the past 2 weeks, did you drink any alcohol?',
+      'Binge Drinking' = 'Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4
+      or 5 [not female or male] or more alcoholic drinks in a row?',
+      'Smoking Frequency' ='Over the past 30 days, about how many cigarettes did you smoke per day?',
+      'Vaping' = 'Over the past 30 days, have you used an electronic cigarette or vape pen?',
+      'Drug Use' = 'Over the past 30 days have you used any drugs'
+    ) # END OF SWITCH
+  }) # END OF FIFTH DESCRIPTION
   
-  observeEvent(input$tutorial,
-               {shinyalert("How to Use:",
-                           "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Graphs are also interactive: hover over to see more information or zoom in on bars! Additionally, underneath each graph there is information about the graphs and the variables within the graph.",
-                           html = TRUE)
-               }) 
+  # Tutorial Button Popup ----
+  observeEvent(input$tutorial, {
+    shinyalert(
+      "How to Use:",
+      "Dropdown menus are located on the right of each graph, which changes the variable(s) shown. Graphs
+      are also interactive: hover over to see more information or zoom in on bars! Additionally, underneath
+      each graph there is information about the graphs and the variables within the graph.",
+      html = TRUE
+    ) # END OF SHINYALERT
+  }) # END OF TUTORIAL BUTTON POPUP
 }
+
+# Start the Shiny App ----
 shinyApp(ui, server)

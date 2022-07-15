@@ -1,4 +1,6 @@
-## app.R ##
+############
+# SETUP ----
+############
 
 # loading libraries
 library(shiny)
@@ -17,8 +19,7 @@ library(shinyalert)
 # source("../merged.R")
 HMS <- read_csv("../../HMSAll.csv")
 
-# color-blind palette:
-
+# color-blind palette vector:
 cbPalette <- c("#009E73", "#CC79A7", "#E69F00", "#56B4E9",
                "#999999","#F0E442", "#0072B2", "#D55E00", "#000000")
 
@@ -109,8 +110,7 @@ HMS <- HMS %>%
                                        'Queer/Nonconforming',
                                        'Self Identified'))))
 
-# creating a mental Illness column in HMS using left_join
-
+# creating a mentalIllness column in HMS using left_join
 MI <- HMS %>% 
   select(responseid, `Diagnosed Depression`:dx_ea) %>% 
   pivot_longer(!responseid) %>% 
@@ -159,7 +159,6 @@ HMS$`Knowledge of Services` <- factor(HMS$`Knowledge of Services`,
                                                  'Disagree',
                                                  'Strongly disagree'))
 
-
 # create a column of diener scores         
 HMS <- HMS %>% 
   mutate(diener_status= 
@@ -179,8 +178,7 @@ HMS <- HMS %>%
                                       'Highly Satisfied'
                                     )))
 
-# creating a new Sleep column:
-
+# creating a new Sleep column to show about how many hours of sleep a student gets on average:
 Sleep <- HMS %>%
   select(responseid, sleep_wk1, sleep_wk2, sleep_wd2, sleep_wd1) %>%
   mutate(hrs_sleep_wkday =
@@ -230,14 +228,17 @@ HMS <- HMS %>%
 HMS$`Drug Use` <- factor(HMS$`Drug Use`, levels = c(0, 1),
                          labels = c('No', 'Yes'))
 
+# creating an empty dataframe for varSelectInputs in the future
 behaviors <- HMS %>% 
   select('Sleep', 'Exercise', `Therapy Use`,`Varsity Athletics`, 
          `Greek Life`, `Knowledge of Services`)
 
+# creating an empty dataframe for varSelectInputs in the future
 substance_behaviors <- HMS %>% 
   select(`Alcohol Use`, `Binge Drinking`, `Smoking Frequency`, 
          'Vaping', `Drug Use`)
 
+# depression question vector to display the whole question rather than the drop down label
 phqQuestions <- c('Little interest or pleasure in doing things' = 
                     '`Depression Question 1`',
                   'Feeling down, depressed or hopeless' = 
@@ -261,19 +262,25 @@ phqQuestions <- c('Little interest or pleasure in doing things' =
                   'Thoughts that you would be better off dead or of hurting 
                   yourself in some way' = 
                     '`Depression Question 9`')
+
+# creating an empty dataframe for varSelectInputs in the future
 flourQues <- HMS %>% 
   select(`Well-being Question 1`: `Well-being Question 8`)
 
+# creating an empty dataframe for varSelectInputs in the future
 phqQues <- HMS %>% 
   select(`Depression Question 1`:`Depression Question 9`)
 
+# creating an empty dataframe for varSelectInputs in the future
 gadQues <- HMS %>% 
   select(`Anxiety Question 1`:`Anxiety Question 7`)
 
+# creating an empty dataframe for varSelectInputs in the future
 ment4_variables <- HMS %>% 
   select(`Diagnosed Depression`, `Diagnosed Anxiety`,
          `Feeling Isolated`, `Lacking Companionship`, `Feeling Leftout`)
 
+# creating an empty dataframe for varSelectInputs in the future
 flourishing_varibales <- HMS %>% 
   select(  diener_score, Exercise, `Therapy Use`, 
            ther_help, ther_helped_me, `Smoking Frequency`,
@@ -282,80 +289,97 @@ flourishing_varibales <- HMS %>%
            activ_art,drug_mar, drug_coc, drug_stim, drug_other,drug_none, 
            drug_her)
 
+# creating an empty dataframe for varSelectInputs in the future
 demographics <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `School Year`, `LGBTQ+`)
 
+# creating an empty dataframe for varSelectInputs in the future
 demographics1 <- HMS %>%
   select('Race', 'Gender', 'International', 
          `Class Year`, `LGBTQ+`)
 
+# defining heights for the boxes in the key takeaways tab so that we can change the heights with one variable
 box_height = '60em'
 box_height2 = '65em'
 
-###############################################################################
-###################################### ui #####################################
-###############################################################################
+##########################
+# UI - USER INTERFACE ----
+##########################
+
 ui <- dashboardPage(
   
   # title of dashboard
   dashboardHeader(
     title = "Cracking the Code to Student Flourishing",
     titleWidth = 400
-    
   ),
   
-  ## Sidebar content
+  # Sidebar content
   dashboardSidebar(
+    
+    # Sidebar Menu Items ----
     sidebarMenu(
       
-      # titles and icons of sidebar 'tabs'
+      # Home tab and icon
       menuItem(
         "Home", tabName = "Home", icon = icon("home")
       ),
       
-      
+      # Student Mental Health tab and icon
       menuItem(
         "Student Mental Health", tabName = 'Mental_Health',
         icon = icon('brain'),
+        # Mental Health Trends sub-tab
         menuItem('Mental Health Trends', tabName = 'section1'),
+        # Mental Health Correlations sub-tab
         menuItem('Mental Health Correlations', tabName = 'section2')
       ),
       
+      # Student Flourishing tab and icon
       menuItem(
         "Student Flourishing", tabName = "Well_being",
         icon = icon("leaf"),
+        # Flourishing Trends sub-tab
         menuItem('Flourishing Trends', tabName = 'section3'),
+        # Flourishing Correlations sub-tab
         menuItem('Flourishing Correlations', tabName = 'section4')
       ),
       
-      menuItem("Key Findings", tabName = 'key', icon = icon('key', 
-                                                            class = NULL,
-                                                            lib = 'font-awesome')),
+      # Key Findings tab
+      menuItem(
+        "Key Findings", tabName = 'key', icon = icon('key', class = NULL, lib = 'font-awesome')
+      ),
+      
+      # About tab
       menuItem(
         "About", tabName = 'About', icon = icon('question')
       )
-      
-    )
-    
-  ),
+    ) # END OF SIDEBAR MENU ITEMS
+  ), # END OF SIDEBAR CONTENT
   
-  ## Body content
+  # Body content ----
   dashboardBody(
     
+    # theme
     shinyDashboardThemes(theme = "poor_mans_flatly"),
+    
+    # linking css stylesheet
     tags$head(
       tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
     ),
     
-    tabItems( 
+    # Tab Items ----
+    tabItems(
       
-      # First tab content
+      # Home tab content ----
       tabItem(
         tabName = "Home",
         h2("Cracking the Code to Student Flourishing"),
+        
         hr(),
-        # the problem
+        
+        # The problem ----
         fluidRow(
           column(4,
                  tags$img(
@@ -364,671 +388,876 @@ ui <- dashboardPage(
                    alt = "Picture of Healthy Minds Network Logo"
                  )
           ),
-          column(8, h3(em(
-            "Over the past decade, the rate of depression, anxiety and serious
-          mental health crises has doubled among college students, according 
-          to Daniel Eisenberg, a principal investigator of the Healthy Minds
-          Study: an annual survey of thousands of students across the country
-          (Hartocollis, New York Times 2021)."
-          )
-          )
-          )
-        ),
+          column(
+            8,
+            h3(
+              em(
+                "Over the past decade, the rate of depression, anxiety and serious mental health crises has doubled
+                among college students, according to Daniel Eisenberg, a principal investigator of the Healthy Minds
+                Study: an annual survey of thousands of students across the country (Hartocollis, New York Times
+                2021)."
+              ) # END OF EM
+            ) # END OF H3
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
         br(),
+        
+        # About Healthy Minds Survey ----
         fluidRow(
-          box(width = 12,
-              # about healthy minds
-              h4(
-                "For the past four years, Sewanee undergrad students have
-                been filling out the Healthy Minds Survey (HMS), a survey that
-                asks questions about mental health outcomes, knowledge and
-                attitudes about mental health and service utilization. 
-                The HMS is used by a network of colleges and emphasizes
-                understanding help-seeking behavior, examining stigma, 
-                knowledge, and other potential barriers to mental 
-                health service utilization."
-              ))),
+          box(
+            width = 12,
+            h4(
+              "For the past four years, Sewanee undergrad students have been filling out the Healthy Minds Survey
+              (HMS), a survey that asks questions about mental health outcomes, knowledge and attitudes about mental
+              health and service utilization. The HMS is used by a network of colleges and emphasizes understanding
+              help-seeking behavior, examining stigma, knowledge, and other potential barriers to mental health
+              service utilization."
+            ) # END OF H4
+          ) # END OF BOX
+        ), # END OF ROW
+        
+        # Project plan ----
         h3("Our Method"),
         fluidRow(
-          box(width = 12,
-              # project plan
-              h4(
-                "Our team of researchers at Sewanee DataLab have analyzed
-                HMS survey data to answer pressing questions about
-                flourishing at Sewanee. The four years of HMS data we
-                have will allow us to find correlations between student
-                health, habits, and flourishing. This project is in
-                partnership with the Associate Dean of Student
-                Flourishing at Sewanee, Dr. Nicole Noffsinger-Frazier, and
-                under mentorship of Dr. Sylvia Gray, Title IX coordinator."
-              ),
-              br(),
-              h4(
-                "These graphs show the percentage of students that fit the selected 
-          criteria. This is a dataset of 1,375 survey respondents over 4 school
-          years. Some demographics are grouped in “other” to protect the 
-          identities of survey respondents."
-              ))),
+          box(
+            width = 12,
+            h4(
+              "Our team of researchers at Sewanee DataLab have analyzed HMS survey data to answer pressing questions
+              about flourishing at Sewanee. The four years of HMS data we have will allow us to find correlations
+              between student health, habits, and flourishing. This project is in partnership with the Associate Dean
+              of Student Flourishing at Sewanee, Dr. Nicole Noffsinger-Frazier, and under mentorship of Dr. Sylvia
+              Gray, Title IX coordinator."
+            ), # END OF H4
+            br(),
+            h4(
+              "These graphs show the percentage of students that fit the selected criteria. This is a dataset of 1,375
+              survey respondents over 4 school years. Some demographics are grouped in “other” to protect the
+              identities of survey respondents."
+            ) # END OF H4
+          ) # END OF BOX
+        ), # END OF ROW
+        
         hr(),
-        # trigger warning
+        
+        # Trigger warning ----
         h3(
           strong("WARNING"), ": Some content may include references to
           potentially triggering topics such as mental illness."
         ),
-        # resources
+        
+        # Resources ----
         h3(strong("Resources:")),
         fluidRow(
-          box(width = 12,
-              h4("University Wellness Center Counseling and Psychological 
-           Services: 931-598-1325",
-                 br(),
-                 "24/7 Wellness Crisis Line: 931-598-1700",
-                 br(),
-                 "Nationwide Mental Health Emergency and Suicide Prevention Hotline: 988",
-                 br(),
-                 "Director of Equity, Equal Opportunity, and Title IX, Dr. Sylvia Gray: 931-598-1420, 
-           Woods 138,",
-                 a(href ="mailto:smgray@sewanee.edu", "smgray@sewanee.edu"),
-                 br(),
-                 a(href = "https://new.sewanee.edu/care-team/", "CARE Team"),
-                 br(),
-                 "Chattanooga Rape Crisis Center: 423-755-2700",
-                 br(),
-                 "24-Hour Sexual Assault Violence Response Team (Nashville): 
-           1-800-879-1999",
-                 br(),
-                 "RAINN (Rape, Abuse & Incest National Network): 1-800-656-4673",
-                 br(),
-                 "Southern Tennessee Regional Hospital - Sewanee: 931-598-5691",
-                 br()
-              ))),
-        h4("*If you have any issues with accessibility, please contact Dr. Nicole Noffsinger-Frazier at", 
-           a(href = "mailto:nanoffsi@sewanee.edu" , "nanoffsi@sewanee.edu"), 
-           "or Matthew Brown from Student Accessibility Services", 
-           a(href = "mailto:mabrown@sewanee.edu" , "mabrown@sewanee.edu")),
+          box(
+            width = 12,
+            h4(
+              "University Wellness Center Counseling and Psychological Services: 931-598-1325",
+              br(),
+              "24/7 Wellness Crisis Line: 931-598-1700",
+              br(),
+              "Nationwide Mental Health Emergency and Suicide Prevention Hotline: 988",
+              br(),
+              "Director of Equity, Equal Opportunity, and Title IX, Dr. Sylvia Gray: 931-598-1420, Woods 138,",
+              a(href ="mailto:smgray@sewanee.edu", "smgray@sewanee.edu"),
+              br(),
+              a(href = "https://new.sewanee.edu/care-team/", "CARE Team"),
+              br(),
+              "Chattanooga Rape Crisis Center: 423-755-2700",
+              br(),
+              "24-Hour Sexual Assault Violence Response Team (Nashville): 1-800-879-1999",
+              br(),
+              "RAINN (Rape, Abuse & Incest National Network): 1-800-656-4673",
+              br(),
+              "Southern Tennessee Regional Hospital - Sewanee: 931-598-5691",
+              br()
+            ) # END OF H4
+          ) # END OF BOX
+        ), # END OF ROW
         
+        # Accessibility ----
+        h4(
+          "*If you have any issues with accessibility, please contact Dr. Nicole Noffsinger-Frazier at", 
+          a(href = "mailto:nanoffsi@sewanee.edu" , "nanoffsi@sewanee.edu"), 
+          "or Matthew Brown from Student Accessibility Services", 
+          a(href = "mailto:mabrown@sewanee.edu" , "mabrown@sewanee.edu")
+        ),
+        
+        # Survey respondant demographics ----
         fluidRow(
           column(12, h3('Who filled out the survey?') )
         ),
-        
         fluidRow(
           box(width = 9, plotlyOutput("homePlot", width = 'auto')),
+          column(
+            3,
+            varSelectInput(inputId = 'homePlot_dem',
+                           label = 'Select a Demographic:',
+                           data = demographics1,
+                           selected = 'Gender'
+            ),
+            h4(
+              strong('Gender:'),
+              'Man Identified includes transgender males. Woman identified includes transgender females.'
+            ),
+            h4(
+              strong("Race:"),
+              "Multiracial includes students of multiple races.Other encompasses races of too small
+              population size to preserve anonymity."
+            ),
+            h4(
+              strong('LGBTQ+:'),
+              'includes sexual identities other than heterosexual as well as genders that are not cisgender.'
+            )
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ), # END OF HOME TABITEM
+      
+      # Trends on mental health tab content ----
+      tabItem(
+        tabName = "section1",
+        
+        # Tutorial button ----
+        actionButton('tutorial', 'Click for User Information'),
+        h2('Trends on Mental Health'),
+        
+        hr(),
+        
+        # First trends on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4(
+              'Percentage of Respondents with a Clinically Diagnosed Mental Illness since 2017'
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # First trends on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput("mentalIllness_1", width = 'auto'),
+            "Fig 1. Clinically diagnosed mental illness rates among students have relatively remained the same
+            since 2017 - around 35%. We hypothesize that factors such as Covid-19 might account for the increase from
+            2019 onwards."
+          ), # END OF BOX
           
-          column(3,
-                 varSelectInput(inputId = 'homePlot_dem',
-                                label = 'Select a Demographic:',
-                                data = demographics1,
-                                selected = 'Gender'
-                 ),
-                 h4(strong('Gender:'), 'Man Identified includes transgender
-                 males. Woman identified includes transgender females.'),
-                 h4(strong("Race:"), "Multiracial includes students of multiple
-                 races.Other encompasses races of too small population size to
-                    preserve anonymity."),
-                 h4(strong('LGBTQ+:'), 'includes sexual identities other than
-                 heterosexual as well as genders that are not cisgender.')
-          )
-        )
-      ),
+          # Select demographics for first trends on mental health plot
+          column(
+            3,
+            varSelectInput(
+              inputId = 'ment1_dem',
+              label = 'Select a Demographic:',
+              data = demographics1,
+              selected = 'Class Year'
+            ) # END OF VARSELECT
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Second trends on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4(
+              'Percentage of respondents’ answers to corresponding depression survey questions'
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Second trends on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput( "phqPlot", width = 'auto'),
+            "Fig 2. This graph shows how many days students experienced depressive feelings in the last two weeks.",
+            # Text output that updates with plot selections
+            textOutput('phqDesc')
+          ), # END OF BOX
+          
+          column(
+            3,
+            # Demographic input
+            varSelectInput(
+              inputId = "phqdem",
+              "Select a Demographic:",
+              demographics,
+              selected = 'Class Year'
+            ),
+            
+            br(),
+            
+            # Question input
+            varSelectInput(
+              inputId = 'phqQ',
+              label = 'Select a Depression Question:',
+              data = phqQues
+            )
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Third trends on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4("Percentage of respondents’ answers to corresponding anxiety survey questions")
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Third trends on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput("gadPlot", width = 'auto'),
+            "Fig 3. This graph shows how many days students experienced anxious feelings in the last two weeks."
+          ), # END OF BOX
+          
+          column(
+            3,
+            # Demographic input
+            varSelectInput(
+              inputId = 'gaddem',
+              label = 'Select a Demographic:',
+              data = demographics,
+              selected = 'Class Year'
+            ),
+            
+            br(),
+            
+            # Question input
+            varSelectInput(
+              inputId = 'gadQ',
+              label = 'Select an Anxiety Question:',
+              data = gadQues
+            )
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ), # END OF TRENDS ON MENTAL HEALTH TABITEM
       
-      # Second tab content
-      tabItem(tabName = "section1",
-              actionButton('tutorial', 'Click for User Information'),
-              h2('Trends on Mental Health'),
-              hr(),
-              
-              # row for title of first graph
-              fluidRow(
-                column(12, h4('Percentage of Respondents with a Clinically Diagnosed
-                Mental Illness since 2017') )
-              ),
-              
-              # row for first graph
-              fluidRow(
-                
-                box(
-                  width = 9, plotlyOutput("mentalIllness_1", width = 'auto'),
-                  "Fig 1. Clinically diagnosed mental illness rates among
-                students have relatively remained the same since 2017 - around 
-                35%. We hypothesize that factors such as Covid-19 might account
-                for the increase from 2019 onwards."),
-                
-                # select demographics for first plot
-                column(3,
-                       varSelectInput(inputId = 'ment1_dem',
-                                      label = 'Select a Demographic:',
-                                      data = demographics1,
-                                      selected = 'Class Year'
-                       )
-                )),
-              
-              fluidRow(
-                column(12, h4('Percentage of respondents’ answers to corresponding 
-                depression survey questions'))
-              ),
-              fluidRow(
-                box(width = 9,
-                    plotlyOutput( "phqPlot", width = 'auto'),
-                    "Fig 2. This graph shows how many days students 
-                  experienced depressive feelings in the last two weeks.",
-                    textOutput('phqDesc')
-                ),
-                column(3,
-                       varSelectInput(
-                         inputId = "phqdem",
-                         "Select a Demographic:",
-                         demographics,
-                         selected = 'Class Year'
-                       ),
-                       br(),
-                       varSelectInput(
-                         inputId = 'phqQ',
-                         label = 'Select a Depression Question:',
-                         data = phqQues
-                       )
-                )
-              ),
-              
-              fluidRow(
-                column(12, h4("Percentage of respondents’ answers to corresponding
-                anxiety survey questions"))
-              ),
-              fluidRow(
-                box(width = 9, plotlyOutput("gadPlot", width = 'auto'),
-                    "Fig 3. This graph shows how many days students 
-                experienced anxious feelings in the last two weeks."),
-                column(
-                  3,
-                  varSelectInput(
-                    inputId = 'gaddem',
-                    label = 'Select a Demographic:',
-                    data = demographics,
-                    selected = 'Class Year'
-                  ),
-                  br(),
-                  varSelectInput(
-                    inputId = 'gadQ',
-                    label = 'Select an Anxiety Question:',
-                    data = gadQues
-                  )
-                )
-              )
-      ),
-      tabItem(tabName = 'section2',
-              h2('Correlations'),
-              hr(),
-              fluidRow(
-                column(12, h4("Percentage of respondents who reported having 
-                days in which emotional or mental difficulties have affect 
-                academic performance"))
-              ),
-              fluidRow(
-                box(width = 9, plotlyOutput("mentalIllness_4", 
-                                            width = 'auto'),
-                    "Fig 1. Academic Impairment is measured by
-                how many days per month the respondents felt that emotional or 
-                mental difficulties hurt their academic performance.",
-                    textOutput('description')
-                ),
-                column(
-                  3,
-                  varSelectInput(
-                    inputId = 'ment4_vars',
-                    label = 'Select a Variable:',
-                    data = ment4_variables
-                  )
-                )
-              ),
-              
-              br(),
-              fluidRow(
-                column(12, h4("Percentage of respondents with a clinically
-                              diagnosed mental illness and their activity 
-                              compared to others."))
-              ),
-              fluidRow(
-                box(width = 9, plotlyOutput("plot5", width = 'auto'),
-                    "Fig 2. Students with one or more 
-              diagnosed mental illnesses and their activities compared to 
-              students without any diagnosed mental illness or illnesses.",
-                    textOutput('MIdesc')),
-                column(
-                  3, varSelectInput(
-                    inputId = 'behaviors',
-                    label = 'Select an Activity:',
-                    data = behaviors
-                  ),
-                  varSelectInput(
-                    inputId = 'MIdem',
-                    label = 'Select a Demographic:',
-                    data = demographics,
-                    selected = 'Class Year'
-                  )
-                )
-              ),
-              
-              br(),
-              fluidRow(
-                column(12, h4("Percentage of respondents with a clinically
-                              diagnosed mental illness and subtance use
-                              behavior compared to others."))
-              ),
-              fluidRow(
-                box(width = 9, plotlyOutput("plot6", width = 'auto'),
-                    "Fig 3. Students with one or more 
-                           diagnosed mental illnesses and their behaviors 
-                           compared to students without any diagnosed mental 
-                           illness or illnesses.",
-                    textOutput('MIdesc2')),
-                column(
-                  3, varSelectInput(
-                    inputId = 'substance_behaviors',
-                    label = 'Select a Behavior:',
-                    data = substance_behaviors
-                  ),
-                  varSelectInput(
-                    inputId = 'MIdem2',
-                    label = 'Select a Demographic:',
-                    data = demographics,
-                    selected = 'Class Year'
-                  )
-                )
-              )
-      ),
+      # Mental health corelations tab content ----
+      tabItem(
+        tabName = 'section2',
+        h2('Correlations'),
+        
+        hr(),
+        
+        # First correlations on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4(
+              "Percentage of respondents who reported having days in which emotional or mental
+              difficulties have affect academic performance"
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # First correlations on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput("mentalIllness_4", width = 'auto'),
+            "Fig 1. Academic Impairment is measured by how many days per month the respondents felt that
+            emotional or mental difficulties hurt their academic performance.",
+            # Text output that updates with plot selections
+            textOutput('description')
+          ), # END OF BOX
+          
+          column(
+            3,
+            # Input
+            varSelectInput(
+              inputId = 'ment4_vars',
+              label = 'Select a Variable:',
+              data = ment4_variables
+            )
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        br(),
+        
+        # Second correlations on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4(
+              "Percentage of respondents with a clinically diagnosed mental illness and their activity
+              compared to others."
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Second correlations on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput("plot5", width = 'auto'),
+            "Fig 2. Students with one or more diagnosed mental illnesses and their activities compared
+            to students without any diagnosed mental illness or illnesses.",
+            # Text output that changes with plot input
+            textOutput('MIdesc')
+          ), # END OF BOX
+          
+          column(
+            3,
+            # Activity input
+            varSelectInput(
+              inputId = 'behaviors',
+              label = 'Select an Activity:',
+              data = behaviors
+            ),
+            # Demographic input
+            varSelectInput(
+              inputId = 'MIdem',
+              label = 'Select a Demographic:',
+              data = demographics,
+              selected = 'Class Year'
+            )
+          ) # END OF COLUMN
+        ), # END OF ROW 
+        
+        br(),
+        
+        # Third correlations on mental health graph title
+        fluidRow(
+          column(
+            12,
+            h4(
+              "Percentage of respondents with a clinically diagnosed mental illness and subtance
+              use behavior compared to others."
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Third correlations on mental health graph ----
+        fluidRow(
+          box(
+            width = 9,
+            # Actual plot
+            plotlyOutput("plot6", width = 'auto'),
+            "Fig 3. Students with one or more diagnosed mental illnesses and their behaviors
+            compared to students without any diagnosed mental illness or illnesses.",
+            textOutput('MIdesc2')
+          ), # END OF BOX
+          
+          
+          column(
+            3,
+            # Behavior input
+            varSelectInput(
+              inputId = 'substance_behaviors',
+              label = 'Select a Behavior:',
+              data = substance_behaviors
+            ),
+            # Demographic input
+            varSelectInput(
+              inputId = 'MIdem2',
+              label = 'Select a Demographic:',
+              data = demographics,
+              selected = 'Class Year'
+            )
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ), # END OF MENTAL HEALTH CORRELATIONS TABITEM
       
-      # Third tab content
+      # Flourishing trends tab content ----
       tabItem(
         tabName = 'section3',
         h2('Trends on Flourishing'),
+        
         hr(),
+        
+        # First flourishing trends graph title
         fluidRow(
-          column(12,h4("Percentage of students flourishing "))
+          column(12, h4("Percentage of students flourishing "))
         ),
+        
+        # First flourishing trends graph ----
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot1", width = 'auto'),
-            "Fig 1. 60% of respondents describe themselves as either satisfied
-            or highly satisfied. Their lives are not perfect, but they love
-            their lives and feel that things are going very well",
+            width = 9,
+            # Actual plot
+            plotlyOutput("Fplot1", width = 'auto'),
+            "Fig 1. 60% of respondents describe themselves as either satisfied or highly satisfied.
+            Their lives are not perfect, but they love their lives and feel that things are going very well",
             br(),
             br(),
-            em("Categories are derived from The Satisfaction With Life Scale
-            (SWLS). The scale was developed as a way to assess an individual’s
-            cognitive judgment of their satisfaction with their life as a 
-               whole."
-            )),
+            em(
+              "Categories are derived from The Satisfaction With Life Scale (SWLS). The scale was developed as
+               a way to assess an individual’s cognitive judgment of their satisfaction with their life as a whole."
+            )
+          ), # END OF BOX
+          
           column(
             3,
+            # Demographic input
             varSelectInput(
               inputId = 'Fdem1',
               label = 'Select a Demographic:',
               data = demographics,
               selected = 'Class Year'
             )
-          )
-        ),
+          ) # END OF COLUMN
+        ), # END OF ROW
         
+        # Second flourishing trends graph title
         fluidRow(
-          column(12, h4("Percentage of respondents’ answers to corresponding 
-          positive mental health survey questions"))
-        ),
+          column(
+            12,
+            h4(
+              "Percentage of respondents’ answers to corresponding positive mental health survey questions"
+            ) # END OF H4
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Second flourishing trends graph ----
         fluidRow(
+          
           box(
-            width = 9, plotlyOutput('dienerplot', width = 'auto'), 
-            "Fig 2. How much students that are flourishing agree with the
-            selected 
-            wellbeing statement. Flourishing individuals are identified as
-            respondents with a flourishing status of ‘Satisfied’ or 
-            ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
-            Flourishing individuals are in the 90th percentile of the SWLS."
-          ),
+            width = 9,
+            # Actual plot
+            plotlyOutput('dienerplot', width = 'auto'), 
+            "Fig 2. How much students that are flourishing agree with the selected wellbeing statement.
+            Flourishing individuals are identified as respondents with a flourishing status of ‘Satisfied’ or
+            ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS). Flourishing individuals are in the
+            90th percentile of the SWLS."
+          ), # END OF BOX
+          
           column(
             3,
-            varSelectInput(inputId = "flourdem",
-                           label="Select a Demographic:",
-                           data=demographics,
-                           selected = 'Class Year'
+            # Demographic input
+            varSelectInput(
+              inputId = "flourdem",
+              label="Select a Demographic:",
+              data=demographics,
+              selected = 'Class Year'
             ),
+            
             br(),
+            
+            # Question input
             varSelectInput(
               inputId = 'flourq',
               label = 'Select a Flourishing Question:',
               data = flourQues)
-          )
-        )),
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ), # END OF FLOURISHING TRENDS TABITEM
+      
+      # Flourishing correlations tab content ----
       tabItem(
         tabName = 'section4',
         h2('Flourishing Correlations'), 
+        
         hr(),
+        
+        # First flourishing correlations graph title
         fluidRow(
-          column(12, h4("Percentage of respondents considered flourishing and
-                        their behavior compared to others."))
+          column(12, h4("Percentage of respondents considered flourishing and their behavior compared to others."))
         ),
+        
+        # First flourishing correlations graph ----
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot2", width = 'auto'),
-            "Fig 1. Flourishing individuals are identified as
-                respondents with a flourishing status of ‘Satisfied’ or 
-                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
-                Flourishing individuals are in the 90th percentile of the SWLS.",
+            width = 9,
+            # Actual plot
+            plotlyOutput("Fplot2", width = 'auto'),
+            "Fig 1. Flourishing individuals are identified as respondents with a flourishing status of ‘Satisfied’
+            or ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS). Flourishing individuals are in the
+            90th percentile of the SWLS.",
+            # Text output that changes with input
             textOutput('fldesc1')
-          ),
+          ), # END OF BOX
+          
           column(
             3,
+            # Demographic input
             varSelectInput(
               inputId = 'Fplot2_dem',
               label = 'Select a Demographic:',
               data = demographics,
               selected = 'Class Year'
             ),
+            
             br(),
+            
+            # Behavior input
             varSelectInput(
               inputId = 'Fplot2_var',
               label = 'Select a Behavior:',
               data = behaviors
             )
-          )
-        ),
+          ) # END OF COLUMN
+        ), # END OF ROW
         
+        # Second flourishing correlations graph title
         fluidRow(
-          column(12, h4("Percentage of respondents considered flourishing and 
-                        substance use behavior compared to others."))
-        ),
+          column(
+            12,
+            h4("Percentage of respondents considered flourishing and substance use behavior compared to others.")
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
+        # Second flourishing correlations graph ----
         fluidRow(
           box(
-            width = 9, plotlyOutput("Fplot3", width = 'auto'),
-            "Fig 2. Flourishing individuals are identified as
-                respondents with a flourishing status of ‘Satisfied’ or 
-                ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS).
-                Flourishing individuals are in the 90th percentile of the 
-            SWLS.",
+            width = 9,
+            # Actual plot
+            plotlyOutput("Fplot3", width = 'auto'),
+            "Fig 2. Flourishing individuals are identified as respondents with a flourishing status of
+            ‘Satisfied’ or  ‘Highly Satisfied’ on the Satisfaction With Life Scale (SWLS). Flourishing
+            individuals are in the 90th percentile of the SWLS.",
+            # Text output that changes with input
             textOutput('fldesc2')
           ),
+          
           column(
             3,
+            # Demographic input
             varSelectInput(
               inputId = 'Fplot3_dem',
               label = 'Select a Demographic:',
               data = demographics
             ),
+            
             br(),
+            
+            # Behavior input
             varSelectInput(
               inputId = 'Fplot3_var',
               label = 'Select a Behavior:',
               data = substance_behaviors
             )
-          )
-        )
-      ),
-      tabItem(tabName = 'key',
-              h2("Important Takeaways"),
-              hr(),
-              fluidRow(column(12,
-                              h3('Mental Health',
-                                 style = 'text-align: center;'))),
-              fluidRow(
-                box(width = 4, height = box_height,
-                    h4(strong('Student Mental Illness Prevalence'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigBlue', '56%'),
-                    p(class = 'nextTo', 'of gender queer/nonconforming students
-                    have diagnosed mental illnesses in 2021'),
-                    br(),
-                    br(),
-                    p(class = 'bigLav', '100%'),
-                    p(class = 'nextTo', 'of gender self identifying students
-                    have diagnosed
-                    mental illnesses in 2021'),
-                    br(),
-                    br(),
-                    p(class = 'bigSam', '45%'),
-                    p(class = 'nextTo', 'of woman identifying students have
-                      diagnosed mental illnesses in 2021'),
-                    br(),
-                    br(),
-                    p(class = 'bigNavy', '21%'),
-                    p(class = 'nextTo', 'of man identifying students have
-                      diagnosed mental illnesses in 2021'),
-                    hr(),
-                    p(class = 'bigBlue', '53%'),
-                    p(class = 'nextTo', 'of students with mental illnesses have
-                      both depression and anxiety'),
-                    hr(),
-                    p(class = 'bigLav', '53%'),
-                    p(class = 'nextTo', 'of seniors in 2019 have mental
-                      illnesses'),
-                    h4(em('vs'), style = 'text-align:center;'),
-                    p(class = 'bigSam', '42%'),
-                    p(class = 'nextTo', 'of freshman in 2019 with mental
-                      illness'),
-                    hr(),
-                    p(class = 'bigNavy', '56%'),
-                    p(class = 'nextTo', 'of LGBTQ+ students in 2021 experience
-                      mental illness'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigBlue', '35%'),
-                    p(class = 'nextTo', 'of non-LGBTQ+ students in 2021')),
-                box(width = 4, height = box_height,
-                    h4(strong('Student Activities'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigLav', '46% and 40%'),
-                    p(class = 'nextTo', 'of students with depression and
-                    anxiety, respectively, report experiencing academic
-                    impairment for 6 or more days'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigSam', '30-35%'),
-                    p(class = 'nextTo', 'of students experience academic
-                      impairment only one or two days, depending on the
-                      loneliness variable'),
-                    hr(),
-                    p(class = 'bigNavy', '6 hours'),
-                    p(class = 'nextTo', 'or less is on average how much
-                      students sleep regardless of mental illness status and
-                      demographic'),
-                    hr(),
-                    p(class = 'bigBlue', '42%'),
-                    p(class = 'nextTo', 'of students with mental illness in
-                      2021 reported using therapy'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigLav', '35%'),
-                    p(class = 'nextTo', 'students without mental illness in
-                      2021'),
-                    hr(),
-                    p(class = 'bigSam', '~32%'),
-                    p(class = 'nextTo', 'of students, with and without mental
-                      illness, in 2021 agree or strongly agree with having
-                      knowledge of mental health services on campus')
-                ),
-                box(width = 4, height = box_height,
-                    h4(strong('Substance Use'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigNavy', '~36%'),
-                    p(class = 'nextTo', 'of students in 2021 have not had any
-                    alcohol in the past 2 weeks regardless of mental illness
-                      status '),
-                    hr(),
-                    p(class = 'bigBlue', '47%'),
-                    p(class = 'nextTo', 'of students with mental illness in
-                      2021, binge drink three to five times or less'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigLav', '43%'),
-                    p(class = 'nextTo', 'of students in 2021 without mental
-                      illness'),
-                    hr(),
-                    p(class = 'bigSam', '78%'),
-                    p(class = 'nextTo', 'of students of both mental illness
-                    statuses in 2021 smoked 0 days'),
-                    hr(),
-                    p(class = 'bigNavy', '68%'),
-                    p(class = 'nextTo', 'of students in 2021 have not vaped in the past 30 days across both mental illnes statuses'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigBlue', '34%'),
-                    p(class = 'nexTo', 'of students in 2021 have vaped'),
-                    hr(),
-                    p(class = 'bigLav', '16%'),
-                    p(class = 'nextTo', 'of students with mental illness in
-                      2021 have used drugs'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigSam', '13%'),
-                    p(class = 'nextTo', 'those without mental illness in 2021')
-                )),
-              fluidRow(column(12,
-                              h3('Flourishing',
-                                 style = 'text-align: center;'))),
-              fluidRow(h4("If you want to learn more on how to improve your
-              flourishing, visit Sewanee's flourishing website:", 
-                          a(href = "https://verge.sewanee.edu", "Verge")),
-                       style = 'text-align: center;'),
-              fluidRow(
-                box(width = 4, height = box_height2,
-                    h4(strong('Student Flourishing'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigBlue', '~40%'),
-                    p(class = 'nextTo', 'of students report being statisfied
-                      with their lives'),
-                    h4(em('and'), style = 'text-align: center;'),
-                    p(class = 'bigLav', '~27%'),
-                    p(class = 'nextTo', 'of students report being highly
-                      satisfied'),
-                    hr(),
-                    p(class = 'bigSam', '0%'),
-                    p(class = 'nextTo', 'of gender queer/nonconforming students
-                        report being highly satisfied with their lives'),
-                    hr(),
-                    p(class = 'bigNavy', '41% and 31%'),
-                    p(class = 'nextTo', 'of non-LGBTQ+ students report being
-                      statisfied and highly satisfied respectively'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigBlue', '35% and 11%'),
-                    p(class = 'nextTo', 'of LGBTQ+ students'),
-                    hr(),
-                    p(class = 'bigLav', '36%'),
-                    p(class = 'nextTo', 'of first year students report being
-                      satisfied'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigSam', '41%'),
-                    p(class = 'nextTo', 'of fourth year students')),
-                box(width = 4, height = box_height2,
-                    h4(strong('Student Activities'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigNavy', '6 hours'),
-                    p(class = 'nextTo', 'or less is on average how much
-                      students sleep regardless of flourishing status and
-                      demographic'),
-                    hr(),
-                    p(class = 'bigBlue', '46%'),
-                    p(class = 'nextTo', 'of students who are not flourishing
-                      use therapy'),
-                    h4(em('vs'), style = 'text-align = center;'),
-                    p(class = 'bigLav', '23%'),
-                    p(class = 'nextTo', 'of students who are not flourishing
-                      do not use therapy'),
-                    hr(),
-                    p(class = 'bigSam', '23%'),
-                    p(class = 'nextTo', 'of students not flourishing in 2021
-                      agree they have knowledge of mental health services'),
-                    h4(em('and'), style = 'text-align: center;'),
-                    p(class = 'bigNavy', '13%'),
-                    p(class = 'nextTo', 'of students flourishing in 2021 agree
-                      they have knowledge of mental health services')),
-                box(width = 4, height = box_height2,
-                    h4(strong('Substance Use'),
-                       style = 'text-align: center;'),
-                    p(class = 'bigBlue', '73%'),
-                    p(class = 'nextTo', 'of students in 2021 have not had
-                      alcohol in the past two weeks regardless of flourishing
-                      status'),
-                    hr(),
-                    p(class = 'bigLav', '64%'),
-                    p(class = 'nextTo', 'of students who are not flourishing in
-                      2021 binge drink 3 to 5 times or less'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigSam', '26%'),
-                    p(class = 'nextTo', 'of students who are flourishing in
-                      2021 binge drink 3 to 5 times or less'),
-                    hr(),
-                    p(class = 'bigNavy', '25%'),
-                    p(class = 'nextTo', 'of flourishing students in 2021 smoke
-                      zero days'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigBlue', '53%'),
-                    p(class = 'nextTo', 'of non-flourishing students in 2021
-                      smoke zero days'),
-                    hr(),
-                    p(class = 'bigLav', '67%'),
-                    p(class = 'nextTo', 'of students in 2021 have not vaped in
-                    the past 30 days regardless of flourishing status'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigSam', '33%'),
-                    p(class = 'nextTo', 'of students in 2021 who have vaped'),
-                    hr(),
-                    p(class = 'bigNavy', '71%'),
-                    p(class = 'nextTo', 'of both non-flourishing and
-                      flourishing students have not used drugs in 2021'),
-                    h4(em('vs'), style = 'text-align: center;'),
-                    p(class = 'bigBlue', '29%'),
-                    p(class = 'nextTo', 'of students who have used drugs in
-                      2021'))
-              )
-              
-      ),
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ), # END OF FLOURISHING CORRELATIONS TABITEM
       
-      # Fifth tab content
+      # Important takeaways tab content ----
       tabItem(
+        tabName = 'key',
+        h2("Important Takeaways"),
         
+        hr(),
+        
+        # Mental Health Section ----
+        fluidRow(
+          column(12, h3('Mental Health', style = 'text-align: center;'))
+        ), # END OF ROW
+        
+        fluidRow(
+          # Student Mental Illness Prevalence ----
+          box(
+            width = 4,
+            height = box_height,
+            
+            h4(strong('Student Mental Illness Prevalence'), style = 'text-align: center;'),
+            
+            p(class = 'bigBlue', '56%'),
+            p(class = 'nextTo', 'of gender queer/nonconforming students have diagnosed mental illnesses in 2021'),
+            
+            br(),
+            br(),
+            
+            p(class = 'bigLav', '100%'),
+            p(class = 'nextTo', 'of gender self identifying students have diagnosed mental illnesses in 2021'),
+            
+            br(),
+            br(),
+            
+            p(class = 'bigSam', '45%'),
+            p(class = 'nextTo', 'of woman identifying students have diagnosed mental illnesses in 2021'),
+            
+            br(),
+            br(),
+            
+            p(class = 'bigNavy', '21%'),
+            p(class = 'nextTo', 'of man identifying students have diagnosed mental illnesses in 2021'),
+            
+            hr(),
+            
+            p(class = 'bigBlue', '53%'),
+            p(class = 'nextTo', 'of students with mental illnesses have both depression and anxiety'),
+            
+            hr(),
+            
+            p(class = 'bigLav', '53%'),
+            p(class = 'nextTo', 'of seniors in 2019 have mental illnesses'),
+            h4(em('vs'), style = 'text-align:center;'),
+            p(class = 'bigSam', '42%'),
+            p(class = 'nextTo', 'of freshman in 2019 with mental illness'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '56%'),
+            p(class = 'nextTo', 'of LGBTQ+ students in 2021 experience mental illness'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '35%'),
+            p(class = 'nextTo', 'of non-LGBTQ+ students in 2021')
+          ), # END OF BOX
+          
+          # Student Activities ----
+          box(
+            width = 4,
+            height = box_height,
+            h4(strong('Student Activities'), style = 'text-align: center;'),
+            
+            p(class = 'bigLav', '46% and 40%'),
+            p(class = 'nextTo', 'of students with depression and anxiety, respectively,
+              report experiencing academic impairment for 6 or more days'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigSam', '30-35%'),
+            p(class = 'nextTo', 'of students experience academic impairment only one or two days,
+              depending on the loneliness variable'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '6 hours'),
+            p(class = 'nextTo', 'or less is on average how much students sleep regardless of
+              mental illness status and demographic'),
+            
+            hr(),
+            
+            p(class = 'bigBlue', '42%'),
+            p(class = 'nextTo', 'of students with mental illness in 2021 reported using therapy'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigLav', '35%'),
+            p(class = 'nextTo', 'students without mental illness in 2021'),
+            
+            hr(),
+            
+            p(class = 'bigSam', '~32%'),
+            p(class = 'nextTo', 'of students, with and without mental illness,
+              in 2021 agree or strongly agree with having knowledge of mental health services on campus')
+          ), # END OF BOX
+          
+          # Substance Use ----
+          box(
+            width = 4,
+            height = box_height,
+            
+            h4(strong('Substance Use'), style = 'text-align: center;'),
+            
+            p(class = 'bigNavy', '~36%'),
+            p(class = 'nextTo', 'of students in 2021 have not had any alcohol in the past 2 weeks
+              regardless of mental illness status '),
+            
+            hr(),
+            
+            p(class = 'bigBlue', '47%'),
+            p(class = 'nextTo', 'of students with mental illness in 2021, binge drink three to five times or less'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigLav', '43%'),
+            p(class = 'nextTo', 'of students in 2021 without mental illness'),
+            
+            hr(),
+            
+            p(class = 'bigSam', '78%'),
+            p(class = 'nextTo', 'of students of both mental illness statuses in 2021 smoked 0 days'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '68%'),
+            p(class = 'nextTo', 'of students in 2021 have not vaped in the past 30 days across both
+              mental illnes statuses'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '34%'),
+            p(class = 'nexTo', 'of students in 2021 have vaped'),
+            
+            hr(),
+            
+            p(class = 'bigLav', '16%'),
+            p(class = 'nextTo', 'of students with mental illness in 2021 have used drugs'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigSam', '13%'),
+            p(class = 'nextTo', 'those without mental illness in 2021')
+          ) # END OF BOX
+        ), # END OF ROW
+        
+        # Flourishing section ----
+        fluidRow(
+          column(12, h3('Flourishing', style = 'text-align: center;'))
+        ), # END OF ROW
+        
+        fluidRow(
+          h4(
+            "If you want to learn more on how to improve your flourishing, visit Sewanee's flourishing website:", 
+            a(href = "https://verge.sewanee.edu", "Verge")
+          ), # END OF H4
+          style = 'text-align: center;'
+        ), # END OF ROW
+        
+        fluidRow(
+          # Student Flourishing ----
+          box(
+            width = 4,
+            height = box_height2,
+            
+            h4(strong('Student Flourishing'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '~40%'),
+            p(class = 'nextTo', 'of students report being statisfied with their lives'),
+            h4(em('and'), style = 'text-align: center;'),
+            p(class = 'bigLav', '~27%'),
+            p(class = 'nextTo', 'of students report being highly satisfied'),
+            
+            hr(),
+            
+            p(class = 'bigSam', '0%'),
+            p(class = 'nextTo', 'of gender queer/nonconforming students report being highly
+              satisfied with their lives'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '41% and 31%'),
+            p(class = 'nextTo', 'of non-LGBTQ+ students report being statisfied and highly satisfied respectively'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '35% and 11%'),
+            p(class = 'nextTo', 'of LGBTQ+ students'),
+            
+            hr(),
+            
+            p(class = 'bigLav', '36%'),
+            p(class = 'nextTo', 'of first year students report being satisfied'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigSam', '41%'),
+            p(class = 'nextTo', 'of fourth year students')
+          ), # END OF BOX
+          
+          # Student Activities ----
+          box(
+            width = 4,
+            height = box_height2,
+            
+            h4(strong('Student Activities'), style = 'text-align: center;'),
+            p(class = 'bigNavy', '6 hours'),
+            p(class = 'nextTo', 'or less is on average how much students sleep regardless of
+              flourishing status and demographic'),
+            
+            hr(),
+            
+            p(class = 'bigBlue', '46%'),
+            p(class = 'nextTo', 'of students who are not flourishing use therapy'),
+            h4(em('vs'), style = 'text-align = center;'),
+            p(class = 'bigLav', '23%'),
+            p(class = 'nextTo', 'of students who are not flourishing do not use therapy'),
+            
+            hr(),
+            
+            p(class = 'bigSam', '23%'),
+            p(class = 'nextTo', 'of students not flourishing in 2021 agree they have knowledge of
+              mental health services'),
+            h4(em('and'), style = 'text-align: center;'),
+            p(class = 'bigNavy', '13%'),
+            p(class = 'nextTo', 'of students flourishing in 2021 agree they have knowledge of
+              mental health services')
+          ), # END OF BOX
+          
+          # Substance Use ----
+          box(
+            width = 4,
+            height = box_height2,
+            
+            h4(strong('Substance Use'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '73%'),
+            p(class = 'nextTo', 'of students in 2021 have not had alcohol in the past
+              two weeks regardless of flourishing status'),
+            
+            hr(),
+            
+            p(class = 'bigLav', '64%'),
+            p(class = 'nextTo', 'of students who are not flourishing in 2021 binge drink 3 to 5 times or less'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigSam', '26%'),
+            p(class = 'nextTo', 'of students who are flourishing in 2021 binge drink 3 to 5 times or less'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '25%'),
+            p(class = 'nextTo', 'of flourishing students in 2021 smoke zero days'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '53%'),
+            p(class = 'nextTo', 'of non-flourishing students in 2021 smoke zero days'),
+            
+            hr(),
+            
+            p(class = 'bigLav', '67%'),
+            p(class = 'nextTo', 'of students in 2021 have not vaped in the past 30 days regardless of
+              flourishing status'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigSam', '33%'),
+            p(class = 'nextTo', 'of students in 2021 who have vaped'),
+            
+            hr(),
+            
+            p(class = 'bigNavy', '71%'),
+            p(class = 'nextTo', 'of both non-flourishing and flourishing students have not used drugs in 2021'),
+            h4(em('vs'), style = 'text-align: center;'),
+            p(class = 'bigBlue', '29%'),
+            p(class = 'nextTo', 'of students who have used drugs in 2021')
+          ) # END OF BOX
+        ) # END OF ROW
+      ), # END OF KEY TAKEAWAYS TABITEM
+      
+      # About tab content ----
+      tabItem(
         tabName = 'About',
         h2('About the Well-being Project'),
+        
         hr(),
+        
         h3(strong("What is DataLab </>?")),
+        
         br(),
-        h4("DataLab is a summer internship program at Sewanee: the University 
-        of the South that partners with DSSG, Data Science for Social Good, 
-        to develop data science skills in students by analyzing data sets 
-           related to pressing social and environmental problems."
+        
+        h4("DataLab is a summer internship program at Sewanee: the University of the South that partners with
+           DSSG, Data Science for Social Good, to develop data science skills in students by analyzing data
+           sets related to pressing social and environmental problems."
         ),
+        
         br(),
+        
+        # Our Team Info ----
         h3(strong('Well-being Dream Team:')),
+        
         br(),
         br(),
+        
+        # Jarely ----
         fluidRow(
           column(
             4,
-            tags$img(
-              src = "jarely.jpg",
-              width = "100%",
-              alt = "Picture of Jarely"
-            )
-          ),
+            tags$img(src = "jarely.jpg", width = "100%", alt = "Picture of Jarely")
+          ), # END OF COLUMN
+          
           column(
             8,
-            h3(
-              "Jarely Soriano | ",
-              a(href = 'mailto:soriaja0@sewanee.edu', 'Email Me')
-            ),
-            h4(em("C'23 IGS: Latin American and 
-                  Caribbean Studies and Global Politics")),
+            h3("Jarely Soriano | ", a(href = 'mailto:soriaja0@sewanee.edu', 'Email Me')),
+            h4(em("C'23 IGS: Latin American and Caribbean Studies and Global Politics")),
             tags$blockquote(
               em("I joined DataLab because I wanted to learn something new and 
               do something impactful. If i’ve learned one thing during this 
               experience, it’s that information can be beautiful and powerful."
               )
             )
-          )
-        ),
+          ) #END OF COLUMN
+        ), # END OF ROW
+        
         br(),
+        
+        # Sam ----
         fluidRow(
           column(
             4,
-            tags$img(
-              src = "sam.jpg",
-              width = "100%",
-              alt = "Picture of Sam"
-            )
-          ),
+            tags$img(src = "sam.jpg", width = "100%", alt = "Picture of Sam")
+          ), # END OF COLUMN
+          
           column(
             8,
-            h3('Sam Dean | ', a(href = 'mailto:deansn0@sewanee.edu', 
-                                'Email Me')),
+            h3('Sam Dean | ', a(href = 'mailto:deansn0@sewanee.edu', 'Email Me')),
             h4(em("C'23 Psychology")),
             tags$blockquote(
               em("Being invited to be a part of DataLab 2022 has been one of 
@@ -1036,19 +1265,21 @@ ui <- dashboardPage(
               my coding skills improve, I was shown how to incorporate two fields 
                  I am most passionate about: data science and mental health.")
             )
-          )
-        ),
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
         br(),
+        
+        # Michael ----
         fluidRow(
           column(
             4,
-            tags$img(src = "michael.jpg", width = "100%", 
-                     alt = "Picture of Michael")
-          ),
+            tags$img(src = "michael.jpg", width = "100%", alt = "Picture of Michael")
+          ), # END OF COLUMN
+          
           column(
             8,
-            h3('Michael Komnick | ', a(href = "mailto:komnimj0@sewanee.edu", 
-                                       'Email Me')),
+            h3('Michael Komnick | ', a(href = "mailto:komnimj0@sewanee.edu", 'Email Me')),
             h4(em("C'24 Computer Science")),
             tags$blockquote(
               em("I heard that DataLab was a great opportunity to use my 
@@ -1056,21 +1287,21 @@ ui <- dashboardPage(
               increase my network and connections with professionals in the 
                  field I am most passionate about.")
             )
-          )
-        ),
+          ) # END OF COLUMN
+        ), # END OF ROW
+        
         br(),
+        
+        # Temi ----
         fluidRow(
           column(
             4,
-            tags$img(
-              src = "temi.jpg",
-              width = "100%",
-              alt = "Picture of Temi")
-          ),
+            tags$img(src = "temi.jpg", width = "100%", alt = "Picture of Temi")
+          ), # END OF COLUMN
+          
           column(
             8,
-            h3('Temi Adejumobi | ', a(href ="mailto:adejuoj0@sewanee.edu", 
-                                      "Email Me")),
+            h3('Temi Adejumobi | ', a(href ="mailto:adejuoj0@sewanee.edu", "Email Me")),
             h4(em("C'24 Computer Science")),
             tags$blockquote(
               em(
@@ -1082,12 +1313,12 @@ ui <- dashboardPage(
                 from interesting people."
               )
             )
-          )
-        )
-      )
-    )
-  )
-)
+          ) # END OF COLUMN
+        ) # END OF ROW
+      ) # END OF ABOUT TABITEM
+    ) # END OF TABITEMS
+  ) # END OF DASHBOARD BODY
+) # END OF UI
 
 
 ################################################################################

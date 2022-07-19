@@ -541,12 +541,14 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
 <p>
 
     5 = 1 or more packs
+</li>
 <ol>
 
 <li>1 = Yes
 <p>
 
     2 = No
+</li>
 <ol>
 
 <li>1 = Any vaping
@@ -559,6 +561,7 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
 <p>
 
     4 = Vaping "just flavoring"
+</li>
 <ol>
 
 <li>1 = Marijuana
@@ -601,12 +604,6 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
 <p>
 
     15 = No, none of these
-</li>
-</ol>
-</li>
-</ol>
-</li>
-</ol>
 </li>
 </ol>
    </td>

@@ -37,11 +37,11 @@ Our data frames (**Data Dictionary**)
     <th>Responses</th>
   </tr>
   <tr>
-   <td>School year [schoolYear] 
+   <td><p>School year [schoolYear] 
    </td>
-   <td>Year the Healthy Minds Survey was taken 
+   <td><p>Year the Healthy Minds Survey was taken 
    </td>
-   <td>2017-18,
+   <td><p>2017-18,
 <p>
 2018-19, 
 <p>
@@ -51,27 +51,27 @@ Our data frames (**Data Dictionary**)
    </td>
   </tr>
   <tr>
-   <td>Class Year [classYear]
+   <td><p>Class Year [classYear]
    </td>
-   <td>What year are you in your current degree program?
+   <td><p>What year are you in your current degree program?
    </td>
-   <td>1st year - 7th year
-   </td>
-  </tr>
-  <tr>
-   <td>Age [age] 
-   </td>
-   <td>How old are you? (You must be 18 years or older to complete this survey.) 
-   </td>
-   <td>______ years old
+   <td><p>1st year - 7th year
    </td>
   </tr>
   <tr>
-   <td>Gender [gender_] 
+   <td><p>Age [age] 
    </td>
-   <td>What is your gender identity?
+   <td><p>How old are you? (You must be 18 years or older to complete this survey.) 
    </td>
-   <td>gender_male = male and transgender males
+   <td><p>______ years old
+   </td>
+  </tr>
+  <tr>
+   <td><p>Gender [gender_] 
+   </td>
+   <td><p>What is your gender identity?
+   </td>
+   <td><p>gender_male = male and transgender males
 <p>
 gender_female = female and transgender females
 <p>
@@ -81,11 +81,11 @@ gender_selfID = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Race [race_]
+   <td><p>Race [race_]
    </td>
-   <td>What is your race/ethnicity?(Select all that apply)
+   <td><p>What is your race/ethnicity?(Select all that apply)
    </td>
-   <td>race_black = African American/Black
+   <td><p>race_black = African American/Black
 <p>
 race_asian = Asian American/Asian
 <p>
@@ -97,11 +97,11 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Positive Mental Health
+   <td><p>Positive Mental Health
 <p>
 [diener]
    </td>
-   <td>
+   <td><p>
 <ul>
 
 <li>I lead a purposeful and meaningful life.
@@ -122,7 +122,7 @@ race_other = Self-identify (please specify)
 </li>
 </ul>
    </td>
-   <td>1 = Strongly disagree
+   <td><p>1 = Strongly disagree
 <p>
 2 = Disagree
 <p>
@@ -138,21 +138,21 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Positive Mental Health
+   <td><p>Positive Mental Health
 <p>
 [diener_score]
    </td>
-   <td>Sum of all diener variables
+   <td><p>Sum of all diener variables
    </td>
-   <td>8 - 56
+   <td><p>8 - 56
    </td>
   </tr>
   <tr>
-   <td>Diagnosed Mental Illnesses [dx_…]
+   <td><p>Diagnosed Mental Illnesses [dx_…]
    </td>
-   <td>Have you ever been diagnosed with any of the following conditions by a health professional (e.g., primary care doctor, psychiatrist, psychologist, etc.)? (Select all that apply)
+   <td><p>Have you ever been diagnosed with any of the following conditions by a health professional (e.g., primary care doctor, psychiatrist, psychologist, etc.)? (Select all that apply)
    </td>
-   <td><strong>dx_dep </strong>[1 = depression] 
+   <td><p><strong>dx_dep </strong>[1 = depression] 
 <p>
 <strong>dx_bip</strong> [1 = bipolar] 
 <p>
@@ -178,13 +178,13 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Academic Impairment
+   <td><p>Academic Impairment
 <p>
 [aca_impa]
    </td>
-   <td>In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt your academic performance?
+   <td><p>In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt your academic performance?
    </td>
-   <td>1 = None
+   <td><p>1 = None
 <p>
 2 = 1-2 days
 <p>
@@ -194,13 +194,13 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Help-seeking intentions
+   <td><p>Help-seeking intentions
 <p>
 [talk1_…]
    </td>
-   <td>If you were experiencing serious emotional distress, whom would you talk to about this? (Select all that apply)
+   <td><p>If you were experiencing serious emotional distress, whom would you talk to about this? (Select all that apply)
    </td>
-   <td>1 = Professional clinician (e.g., psychologist,counselor, or psychiatrist)
+   <td><p>1 = Professional clinician (e.g., psychologist,counselor, or psychiatrist)
 <p>
 2 = Roommate
 <p>
@@ -220,13 +220,13 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Use of counseling/therapy
+   <td><p>Use of counseling/therapy
 <p>
 [ther_ever] 
    </td>
-   <td>Have you ever received counseling or therapy for mental health concerns?
+   <td><p>Have you ever received counseling or therapy for mental health concerns?
    </td>
-   <td>1 = No, never
+   <td><p>1 = No, never
 <p>
 2 = Yes, prior to starting college
 <p>
@@ -236,13 +236,13 @@ race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
-   <td>Anxiety
+   <td><p>Anxiety
 <p>
 [gad7_…]
 <p>
 * Not measured in HMS 2017
    </td>
-   <td>Over the last 2 weeks, how often have you been bothered by the following problems?
+   <td><p>Over the last 2 weeks, how often have you been bothered by the following problems?
 <p>
 Feeling nervous, anxious or on edge
 <p>
@@ -260,7 +260,7 @@ Feeling afraid as if something awful might happen
 <p>
 How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?
    </td>
-   <td>1 = Not at all
+   <td><p>1 = Not at all
 <p>
 2 = Several days
 <p>
@@ -270,13 +270,13 @@ How difficult have these problems (noted above) made it for you to do your work,
    </td>
   </tr>
   <tr>
-   <td>Depression
+   <td><p>Depression
 <p>
 [phq9_…]
 <p>
 * Not measured in HMS 2017
    </td>
-   <td>- Over the last 2 weeks, how often have you been
+   <td><p>- Over the last 2 weeks, how often have you been
 <p>
 bothered by any of the following problems?:
 <p>
@@ -304,7 +304,7 @@ Little interest or pleasure in doing things
 <p>
 Feeling down, depressed or hopeless
    </td>
-   <td>1 = Not at all
+   <td><p>1 = Not at all
 <p>
 2 = Several days
 <p>
@@ -314,15 +314,15 @@ Feeling down, depressed or hopeless
    </td>
   </tr>
   <tr>
-   <td>Depression Impact
+   <td><p>Depression Impact
 <p>
 [dep_impa]
 <p>
 * Not measured in HMS 2017
    </td>
-   <td>How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?
+   <td><p>How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?
    </td>
-   <td>1 = Not difficult at all
+   <td><p>1 = Not difficult at all
 <p>
 2 = Somewhat difficult
 <p>
@@ -332,13 +332,13 @@ Feeling down, depressed or hopeless
    </td>
   </tr>
   <tr>
-   <td>Loneliness
+   <td><p>Loneliness
 <p>
 [lone_…]
 <p>
 * Only measured in HMS 2020-2021
    </td>
-   <td>Please answer the following:
+   <td><p>Please answer the following:
 <p>
 How often do you feel that you lack companionship?
 <p>
@@ -346,7 +346,7 @@ How often do you feel left out?
 <p>
 How often do you feel isolated from others?
    </td>
-   <td>1 = Hardly ever
+   <td><p>1 = Hardly ever
 <p>
 2 = Some of the time
 <p>
@@ -354,17 +354,17 @@ How often do you feel isolated from others?
    </td>
   </tr>
   <tr>
-   <td>Exercise
+   <td><p>Exercise
 <p>
 [exerc]
 <p>
 * Only measured in HMS 2020-2021
    </td>
-   <td>How much do you agree with the following statement?: 
+   <td><p>How much do you agree with the following statement?: 
 <p>
 My exercise habits have changed a lot since I began as a student at my school.
    </td>
-   <td>1=Strongly agree 
+   <td><p>1=Strongly agree 
 <p>
 2=Agree 
 <p>
@@ -374,11 +374,11 @@ My exercise habits have changed a lot since I began as a student at my school.
    </td>
   </tr>
   <tr>
-   <td>Sleep [Sleep]
+   <td><p>Sleep [Sleep]
    </td>
-   <td>On average, how many hours of sleep do you get per night?
+   <td><p>On average, how many hours of sleep do you get per night?
    </td>
-   <td>Less than 6 hours
+   <td><p>Less than 6 hours
 <p>
 6 to 10 hours
 <p>
@@ -386,7 +386,7 @@ More than 10 hours
    </td>
   </tr>
   <tr>
-   <td>Alcohol Use
+   <td><p>Alcohol Use
 <p>
 [alc_any]
 <p>
@@ -396,11 +396,11 @@ More than 10 hours
 <p>
 [binge_fr_o]
    </td>
-   <td>Over the past 2 weeks, did you drink any alcohol?
+   <td><p>Over the past 2 weeks, did you drink any alcohol?
 <p>
 Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 or 5 [not female or male] or more alcoholic drinks in a row? (1 drink is a can of beer, a glass of wine, a wine cooler, a shot of liquor, or a mixed drink.)
    </td>
-   <td>1 = Yes
+   <td><p>1 = Yes
 <p>
 0 = No
 <p>
@@ -420,11 +420,11 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
    </td>
   </tr>
   <tr>
-   <td>Smoking Frequency [smok_freq]
+   <td><p>Smoking Frequency [smok_freq]
    </td>
-   <td>Over the past 30 days, about how many cigarettes did you smoke per day?
+   <td><p>Over the past 30 days, about how many cigarettes did you smoke per day?
    </td>
-   <td>1 = 0 cigarettes
+   <td><p>1 = 0 cigarettes
 <p>
 2 = Less than 1 cigarette
 <p>
@@ -436,21 +436,21 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
    </td>
   </tr>
   <tr>
-   <td>Vaping [smok_vape]
+   <td><p>Vaping [smok_vape]
    </td>
-   <td>Over the past 30 days, have you used an electronic cigarette or vape pen?
+   <td><p>Over the past 30 days, have you used an electronic cigarette or vape pen?
    </td>
-   <td>1 = Yes
+   <td><p>1 = Yes
 <p>
 2 = No
    </td>
   </tr>
   <tr>
-   <td>Vaping [smok_vape_mist]
+   <td><p>Vaping [smok_vape_mist]
    </td>
-   <td>What did you think was in the mist you inhaled the last time you used a vaping device?
+   <td><p>What did you think was in the mist you inhaled the last time you used a vaping device?
    </td>
-   <td>1 = Any vaping
+   <td><p>1 = Any vaping
 <p>
 2 = Vaping nicotine
 <p>
@@ -460,11 +460,11 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
    </td>
   </tr>
   <tr>
-   <td>Drug Use [drug_…]
+   <td><p>Drug Use [drug_…]
    </td>
-   <td>Over the past 30 days, have you used any of the following drugs?(Select all that apply)
+   <td><p>Over the past 30 days, have you used any of the following drugs?(Select all that apply)
    </td>
-   <td>1 = Marijuana
+   <td><p>1 = Marijuana
 <p>
 2 = Cocaine (any form, including crack, powder, or freebase)
 <p>
@@ -496,7 +496,7 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
    </td>
   </tr>
   <tr>
-   <td>Loneliness
+   <td><p>Loneliness
 <p>
 [lone_lackcompanion]
 <p>
@@ -504,7 +504,7 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
 <p>
 [lone_isolated]
    </td>
-   <td>Please answer the following: 
+   <td><p>Please answer the following: 
 <p>
 How often do you feel that you lack companionship?
 <p>
@@ -512,7 +512,7 @@ How often do you feel left out?
 <p>
 How often do you feel isolated from others? 
    </td>
-   <td>1 = Hardly ever
+   <td><p>1 = Hardly ever
 <p>
 2 = Some of the time
 <p>
@@ -520,15 +520,15 @@ How often do you feel isolated from others?
    </td>
   </tr>
   <tr>
-   <td>Belonging
+   <td><p>Belonging
 <p>
 [belong1]
    </td>
-   <td>How much do you agree with the following statement?:
+   <td><p>How much do you agree with the following statement?:
 <p>
 I see myself as a part of the campus community.
    </td>
-   <td>1 = Strongly agree
+   <td><p>1 = Strongly agree
 <p>
 2 = Agree
 <p>
@@ -542,17 +542,17 @@ I see myself as a part of the campus community.
    </td>
   </tr>
   <tr>
-   <td>Financial Stress
+   <td><p>Financial Stress
 <p>
 [fincur]
 <p>
 [finpast]
    </td>
-   <td>How would you describe your financial situation right now?
+   <td><p>How would you describe your financial situation right now?
 <p>
 How would you describe your financial situation while growing up?
    </td>
-   <td>1 = Always stressful
+   <td><p>1 = Always stressful
 <p>
 2 = Often stressful
 <p>
@@ -564,15 +564,15 @@ How would you describe your financial situation while growing up?
    </td>
   </tr>
   <tr>
-   <td>Knowledge and perceptions of campus services
+   <td><p>Knowledge and perceptions of campus services
 <p>
 [knowwher]
    </td>
-   <td>How much do you agree with the following statement?:
+   <td><p>How much do you agree with the following statement?:
 <p>
 If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.
    </td>
-   <td>1 = Strongly agree
+   <td><p>1 = Strongly agree
 <p>
 2 = Agree
 <p>
@@ -586,7 +586,7 @@ If I needed to seek professional help for my mental or emotional health, I would
    </td>
   </tr>
   <tr>
-   <td>Beliefs about treatment efficacy
+   <td><p>Beliefs about treatment efficacy
 <p>
 [ther_help]
 <p>
@@ -596,7 +596,7 @@ If I needed to seek professional help for my mental or emotional health, I would
 <p>
 [meds_helped_me]
    </td>
-   <td>How helpful on average do you think therapy or counseling is, when provided competently, for people your age who are clinically depressed?
+   <td><p>How helpful on average do you think therapy or counseling is, when provided competently, for people your age who are clinically depressed?
 <p>
 How helpful on average do you think therapy or counseling would be for you if you were having mental or emotional health problems?
 <p>
@@ -604,7 +604,7 @@ How helpful on average do you think medication is, when provided competently, fo
 <p>
 How helpful on average do you think medication wouldbe for you if you were having mental or emotional health problems?
    </td>
-   <td>1 = Very helpful
+   <td><p>1 = Very helpful
 <p>
 2 = Helpful
 <p>
@@ -614,19 +614,19 @@ How helpful on average do you think medication wouldbe for you if you were havin
    </td>
   </tr>
   <tr>
-   <td>Stigma
+   <td><p>Stigma
 <p>
 [stig_pcv_1]
 <p>
 [stig_per_1]
    </td>
-   <td>How much do you agree with the following statement?:
+   <td><p>How much do you agree with the following statement?:
 <p>
 Most people would willingly accept someone who has received mental health treatment as a close friend. 
 <p>
 Most people think less of a person who has received mental health treatment.
    </td>
-   <td>1 = Strongly agree
+   <td><p>1 = Strongly agree
 <p>
 2 = Agree
 <p>
@@ -640,25 +640,25 @@ Most people think less of a person who has received mental health treatment.
    </td>
   </tr>
   <tr>
-   <td>International Student Status
+   <td><p>International Student Status
 <p>
 [international]
    </td>
-   <td>Are you an international student?
+   <td><p>Are you an international student?
    </td>
-   <td>1 = Yes
+   <td><p>1 = Yes
 <p>
 0 = No
    </td>
   </tr>
   <tr>
-   <td>Major
+   <td><p>Major
 <p>
 [field_…]
    </td>
-   <td>What is your field of study? (Select all that apply)
+   <td><p>What is your field of study? (Select all that apply)
    </td>
-   <td>1 = Humanities (history, languages, philosophy,etc.)
+   <td><p>1 = Humanities (history, languages, philosophy,etc.)
 <p>
 2 = Natural sciences or mathematics
 <p>
@@ -700,13 +700,13 @@ Most people think less of a person who has received mental health treatment.
    </td>
   </tr>
   <tr>
-   <td>Extra Curricular Activities
+   <td><p>Extra Curricular Activities
 <p>
 [activ_…]
    </td>
-   <td>What activities do you currently participate in at your school? (Select all that apply
+   <td><p>What activities do you currently participate in at your school? (Select all that apply
    </td>
-   <td>1 = Academic or pre-professional organization
+   <td><p>1 = Academic or pre-professional organization
 <p>
 2 = Athletics (club)
 <p>
@@ -738,7 +738,7 @@ varsity)
    </td>
   </tr>
   <tr>
-   <td>Sexual Orientation
+   <td><p>Sexual Orientation
 <p>
 [sexual_h]
 <p>
@@ -756,9 +756,9 @@ varsity)
 <p>
 [sexual_text]
    </td>
-   <td>How would you describe your sexual orientation? (Select all that apply)
+   <td><p>How would you describe your sexual orientation? (Select all that apply)
    </td>
-   <td>1 = Heterosexual
+   <td><p>1 = Heterosexual
 <p>
 2 = Lesbian
 <p>
@@ -774,11 +774,11 @@ varsity)
    </td>
   </tr>
   <tr>
-   <td>LGBTQ+
+   <td><p>LGBTQ+
    </td>
-   <td>Do you identify as LGBTQ+?
+   <td><p>Do you identify as LGBTQ+?
    </td>
-   <td>0 = No
+   <td><p>0 = No
 <p>
 1 = Yes
    </td>

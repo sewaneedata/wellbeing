@@ -32,11 +32,6 @@ Our data frames (**Data Dictionary**)
 
 <table>
   <tr>
-    <th>Variable</th>
-    <th>Description</th>
-    <th>Response</th>
-  </tr>
-  <tr>
    <td>School year [ schoolYear ] 
    </td>
    <td>Year the Healthy Minds Survey was taken 
@@ -71,17 +66,17 @@ Our data frames (**Data Dictionary**)
    </td>
    <td>What is your gender identity?
    </td>
-   <td>1=Male
+   <td>1 = Male
 <p>
-2=Female
+2 = Female
 <p>
-3=Trans male/Trans man
+3 = Trans male/Trans man
 <p>
-4=Trans female/Trans woman
+4 = Trans female/Trans woman
 <p>
-5=Genderqueer/Gender non-conforming
+5 = Genderqueer/Gender non-conforming
 <p>
-6=Self-identify (please specify)
+6 = Self-identify (please specify)
    </td>
   </tr>
   <tr>
@@ -89,21 +84,15 @@ Our data frames (**Data Dictionary**)
    </td>
    <td>What is your race/ethnicity?(Select all that apply)
    </td>
-   <td>Race_black =
+   <td>race_black = African American/Black
 <p>
-African American/Black 
+race_asian = Asian American/Asian
 <p>
-Race_asian = 
+race_his = Hispanic/Latino/a
 <p>
-Asian American/Asian race_his = 
+race_white = White
 <p>
-Hispanic/Latino/a 
-<p>
-Race_white = White 
-<p>
-Race_other = 
-<p>
-Self-identify (please specify)
+race_other = Self-identify (please specify)
    </td>
   </tr>
   <tr>
@@ -132,19 +121,19 @@ Self-identify (please specify)
 </li>
 </ul>
    </td>
-   <td>1=Strongly disagree
+   <td>1 = Strongly disagree
 <p>
-2=Disagree
+2 = Disagree
 <p>
-3=Slightly disagree
+3 = Slightly disagree
 <p>
-4=Mixed or neither agree nor disagree
+4 = Mixed or neither agree nor disagree
 <p>
-5=Slightly agree
+5 = Slightly agree
 <p>
-6=Agree
+6 = Agree
 <p>
-7=Strongly agree
+7 = Strongly agree
    </td>
   </tr>
   <tr>
@@ -194,13 +183,13 @@ Self-identify (please specify)
    </td>
    <td>In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt your academic performance?
    </td>
-   <td>1=None 
+   <td>1 = None
 <p>
-2=1-2 days 
+2 = 1-2 days
 <p>
-3=3-5 days 
+3 = 3-5 days
 <p>
-4=6 or more days
+4 = 6 or more days
    </td>
   </tr>
   <tr>
@@ -210,21 +199,23 @@ Self-identify (please specify)
    </td>
    <td>If you were experiencing serious emotional distress, whom would you talk to about this? (Select all that apply)
    </td>
-   <td>1=Professional clinician (e.g., psychologist,counselor, or psychiatrist) 
+   <td>1 = Professional clinician (e.g., psychologist,counselor, or psychiatrist)
 <p>
-2=Roommate 
+2 = Roommate
 <p>
-3=Friend (who is not a roommate) 
+3 = Friend (who is not a roommate)
 <p>
-4=Significant other 
+4 = Significant other
 <p>
-5=Family member 6=Religious counselor or other religious contact
+5 = Family member
 <p>
-7=Support group 
+6 = Religious counselor or other religious contact
 <p>
-8=Other non-clinical source (please specify) 
+7 = Support group
 <p>
-9=No one
+8 = Other non-clinical source (please specify)
+<p>
+9 = No one
    </td>
   </tr>
   <tr>
@@ -234,11 +225,13 @@ Self-identify (please specify)
    </td>
    <td>Have you ever received counseling or therapy for mental health concerns?
    </td>
-   <td>1=No, never 
+   <td>1 = No, never
 <p>
-2=Yes, prior to starting college 
+2 = Yes, prior to starting college
 <p>
-3=Yes, since starting college 4=Yes, both of the above (prior to college and since starting college)
+3 = Yes, since starting college
+<p>
+4 = Yes, both of the above (prior to college and since starting college)
    </td>
   </tr>
   <tr>
@@ -266,11 +259,13 @@ Feeling afraid as if something awful might happen
 <p>
 How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?
    </td>
-   <td>1=Not at all 
+   <td>1 = Not at all
 <p>
-2=Several days 
+2 = Several days
 <p>
-3=Over half the days 4=Nearly every day
+3 = Over half the days
+<p>
+4 = Nearly every day
    </td>
   </tr>
   <tr>
@@ -308,11 +303,13 @@ Little interest or pleasure in doing things
 <p>
 Feeling down, depressed or hopeless
    </td>
-   <td>1=Not at all 
+   <td>1 = Not at all
 <p>
-2=Several days 
+2 = Several days
 <p>
-3=Over half the days 4=Nearly every day
+3 = Over half the days
+<p>
+4 = Nearly every day
    </td>
   </tr>
   <tr>
@@ -324,11 +321,13 @@ Feeling down, depressed or hopeless
    </td>
    <td>How difficult have these problems (noted above) made it for you to do your work, take care of things at home, or get along with other people?
    </td>
-   <td>1=Not difficult at all 2=Somewhat difficult 
+   <td>1 = Not difficult at all
 <p>
-3=Very difficult 
+2 = Somewhat difficult
 <p>
-4=Extremely difficult
+3 = Very difficult
+<p>
+4 = Extremely difficult
    </td>
   </tr>
   <tr>
@@ -346,11 +345,11 @@ How often do you feel left out?
 <p>
 How often do you feel isolated from others?
    </td>
-   <td>1=Hardly ever 
+   <td>1 = Hardly ever
 <p>
-2=Some of the time 
+2 = Some of the time
 <p>
-3=Often
+3 = Often
    </td>
   </tr>
   <tr>
@@ -364,13 +363,13 @@ How often do you feel isolated from others?
 <p>
 (Include any exercise of moderate or higher intensity, where “moderate intensity” would be roughly equivalent to brisk walking or bicycling)
    </td>
-   <td>1=Less than 1 hour
+   <td>1 = Less than 1 hour
 <p>
-2=2-3 hours
+2 = 2-3 hours
 <p>
-3=3-4 hours
+3 = 3-4 hours
 <p>
-4=5 or more hours
+4 = 5 or more hours
    </td>
   </tr>
   <tr>
@@ -386,51 +385,53 @@ Weekdays
 <p>
 Weekend days
    </td>
-   <td>1=12:00pm
+   <td>1 = 12:00pm
 <p>
-2=1:00pm 
+2 = 1:00pm
 <p>
-3=2:00pm 
+3 = 2:00pm
 <p>
-4=3:00pm 
+4 = 3:00pm
 <p>
-5=4:00pm 
+5 = 4:00pm
 <p>
-6=5:00pm 
+6 = 5:00pm
 <p>
-7=6:00pm 
+7 = 6:00pm
 <p>
-8=7:00pm 
+8 = 7:00pm
 <p>
-9=8:00pm 
+9 = 8:00pm
 <p>
-10=9:00pm 
+10 = 9:00pm
 <p>
-11=10:00pm 
+11 = 10:00pm
 <p>
-12=11:00pm 
+12 = 11:00pm
 <p>
-13=12:00am 
+13 = 12:00am
 <p>
-14=1:00am 
+14 = 1:00am
 <p>
-15=2:00am 
+15 = 2:00am
 <p>
-16=3:00am 
+16 = 3:00am
 <p>
-17=4:00am 
+17 = 4:00am
 <p>
-18=5:00am 
+18 = 5:00am
 <p>
-19=6:00am 
+19 = 6:00am
 <p>
-20=7:00am 
+20 = 7:00am
 <p>
-21=8:00am 
+21 = 8:00am
 <p>
-22=9:00am 
+22 = 9:00am
 <p>
-23=10:00am 24=11:00am 
+23 = 10:00a
+<p>
+24 = 11:00am 
    </td>
   </tr>
   <tr>
@@ -440,23 +441,29 @@ Weekend days
 <p>
 How long is your typical nap?
    </td>
-   <td>1=I don’t take naps.
+   <td>1 = I don’t take naps.
 <p>
-2=1 
+2 = 1 
 <p>
-3=2 
+3 = 2 
 <p>
-4=3 
+4 = 3 
 <p>
-5=4 
+5 = 4 
 <p>
-6=5 
+6 = 5 
 <p>
-7=6 
+7 = 6 
 <p>
-8=7
+8 = 7
 <p>
-1=Less than 1 hour 2=Between 1 and 2 hours 3=Between 2 and 3 hours 4=More than 3 hours 
+1 = Less than 1 hour
+<p>
+2 = Between 1 and 2 hours
+<p>
+3 = Between 2 and 3 hours
+<p>
+4 = More than 3 hours 
    </td>
   </tr>
   <tr>
@@ -478,19 +485,19 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
 <p>
 0 = No
 <p>
-1=0 times 
+1 = 0 times 
 <p>
-2=1 time 
+2 = 1 time 
 <p>
-3=2 times 
+3 = 2 times 
 <p>
-4=3 to 5 times 
+4 = 3 to 5 times 
 <p>
-5=6 to 9 times 
+5 = 6 to 9 times 
 <p>
-6=10 or more times 
+6 = 10 or more times 
 <p>
-7=Don’t know
+7 = Don’t know
    </td>
   </tr>
   <tr>
@@ -523,32 +530,83 @@ Over the past 2 weeks, about how many times did you have 4 [female]/5 [male]/4 o
    <td>
 <ol>
 
-<li>D
-
-<li>D
-
-<li>D
-
-<li>1=Marijuana 2=Cocaine (any form, including crack, powder, or freebase) 3=Heroin 
-    4=Opioid pain relievers (such as Vicodin, OxyContin, Percocet, Demerol,Dilaudid, codeine, hydrocodone, methadone, morphine) without a prescription or more than prescribed 5=Benzodiazepines (such as Valium, Ativan, Klonopin, Xanax, Rohypnal (Roofies)) 6=Methamphetamines (also known as speed, crystal meth, Tina, T, or ice) 
+<li>1 = 0 cigarettes
+    2 = Less than 1 cigarette
 <p>
 
-    7=Other stimulants (such as Ritalin, Adderall) without a prescription or more than prescribed 8=MDMA (also known as Ecstasy or Molly) 
+    3 = 1 to 5 cigarettes
 <p>
 
-    9=Ketamine (also known as K, SpecialK) 
+    4 = About one-half pack
 <p>
 
-    10=LSD (also known as acid) 
+    5 = 1 or more packs
+<ol>
+
+<li>1 = Yes
 <p>
 
-    11=Psilocybin (also known as magic mushrooms, boomers, shrooms) 
+    2 = No
+<ol>
+
+<li>1 = Any vaping
 <p>
 
-    12=Kratom 13=Athletic performance enhancers (anything that violates policies set by your school or any athletic governing body) 
+    2 = Vaping nicotine
 <p>
 
-    14=Other drugs without a prescription (please specify) 15=No, none of these
+    3 = Vaping Marijuana
+<p>
+
+    4 = Vaping "just flavoring"
+<ol>
+
+<li>1 = Marijuana
+<p>
+
+    2 = Cocaine (any form, including crack, powder, or freebase)
+<p>
+
+    3 = Heroin
+<p>
+
+    4 = Opioid pain relievers (such as Vicodin, OxyContin, Percocet, Demerol,Dilaudid, codeine, hydrocodone, methadone, morphine) without a prescription or more than prescribed
+<p>
+
+    5 = Benzodiazepines (such as Valium, Ativan, Klonopin, Xanax, Rohypnal (Roofies))
+<p>
+
+    6 = Methamphetamines (also known as speed, crystal meth, Tina, T, or ice)
+<p>
+
+    7 = Other stimulants (such as Ritalin, Adderall) without a prescription or more than prescribed
+<p>
+
+    8 = MDMA (also known as Ecstasy or Molly)
+<p>
+
+    9 = Ketamine (also known as K, SpecialK)
+<p>
+
+    10 = LSD (also known as acid)  11 = Psilocybin (also known as magic mushrooms, boomers, shrooms)
+<p>
+
+    12 = Kratom
+<p>
+
+    13 = Athletic performance enhancers (anything that violates policies set by your school or any athletic governing body)
+<p>
+
+    14 = Other drugs without a prescription (please specify)
+<p>
+
+    15 = No, none of these
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
 </li>
 </ol>
    </td>
@@ -570,11 +628,11 @@ How often do you feel left out?
 <p>
 How often do you feel isolated from others? 
    </td>
-   <td>1=Hardly ever 
+   <td>1 = Hardly ever
 <p>
-2=Some of the time 
+2 = Some of the time
 <p>
-3=Often
+3 = Often
    </td>
   </tr>
   <tr>
@@ -586,13 +644,17 @@ How often do you feel isolated from others?
 <p>
 I see myself as a part of the campus community.
    </td>
-   <td>1=Strongly agree 
+   <td>1 = Strongly agree
 <p>
-2=Agree 
+2 = Agree
 <p>
-3=Somewhat agree 4=Somewhat disagree 5=Disagree
+3 = Somewhat agree
 <p>
-6=Strongly disagree
+4 = Somewhat disagree
+<p>
+5 = Disagree
+<p>
+6 = Strongly disagree
    </td>
   </tr>
   <tr>
@@ -606,11 +668,15 @@ I see myself as a part of the campus community.
 <p>
 How would you describe your financial situation while growing up?
    </td>
-   <td>1=Always stressful 
+   <td>1 = Always stressful
 <p>
-2=Often stressful 3=Sometimes stressful 4=Rarely stressful 
+2 = Often stressful
 <p>
-5=Never stressful
+3 = Sometimes stressful
+<p>
+4 = Rarely stressful
+<p>
+5 = Never stressful
    </td>
   </tr>
   <tr>
@@ -622,13 +688,17 @@ How would you describe your financial situation while growing up?
 <p>
 If I needed to seek professional help for my mental or emotional health, I would know where to go on my campus.
    </td>
-   <td>1=Strongly agree 
+   <td>1 = Strongly agree
 <p>
-2=Agree 
+2 = Agree
 <p>
-3=Somewhat agree 4=Somewhat disagree 5=Disagree 
+3 = Somewhat agree
 <p>
-6=Strongly disagree
+4 = Somewhat disagree
+<p>
+5 = Disagree
+<p>
+6 = Strongly disagree
    </td>
   </tr>
   <tr>
@@ -650,13 +720,13 @@ How helpful on average do you think medication is, when provided competently, fo
 <p>
 How helpful on average do you think medication wouldbe for you if you were having mental or emotional health problems?
    </td>
-   <td>1=Very helpful 
+   <td>1 = Very helpful
 <p>
-2=Helpful
+2 = Helpful
 <p>
- 3=Somewhat helpful
+3 = Somewhat helpful
 <p>
-4=Not helpful
+4 = Not helpful
    </td>
   </tr>
   <tr>
@@ -672,13 +742,17 @@ Most people would willingly accept someone who has received mental health treatm
 <p>
 Most people think less of a person who has received mental health treatment.
    </td>
-   <td>1=Strongly agree 
+   <td>1 = Strongly agree
 <p>
-2=Agree 
+2 = Agree
 <p>
-3=Somewhat agree 4=Somewhat disagree 5=Disagree 
+3 = Somewhat agree
 <p>
-6=Strongly disagree 
+4 = Somewhat disagree
+<p>
+5 = Disagree
+<p>
+6 = Strongly disagree 
    </td>
   </tr>
   <tr>
@@ -688,9 +762,9 @@ Most people think less of a person who has received mental health treatment.
    </td>
    <td>Are you an international student?
    </td>
-   <td>1=Yes 
+   <td>1 = Yes
 <p>
-0=No
+0 = No
    </td>
   </tr>
   <tr>
@@ -700,39 +774,45 @@ Most people think less of a person who has received mental health treatment.
    </td>
    <td>What is your field of study? (Select all that apply)
    </td>
-   <td>1=Humanities (history, languages, philosophy,etc.) 2=Natural sciences or mathematics 
+   <td>1 = Humanities (history, languages, philosophy,etc.)
 <p>
-3=Social sciences (economics, psychology,etc.) 4=Architecture or urban planning
+2 = Natural sciences or mathematics
 <p>
-5=Art and design 
+3 = Social sciences (economics, psychology,etc.)
 <p>
-6=Business 
+4 = Architecture or urban planning
 <p>
-7=Dentistry
+5 = Art and design
 <p>
-8=Education 
+6 = Business
 <p>
-9=Engineering 
+7 = Dentistry
 <p>
-10=Law
+8 = Education
 <p>
-11=Medicine
+9 = Engineering
 <p>
-12=Music, theatre, or dance 13=Nursing 
+10 = Law
 <p>
-14=Pharmacy 
+11 = Medicine
 <p>
-15=Pre - professional
+12 = Music, theatre, or dance
 <p>
-16=Public health 
+13 = Nursing
 <p>
-17=Public policy 
+14 = Pharmacy
 <p>
-18=Social work
+15 = Pre - professional
 <p>
-19=Undecided
+16 = Public health
 <p>
- 20=Other (please specify)
+17 = Public policy
+<p>
+18 = Social work
+<p>
+19 = Undecided
+<p>
+20 = Other (please specify)
    </td>
   </tr>
   <tr>
@@ -742,35 +822,35 @@ Most people think less of a person who has received mental health treatment.
    </td>
    <td>What activities do you currently participate in at your school? (Select all that apply
    </td>
-   <td>1=Academic or pre-professional organization
+   <td>1 = Academic or pre-professional organization
 <p>
-2=Athletics (club)
+2 = Athletics (club)
 <p>
-3=Athletics (intercollegiate
+3 = Athletics (intercollegiate
 <p>
 varsity)
 <p>
-4=Athletics (intramural) 
+4 = Athletics (intramural)
 <p>
-5=Community service
+5 = Community service
 <p>
-6=Cultural or racial organization
+6 = Cultural or racial organization
 <p>
-7=Dance
+7 = Dance
 <p>
-8=Fraternity or sorority
+8 = Fraternity or sorority
 <p>
-9=Gender or sexuality organization
+9 = Gender or sexuality organization
 <p>
-10=Government or politics (including student government)
+10 = Government or politics (including student government)
 <p>
-11=Health and wellness organization
+11 = Health and wellness organization
 <p>
-12=Media or publications
+12 = Media or publications
 <p>
-13=Music or drama
+13 = Music or drama
 <p>
-14=Religious organization
+14 = Religious organization
    </td>
   </tr>
   <tr>
@@ -794,17 +874,19 @@ varsity)
    </td>
    <td>How would you describe your sexual orientation? (Select all that apply)
    </td>
-   <td>1=Heterosexual
+   <td>1 = Heterosexual
 <p>
-2=Lesbian 
+2 = Lesbian
 <p>
-3=Gay 
+3 = Gay
 <p>
-4=Bisexual 
+4 = Bisexual
 <p>
-5=Queer 
+5 = Queer
 <p>
-6=Questioning 7=Self-identify (please specify) 
+6 = Questioning
+<p>
+7 = Self-identify (please specify) 
    </td>
   </tr>
 </table>

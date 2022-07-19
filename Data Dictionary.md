@@ -32,7 +32,7 @@ Our data frames (**Data Dictionary**)
 
 <table>
   <tr>
-   <td>School year [ schoolYear ] 
+   <td>School year [schoolYear] 
    </td>
    <td>Year the Healthy Minds Survey was taken 
    </td>
@@ -46,7 +46,7 @@ Our data frames (**Data Dictionary**)
    </td>
   </tr>
   <tr>
-   <td>Class Year [ classYear ]
+   <td>Class Year [classYear]
    </td>
    <td>What year are you in your current degree program?
    </td>
@@ -54,7 +54,7 @@ Our data frames (**Data Dictionary**)
    </td>
   </tr>
   <tr>
-   <td>Age [ age ] 
+   <td>Age [age] 
    </td>
    <td>How old are you? (You must be 18 years or older to complete this survey.) 
    </td>
@@ -62,7 +62,7 @@ Our data frames (**Data Dictionary**)
    </td>
   </tr>
   <tr>
-   <td>Gender [ gender ] 
+   <td>Gender [gender] 
    </td>
    <td>What is your gender identity?
    </td>
@@ -80,7 +80,7 @@ Our data frames (**Data Dictionary**)
    </td>
   </tr>
   <tr>
-   <td>Race [ race_]
+   <td>Race [race_]
    </td>
    <td>What is your race/ethnicity?(Select all that apply)
    </td>
@@ -98,7 +98,7 @@ race_other = Self-identify (please specify)
   <tr>
    <td>Positive Mental Health
 <p>
-[ diener ]
+[diener]
    </td>
    <td>
 <ul>
@@ -139,7 +139,7 @@ race_other = Self-identify (please specify)
   <tr>
    <td>Positive Mental Health
 <p>
-[ diener_score ]
+[diener_score]
    </td>
    <td>Sum of all diener variables
    </td>
@@ -151,35 +151,35 @@ race_other = Self-identify (please specify)
    </td>
    <td>Have you ever been diagnosed with any of the following conditions by a health professional (e.g., primary care doctor, psychiatrist, psychologist, etc.)? (Select all that apply)
    </td>
-   <td><strong>dx_dep </strong>[ 1 = depression ] 
+   <td><strong>dx_dep </strong>[1 = depression] 
 <p>
-<strong>dx_bip</strong> [ 1 = bipolar ] 
+<strong>dx_bip</strong> [1 = bipolar] 
 <p>
-<strong>dx_anx</strong> [ 1 = anxiety ] 
+<strong>dx_anx</strong> [1 = anxiety] 
 <p>
-<strong>dx_ocd</strong> [ 1= Obsessive-compulsive / related disorders ]
+<strong>dx_ocd</strong> [1= Obsessive-compulsive / related disorders]
 <p>
-<strong>dx_ptsd</strong> [ 1=Trauma and Stressor Related Disorders ]
+<strong>dx_ptsd</strong> [1=Trauma and Stressor Related Disorders]
 <p>
-<strong>dx_neurodev</strong> [ 1=Neurodevelopmental disorder or intellectual disability ]
+<strong>dx_neurodev</strong> [1=Neurodevelopmental disorder or intellectual disability]
 <p>
-<strong>dx_ea</strong> [ 1=Eating disorder ] 
+<strong>dx_ea</strong> [1=Eating disorder] 
 <p>
-<strong>dx_psy</strong> [ 1=Psychosis ] 
+<strong>dx_psy</strong> [1=Psychosis] 
 <p>
-<strong>dx_pers</strong> [ 1=Personality disorder ]
+<strong>dx_pers</strong> [1=Personality disorder]
 <p>
-<strong>dx_sa </strong>[ 1=Substance use disorder ] 
+<strong>dx_sa </strong>[1=Substance use disorder] 
 <p>
-<strong>dx_none </strong>[ 1=No, none of these [mutually exclusive]
+<strong>dx_none </strong>[1=No, none of these [mutually exclusive]
 <p>
-<strong>dx_dk</strong> [ 1= don't know ] 
+<strong>dx_dk</strong> [1= don't know]
    </td>
   </tr>
   <tr>
    <td>Academic Impairment
 <p>
-[ aca_impa ]
+[aca_impa]
    </td>
    <td>In the past 4 weeks, how many days have you felt that emotional or mental difficulties have hurt your academic performance?
    </td>
@@ -195,7 +195,7 @@ race_other = Self-identify (please specify)
   <tr>
    <td>Help-seeking intentions
 <p>
-[ talk1_…]
+[talk1_…]
    </td>
    <td>If you were experiencing serious emotional distress, whom would you talk to about this? (Select all that apply)
    </td>
@@ -221,7 +221,7 @@ race_other = Self-identify (please specify)
   <tr>
    <td>Use of counseling/therapy
 <p>
-[ ther_ever ] 
+[ther_ever] 
    </td>
    <td>Have you ever received counseling or therapy for mental health concerns?
    </td>
@@ -373,7 +373,7 @@ How often do you feel isolated from others?
    </td>
   </tr>
   <tr>
-   <td>Sleep [sleep_ ]
+   <td>Sleep [sleep_]
    </td>
    <td>During this school year, at approximately what time have you typically gone to sleep on:
 <p>

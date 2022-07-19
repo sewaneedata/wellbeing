@@ -32,6 +32,11 @@ Our data frames (**Data Dictionary**)
 
 <table>
   <tr>
+    <th>Variable</th>
+    <th>Question</th>
+    <th>Responses</th>
+  </tr>
+  <tr>
    <td>School year [schoolYear] 
    </td>
    <td>Year the Healthy Minds Survey was taken 

@@ -547,7 +547,9 @@ ui <- dashboardPage(
             plotlyOutput("mentalIllness_1", width = 'auto'),
             "Fig 1. Clinically diagnosed mental illness rates among students have relatively remained the same
             since 2017 - around 35%. We hypothesize that factors such as Covid-19 might account for the increase from
-            2019 onwards."
+            2019 onwards.",
+            br(),
+            "* Note: There are no responses from 5th year students in the school year 2020/2021"
           ), # END OF BOX
           
           # Select demographics for first trends on mental health plot
@@ -1204,9 +1206,12 @@ ui <- dashboardPage(
         
         br(),
         
-        h4("DataLab is a summer internship program at Sewanee: the University of the South that partners with
-           DSSG, Data Science for Social Good, to develop data science skills in students by analyzing data
-           sets related to pressing social and environmental problems."
+        h4("The Sewanee DataLab makes the power of data analytics accessible for the greater good. We accomplish
+           this by training and supporting a new generation of data scientists who work exclusively on social impact
+           projects. The Sewanee DataLab seeks to expand the definition of data science and what it means to be a
+           data scientist by training undergraduate students, academics, and professionals from a wide range of
+           disciplines. Sewanee DataLab participants learn to understand and use data equitably to benefit those
+           they serve."
         ),
         
         br(),

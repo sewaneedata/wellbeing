@@ -36,6 +36,6 @@ If you already have the HMSAll.csv, then just move the file to the parent direct
 - The format and content of the data varies from year to year so we had to clean each year separately before merging it (this was also done in merged.R)
 - The data we received was anonymised in different ways before being given to us, so it varied even more than HMS data normally would have from year to year.
 - The years we had were from the school years 2017/2018, 2018/2019, 2019/2020, & 2020/2021, so our code only cleans and merges those years due to the inconsistency in formatting and content.
-- To add more, you would need to add code to clean and format the data into the format we chose (use the merged.R file as an example of how to get it in the proper format). 
-- After cleaning and formatting the data within merged.R, you can easily add it to the code that merges the data frames.
+- To add more years of data, you would need clean and format the data (preferably in the merged.R file) using the format we chose (follow the merged.R file as an example). 
+- After cleaning and formatting the data within merged.R, you can easily change the code that merges the data frames to include the new year of data.
 - So long as the new data matches the format, it should merge properly, and no other code should need to be changed (app.R should not need to be changed to add new years of data).

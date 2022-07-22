@@ -4,17 +4,17 @@
 3. Install [R Studio](https://www.rstudio.com/products/rstudio/download/)
 4. Open R Studio
 5. Install the packages we used(Learn how to do that [here](https://support.rstudio.com/hc/en-us/articles/201057987-Quick-list-of-useful-R-packages)):
-    1. shiny
-    2. shinydashboard
-    3. dashboardthemes
-    4. ggplot2
-    5. ggthemes
-    6. rlang
-    7. readr
-    8. tidyverse
-    9. RColorBrewer
-    10. plotly
-    11. shinyalert
+    - shiny
+    - shinydashboard
+    - dashboardthemes
+    - ggplot2
+    - ggthemes
+    - rlang
+    - readr
+    - tidyverse
+    - RColorBrewer
+    - plotly
+    - shinyalert
 
 # How to Generate the Merged Data CSV (HMSAll.csv)
 If you already have the HMSAll.csv, then just move the file to the parent directory of the repository folder (directions below)

@@ -4,7 +4,7 @@
 3. Install [R Studio](https://www.rstudio.com/products/rstudio/download/)
 
 # How to Generate the Merged Data CSV (HMSAll.csv)
-- If you already have the HMSAll.csv, then just move the file to the parent directory of the repository folder (directions below)
+If you already have the HMSAll.csv, then just move the file to the parent directory of the repository folder (directions below)
 
 1. Move the original HMS data CSVs (HMS17.csv, HMS18.csv, HMS19.csv, HMS20_better.csv) to the parent directory of the cloned repository (eg. if you clone the folder in ~/Documents/Project, then put the four years of HMS CSVs in ~/Documents/Project. Cloning the repo should result in another folder within the Project folder called wellbeing, ~/Documents/Project/wellbeing).
 2. Open R Studio

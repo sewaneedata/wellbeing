@@ -13,7 +13,7 @@ If you already have the HMSAll.csv, then just move the file to the parent direct
 5. Run the whole merged.R file (this can be done on Mac by using command + r or by selecting all of the code with command + a or ctrl + a then using command + enter or ctrl + enter).
 6. You should now have a file called HMSAll.csv in the parent directory of the repsitory folder (~/Documents/Project)
 
-# How to run the app on your local machine
+# How to Run the App
 1. Open R Studio
 2. Set your working directory to the Dashboard folder within the repository folder (eg. ~/Documents/Project/wellbeing/Dashboard). Learn how to change your working directory [here](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces-in-the-RStudio-IDE).
 3. Click the Run App button in the top right of the text editor within R Studio

@@ -3,7 +3,7 @@
 2. Clone the repository (Learn how to do that [here](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)).
 3. Install [R Studio](https://www.rstudio.com/products/rstudio/download/)
 4. Open R Studio
-5. Install the packages we used(Learn how to do that [here](https://support.rstudio.com/hc/en-us/articles/201057987-Quick-list-of-useful-R-packages)):
+5. Install the packages we used (Learn how to do that [here](https://support.rstudio.com/hc/en-us/articles/201057987-Quick-list-of-useful-R-packages)):
     - shiny
     - shinydashboard
     - dashboardthemes

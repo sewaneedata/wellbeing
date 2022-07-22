@@ -15,6 +15,7 @@
     - RColorBrewer
     - plotly
     - shinyalert
+    - data.table
 
 # How to Generate the Merged Data CSV (HMSAll.csv)
 If you already have the HMSAll.csv, then just move the file to the parent directory of the repository folder (directions below)

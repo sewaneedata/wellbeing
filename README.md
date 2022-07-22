@@ -17,3 +17,11 @@ If you already have the HMSAll.csv, then just move the file to the parent direct
 1. Open R Studio
 2. Set your working directory to the Dashboard folder within the repository folder (eg. ~/Documents/Project/wellbeing/Dashboard). Learn how to change your working directory [here](https://support.rstudio.com/hc/en-us/articles/200711843-Working-Directories-and-Workspaces-in-the-RStudio-IDE).
 3. Click the Run App button in the top right of the text editor within R Studio
+
+# Notes:
+- The format and content of the data varies from year to year so we had to clean each year separately before merging it (this was also done in merged.R)
+- The data we received was anonymised in different ways before being given to us, so it varied even more than HMS data normally would have from year to year.
+- The years we had were from the school years 2017/2018, 2018/2019, 2019/2020, & 2020/2021, so our code only cleans and merges those years due to the inconsistency in formatting and content.
+- To add more, you would need to add code to clean and format the data into the format we chose (use the merged.R file as an example of how to get it in the proper format). 
+- After cleaning and formatting the data within merged.R, you can easily add it to the code that merges the data frames.
+- So long as the new data matches the format, it should merge properly, and no other code should need to be changed (app.R should not need to be changed to add new years of data).
